@@ -1,0 +1,196 @@
+\chapter{Zero-Knowledge Proofs}
+This chapter surveys selective literature about zero knowledge proofs for practical design application. The goal is to familiarize the reader with the content classification of zero-knowledge proofs in cryptography, and to give an introduction and comparison of main argument systems widely used as of today. Zero-knowledge proof systems belong to the domain of verifiable computation. Verifiable computation (VC) makes use of cryptographic protocols and arguments to verify that a computation was performed correctly. Arguments allow for false proofs only if they require very high computational power. 
+
+Until the concept of interactive proof systems (IPs) was introduced by \citet{GMR89}, provers could convince verifiers with false statements by breaking the underlying cryptographic system. Traditional proofs are static and are made for easy, step-wise computation verification, whereas IPs require interaction between prover and verifier. In computational complexity theory, interactive proof systems are abstract machines exchanging messages between prover and verifier to convince the verifier that these sets of strings belong to a language \(L\). Here, the formal language \(L\) is defining a decision problem, i.e., a computational problem that has only two outputs, yes and no. The untrusted prover has unlimited computational power and the verifier is honest and computationally restricted. The complexity class of IP describes prover and verifier interaction in a polynomial number of rounds.  Advances in computational complexity theory during that time showed that IPs are more efficient and belong to a wider class than the traditional \textbf{NP}, i.e., problems solvable in deterministic polynomial time. In 1987, it was shown that every language belonging to NP has zero-knowledge proof systems \citep{anymental10.1145/28395.28420}. Later, it was shown that the class of \textbf{IP}, i.e., problems solvable by interactive proof systems, lies in \textbf{PSPACE}, i.e., problems solvable in polynomial space \citep{Shamir10.1145/146585.146609}, and that every language \(L\) in polynomial time has an interactive proof system \citep{Lund10.1145/146585.146605}. Other important advances in computational complexity theory are \textbf{MIP=NEXP} \citep{Laszlo} and the \textbf{PCP theorem} \citep{PCPTheorem10.1145/278298.278306}. These works resulted in a set of mathematical proof protocols, that will be introduced in this chapter. \citet{Thaler} gives a further, exhaustive overview of all mathematical proofs and in-depth protocol descriptions. 
+
+The examined protocols are secure against computationally unrestricted provers: \textit{Interactive Proof (IP), Multi-prover Interactive Proof (MIP), linear Probabilistically Checkable Proof (PCP), and Interactive Oracle Proof (IOP)}. 
+
+Combining these protocols with cryptographic primitives to force certain behavior in the proof generation will create an argument system. Argument systems are considered to be zero-knowledge, if and only if the proof does not reveal anything but its own validity \citep{GMR89}. Adding certain properties, e.g. non-interactivity, succinctness, and knowledge, will design a certain argument of knowledge, e.g. zk-SNARK (zero-knowledge succinct non-interactive argument of knowledge). Different zk-SNARKS and notions will be examined in more detail.
+
+The next sub chapters are structured according to the design approach described above. First, IPs, MIPs, PCPs, and IOPs will be defined. Through the combination with polynomial commitment schemes argument systems can be designed. Non-interactivity is achieved through Fiat-Shamir transformation. Second, properties and mathematical tools will be introduced to describe different arguments of knowledge: zk-SNARK, FRI-STARK and bulletproofs. Third, real-world applications of zero-knowledge proof systems will be summarized. Lastly, the different systems will be evaluated in different application scenarios.
+
+- what is zero knowledge definition
+- what means indistinguishable
+- different types of zero-knowledge (perfect, statistical, computational)
+- ZKPs are part of verifiable computations
+- what is verifiable computation
+
+\section{From Mathematical Proofs towards Argument Systems}
+mathematical proofs belong to NP
+IPs are the basis to understand cryptographic protocols and argument systems
+argument systems are IP with a specific assumption
+polynomial IOPs together with polynomial commitment scheme always yields a specific argument of knowledge, can be made non interactive with fiat-shamir, can be succinct too, different abwandlungen
+but before we need basic understanding on different mathematical proofs that lie behind the construction of argument systems
+then we need understanding of commitment scheme and fiat shamir transform
+how zero knowledge is applied in the design will be shown later when going through the different systems
+
+information secure = only theoretically
+what are those, little history
+1:polynomial IOPs 
+- interactive proofs intro
+- MIPs
+- constant round IOPs
+2:linear PCPs
+-intro from the book Thaler-->combined with cryptographic primitives we get SNARKs, everything is a SNARK and SNARK variation
+-Luong and Park: properties intro
+- Yang Yang et al properties
+-Soonhyeong 2021: better verification with EVM to verify non-maliciousness of blocks (zKSNARKS used)
+
+\subsection{Interactive Proofs}
+introduced by  GOLDWASSER, Shafi; MICALI, Silvio; RACKOFF, Charles. The
+knowledge complexity of interactive proof systems. SIAM Journal
+on computing. 1989, vol. 18, no. 1, pp. 186–208.
+GKR protocol-->why? GKR protocol is general-purpose in the sense that it solves the problem of arithmetic circuit evaluation, and any problem in P can
+be “efficiently” reduced to circuit evaluation
+randomness
+completeness
+soundness
+statistical soundness
+computational soundness
+fiat shamir transformation for non interactive
+knowledge soundness
+proof of knowledge
+obtaining zero knowledge from it: verifier learns nothing about the witness
+\subsection{MIPs}
+\subsection{Linear PCPs}
+\subsection{constant round IOPs}
+\subsection{Polynomial IOPs}
+(focus on chapter 10.6, combine with preliminaries from previous chapters in Thaler)
+
+\section{Towards zero-knowledge non-interactive arguments of knowledge}
+-first succinct argument of knowledge by goldwasser etc. 
+-what is succinct
+- repeat that Fiat Shamir Transformation can make them all non-interactive
+-every proof from above combined with polynomial commitment schemes yields a SNARK
+-short explanation what are polynomial commitment schemes: %https://coingeek.com/how-plonk-works-part-1/#:~:text=PLONK%20is%20a%20state%2Dof,by%20all%20circuits%5B1%5D.
+- how: 1 design a public-coin polynomial IOP for circuit- or R1CS-satisfiability, 2 use polynomial commitment scheme 3 remove interaction via fiat shamir
+- linear PCPs are exception: they need to be combined with pairing based cryptography
+- everything is a sub of SNARKs
+- I only want to cover three most practical zero knowledge SNARKs
+- Constant-round IOPs vs. MIPs and IPs-->p.301 Thaler
+- every combo with polynomial commitment scheme is a SNARK
+- we focus on Groth16, PLONK, FRI-STARK, bulletproof
+
+NITULESCU, Anca. zk-SNARKs: A Gentle Introduction [https:
+/ / www . di . ens . fr / ~nitulesc / files / Survey - SNARKs . pdf].
+2020. Tech. rep. ENS Paris. Accessed: 2022-05-15.
+
+\subsection{Circuit-specific zk-SNARK}
+- Linear PCP and pairing based cryptography
+- definitions
+- R1CS, QAP and Elliptic Curve Pairing
+- main functionalities: trusted setup, proof and verify
+- history
+- Groth16
+- performance enhancements by Groth\& Maller 2017, Lipmaa 2019 and Kim Lee Oh 2020 as the newest contribution with only one single verification
+- Luong and Park easy Intro
+- Yang Yang et al: Intro Groth16, R1C1, QAP easy examples
+- Baghery et al. mathematical backings if needed
+- Benamara: ECs and pairings, good math paper 
+- Guo et al: QAP, Bilinear Maps, R1CS theory
+
+
+
+\subsection{Towards Universal Setup zk-SNARK}
+PLONK
+Constant round polynomial IOP plus Kate commitment
+-definitions
+-history
+-plonk, it is a SNARK
+-main functionality
+
+\subsection{FRI-STARK}
+with FRI-based polynomial commitment
+-does not use R1CS
+-fri starks
+-Salleras et al 2021
+
+\subsection{Bulletproofs}
+with discrete-log based polynomial commitment
+- uses R1CS too
+- they are non-interactive,
+- they are zk arguments of knowledge
+- Godden et al bulletproofs
+- Chung et. al bulletproof+
+- Deng at al history of bulletproofs
+-Salleras et al 2021
+main protocols: Lipmaa, Boudot, then Groth and Coutueau, then Hybrid from Kim Lee 2019
+Deng et al 2022: history of range proofs, cuproof as example
+-Kim Lee 2019: overview on range proof protocols
+
+
+\section{Opportunities and Use Cases}
+
+-e-government:e-voting/digital election
+
+-healthcare: purchasing medical insurance contracts, patient data exchange/access
+-e-auction/bidding systems
+-cloud computing: zk port knocking, data deduplication, authentication schemes for cloud servers
+-blockchain scaling: decrease comp cost for tx verification, zkRollups, zkSync
+-querying: link traversal, zk-SQL SPARQL queries, zk based traceability systems
+
+- Sedlmeier et al: overcoming transparency vs. privacy
+- Godden et al overview of ZKP use cases: verifiable comp., linked data, identity management, access control
+- ZKPs belong to verifiable computation, succinct blockchain Simunic et al 2022
+- sources from Zhang et al 2021 PipeZK overview of the different Anwendungsbereiche of ZKPs-->what is verifiable outsourcing as application example?
+- Maller et al 2019 Sonic: verifiable outsourcing computation example paper
+
+\subsection{Identity Protection and Authentication}
+- Bonsad et al use case
+- Guo et al: e-government example
+- Wang et al: hospital as trusted party, insurance receives proofs and cashes out, patient's medical data protected at all times
+- Shi et al (2022): Schnorr ZKP used to proof user identity-->a bit old fashioned ZKP used maybe??
+- Hunag et al 2020: good use case for MRO data sharing? zk SNARKS
+- Major,Buchanan(2020): port knocking authentication scheme
+- Kanagamani, Karuppiah(2021): data deduplication cloud computing with in-line block matching and ZKP properties
+-Soonhyeong 2021: better verification with EVM to verify non-maliciousness of blocks (zKSNARKS used)
+- Munivel Kannammal (2019): authentication scheme as additional security to prevent mobile phone password attacks on cloud storage server
+- Liu Wang Peng Xing 2019: remote authentication for mobile cloud computing
+-cloud computing
+-egovernment, eauctions
+
+
+\subsection{Data Sharing and Traceability}
+- Xue and Wang: traceability use case applicable to pred. maintenance problem
+-link traversal, SQL
+-healthcare
+-zero knowledge static program analysis: proof that a secret code is correct (Fang, Near, Darias, Zhang 2021)
+
+\subsection{Blockchain Scaling}
+- zk Roll ups, more sources needed
+- Xu Chen(2021): new algorithms for zero knowledge set membership for ZK-scaling, based and compared to zkSync
+- 
+\section{Challenges}
+- challenges can go into evaluation/comparisons of the 4 zkps
+\subsection{Cost}
+-Zhang et al 2021 PipeZK time and cost challenges of zKSNARK
+-effieciency of ZKP: computation depends on field size-->there is a need for memory efficient ZKPs: wolverine and mac'n'cheese can do it better, but QuickSilver better protocol for large circuits (Yang, Weng, Sarkar, Wang 2021), Dittmer et al (2022) outperform Quicksilver then (most current best performing memory based protocol)
+-elements from Sedlmeier Völter Strüker (2021): take the cost of Groth16
+
+\subsection{Trust Assumption}
+-Huang et al 2020 semi trusted proxy server, their assumptions
+-trusted set up for zk Snarks
+
+\subsection{Quantum Computing Threats}
+1. Why are quantum verifiers a threat? (maybe Katz et al 2018)
+2. different aspects of solution examples
+-Deng et al 
+- Xie Yang 2019: quantum secure CRS, good arguments of other shortcomings of ZKP systems, interactive and non interactive quantum zero knowledge proof systems
+- Vidick Zhang 2020: describe the three problems that there are protocols developed for (big umbrella problem: quantum verification problem), good definitions from the quantum world
+- also include Watrous(2009)-->coming from Vidick Zhang 2020
+-Lyubashevsky et al (2020): new lattice based ZKP algorithm which is the fastest and smallest proof size for small int addition and multiplication 
+
+\section{Evaluation Methods}
+-Huang et al 2020: 1)privacy preserving and security: confidentiality, availability, integrity, privacy-preserving, traceability, single point of failure 2) performance evaluation: computing cost, number of startup nodes, privacy protection, time to generate NIZK keypair, NIZK proof, verify NIZK proof
+-Zhang et al 2021 PipeZK proof generation enhancement
+- Maller et al 2019 Sonic: better structured SRS in linear size to speed up proof verification
+
+\subsection{Performance Analysis}
+-Liu et al, Zheng at al: semihonest model evaluation topics-> computational complexity, communication complexity, experimental evaluation
+- Liu Wang Peng Xing 2019: remote authentication for mobile cloud computing, Real-Or-Random model and BAN logic for security evaluation REGARDING different attacks
+- Zhang et al 2021 PikeZK: new hardware accelerator to boost comp time for proof generation
+
+\subsection{Sustainability}
+-maybe too little literature for an own sub chapter
+-Simunic et al mention need for more sustainable solutions in blockchain privacy preserving through ZKPs
+-elements from Sedlmeier Völter Strüker (2021): ZKPs are more sustainable 
