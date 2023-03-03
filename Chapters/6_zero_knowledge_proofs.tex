@@ -1,26 +1,39 @@
 \chapter{Zero-Knowledge Proofs}
 This chapter surveys selective literature about zero knowledge proofs for practical design application. The goal is to familiarize the reader with the content classification of zero-knowledge proofs in cryptography, and to give an introduction and comparison of main argument systems widely used as of today. Zero-knowledge proof systems belong to the domain of verifiable computation. Verifiable computation (VC) makes use of cryptographic protocols and arguments to verify that a computation was performed correctly. Arguments allow for false proofs only if they require very high computational power. 
 
-Until the concept of interactive proof systems (IPs) was introduced by \citet{GMR89}, provers could convince verifiers with false statements by breaking the underlying cryptographic system. Traditional proofs are static and are made for easy, step-wise computation verification, whereas IPs require interaction between prover and verifier. In computational complexity theory, interactive proof systems are abstract machines exchanging messages between prover and verifier to convince the verifier that these sets of strings belong to a language \(L\). Here, the formal language \(L\) is defining a decision problem, i.e., a computational problem that has only two outputs, yes and no. The untrusted prover has unlimited computational power and the verifier is honest and computationally restricted. The complexity class of IP describes prover and verifier interaction in a polynomial number of rounds.  Advances in computational complexity theory during that time showed that IPs are more efficient and belong to a wider class than the traditional \textbf{NP}, i.e., problems solvable in deterministic polynomial time. In 1987, it was shown that every language belonging to NP has zero-knowledge proof systems \citep{anymental10.1145/28395.28420}. Later, it was shown that the class of \textbf{IP}, i.e., problems solvable by interactive proof systems, lies in \textbf{PSPACE}, i.e., problems solvable in polynomial space \citep{Shamir10.1145/146585.146609}, and that every language \(L\) in polynomial time has an interactive proof system \citep{Lund10.1145/146585.146605}. Other important advances in computational complexity theory are \textbf{MIP=NEXP} \citep{Laszlo} and the \textbf{PCP theorem} \citep{PCPTheorem10.1145/278298.278306}. These works resulted in a set of mathematical proof protocols, that will be introduced in this chapter. \citet{Thaler} gives a further, exhaustive overview of all mathematical proofs and in-depth protocol descriptions. 
+Until the concept of interactive proof systems (IPs) was introduced by \citet{GoldwasserIPs}, provers could convince verifiers with false statements by breaking the underlying cryptographic system. Traditional proofs are static and are made for easy, step-wise computation verification, whereas IPs require interaction between prover and verifier. In computational complexity theory, interactive proof systems are abstract machines exchanging messages between prover and verifier to convince the verifier that these sets of strings belong to a language \(L\). Here, the formal language \(L\) is defining a decision problem, i.e., a computational problem that has only two outputs, yes and no. Examples of sets of strings in \(L\) can be, that a certain Bitcoin transaction is valid, \(x = 7\) for a given \(f(x)\), or a certain object belongs to a specific merkle tree. The untrusted prover has unlimited computational power and the verifier is honest and computationally restricted. Advances in computational complexity theory during that time showed that IPs are more efficient and belong to a wider class than the traditional \textbf{NP}, i.e., problems solvable in deterministic polynomial time by reading proof strings of polynomial length \citep{SassonIOPsinproceedings}. In 1987, it was shown that every language belonging to NP has zero-knowledge proof systems \citep{anymental10.1145/28395.28420}. Later, it was shown that the class of \textbf{IP}, i.e., problems solvable by interactive proof systems, lies in \textbf{PSPACE}, i.e., problems solvable in polynomial space \citep{Shamir10.1145/146585.146609}, and that every language \(L\) in polynomial time has an interactive proof system \citep{Lund10.1145/146585.146605}. The complexity class of IP describes prover and verifier interaction in a polynomial number of rounds. Other important advances in computational complexity theory are \textbf{MIP=NEXP} \citep{Laszlo} and the \textbf{PCP theorem} \citep{PCPTheorem10.1145/278298.278306}. These works resulted in a set of proof and argument systems, that will be introduced in this chapter. \citet{Thaler} gives a further, exhaustive overview of all systems and in-depth protocol descriptions. 
 
-The examined protocols are secure against computationally unrestricted provers: \textit{Interactive Proof (IP), Multi-prover Interactive Proof (MIP), linear Probabilistically Checkable Proof (PCP), and Interactive Oracle Proof (IOP)}. 
+The examined proof systems are secure against computationally unrestricted provers: \textit{Interactive Proof (IP), Multi-prover Interactive Proof (MIP), linear Probabilistically Checkable Proof (PCP), and Interactive Oracle Proof (IOP)}. 
 
-Combining these protocols with cryptographic primitives to force certain behavior in the proof generation will create an argument system. Argument systems are considered to be zero-knowledge, if and only if the proof does not reveal anything but its own validity \citep{GMR89}. Adding certain properties, e.g. non-interactivity, succinctness, and knowledge, will design a certain argument of knowledge, e.g. zk-SNARK (zero-knowledge succinct non-interactive argument of knowledge). Different zk-SNARKS and notions will be examined in more detail.
+Combining the systems above with cryptographic tools to force certain behavior in the proof generation will create an argument system. Argument systems are considered to be zero-knowledge, if and only if the proof does not reveal anything but its own validity \citep{GMR89}. Adding certain properties, e.g. non-interactivity, succinctness, and knowledge, will design a certain argument of knowledge, e.g. zk-SNARK (zero-knowledge succinct non-interactive argument of knowledge). Different zk-SNARKS and notions will be examined in more detail.
 
-The next sub chapters are structured according to the design approach described above. First, IPs, MIPs, PCPs, and IOPs will be defined. Through the combination with polynomial commitment schemes argument systems can be designed. Non-interactivity is achieved through Fiat-Shamir transformation. Second, properties and mathematical tools will be introduced to describe different arguments of knowledge: zk-SNARK, FRI-STARK and bulletproofs. Third, real-world applications of zero-knowledge proof systems will be summarized. Lastly, the different systems will be evaluated in different application scenarios.
+The next sub chapters are structured according to the design approach described above. First, IPs, MIPs, PCPs, and IOPs will be defined. Through the combination with polynomial commitment schemes argument systems can be designed. Non-interactivity is achieved through Fiat-Shamir transformation. Second, properties and mathematical tools will be introduced to describe different arguments of knowledge: zk-SNARK, FRI-STARK and bulletproofs. Third, real-world applications of zero-knowledge proof systems will be summarized. Lastly, the different proof systems will be evaluated in different application scenarios.
 
+\begin{comment}
 - what is zero knowledge definition
 - what means indistinguishable
 - different types of zero-knowledge (perfect, statistical, computational)
 - ZKPs are part of verifiable computations
 - what is verifiable computation
+\end{comment}
 
-\section{From Mathematical Proofs towards Argument Systems}
-mathematical proofs belong to NP
+\section{From Proof Systems towards Argument Systems}
+
+A mathematical proof in the context of computer science and cryptography is any object that convinces a verifier that a statement is correct. Mathematical proofs embody what is defined in the complexity class NP. A proof system is a structured scheme that outputs a decision of whether a statement is correct or incorrect. In general, there are three properties that are desirable for proof systems \citep{GoldwasserIPs}, which will be introduced shortly. Throughout this sub chapter, these properties will be revisited more exhaustively.
+
+\begin{itemize}
+    \item True statements should have a convincing proof of their validity. (\textit{Completeness})
+    \item If a statement is incorrect, there is no possibility of it having a convincing proof. (\textit{Soundness})
+    \item The procedure to create and verify proofs should be efficient and fast.
+\end{itemize}
+
+Unlike argument systems, proof systems do not limit the malicious prover in its computational power (\textit{statistical soundness}). Using cryptographic primitives and restricting the prover, e.g., probabilistic polynomial time proof, so that it cannot break the primitives, describes the design towards argument systems, which are computationally sound \citep{ArgSystems, MicaliArgSys}. Each proof system presented makes assumptions on the prover. However, only with the use of cryptographic tools and zero-knowledge, these proof systems can be extended with additional properties to yield zero-knowledge argument systems of various kinds.
+
+\begin{comment}
 IPs are the basis to understand cryptographic protocols and argument systems
 argument systems are IP with a specific assumption
 polynomial IOPs together with polynomial commitment scheme always yields a specific argument of knowledge, can be made non interactive with fiat-shamir, can be succinct too, different abwandlungen
-but before we need basic understanding on different mathematical proofs that lie behind the construction of argument systems
+but before we need basic understanding on different proof systems that lie behind the construction of argument systems
 then we need understanding of commitment scheme and fiat shamir transform
 how zero knowledge is applied in the design will be shown later when going through the different systems
 
@@ -35,8 +48,21 @@ what are those, little history
 -Luong and Park: properties intro
 - Yang Yang et al properties
 -Soonhyeong 2021: better verification with EVM to verify non-maliciousness of blocks (zKSNARKS used)
+\end{comment}
 
 \subsection{Interactive Proofs}
+
+In interactive proof systems, the prover with unlimited computational resources interacts with a computationally bound verifier in order to convince the verifier of the correctness of a statement. The verifier randomly challenges the prover, which is referred to as coin tosses \citep{GoldwasserCoinTosses}. These challenges happen in rounds, until there are sufficient tests run and the verifier is convinced. \citet{GoldwasserIPs} defined an interactive proof system that is private, i.e., that the verifiers challenges are not publicly accessible, whereas the interactive proof system of \citet{BabaiIPs} allows the coin tosses to be publicly accessible by the prover.
+\begin{align*}
+    \text{\parbox{450pt}{\textbf{Interactive Proof System.} \textit{\(L\) is a language over \(\{0,1\}^n\), with n representing the input size domain of n-bit strings. An interactive protocol is a interactive proof system if after \(k\) rounds, the probabilistic verifier in polynomial time exchanged \(k\) messages with the computationally unrestricted prover, and has to either accept or decline the correctness of the prover's proposition. IP is the complexity class of problems solvable by a k-round interactive proof system.}}}
+\end{align*}
+  
+The transcript is the order in which messages are exchanged. The prover and verifier are functions \(P(x), V(x)\) with common input \(x\). The overall distribution of all transcriptions between prover and verifier is called \(View_V(P(x), V(x))\), which is bound by the number of rounds between \(P\)and \(V\). \(P\) provides a result that satisfies the proposition, e.g., \(y\) to a function \(f(x) = y\). \(P\) and \(V\) exchange a transcript of messages \((m_1, m_2, m_3, ..., m_k)\), whereby both parties take turns and the last message is sent by the prover. Note, that \(V\) is probabilistic with internal randomness \(r\). Hence, the output depends on \((V, x, r, P)\) and is \(\{0,1\}\), i.e., \(1\) if the statement is correct, and \(0\) if it is incorrect \citep{GoldwasserIPs, BabaiIPs}. Interactive proof systems have completeness error \(\delta_c\) and soundness error \(\delta_s\) . For any input \(x\), there must be a convincing proof that \(f(x)\) is correct. Incorrect statements for \(y \neq f(x)\) cannot result in a convincing proof, i.e., a malicious prover does not exist \citep{Thaler}. IP systems are valid if \(\delta_c, \delta_s \leq 1/3\).
+
+\subsubsection{Non-interactive, publicly verifiable arguments}
+\subsubsection{Random Oracle Model}
+\subsubsection{Fiat-Shamir Transformation}
+\begin{comment}
 introduced by  GOLDWASSER, Shafi; MICALI, Silvio; RACKOFF, Charles. The
 knowledge complexity of interactive proof systems. SIAM Journal
 on computing. 1989, vol. 18, no. 1, pp. 186–208.
@@ -51,6 +77,10 @@ fiat shamir transformation for non interactive
 knowledge soundness
 proof of knowledge
 obtaining zero knowledge from it: verifier learns nothing about the witness
+\end{comment}
+
+
+
 \subsection{MIPs}
 \subsection{Linear PCPs}
 \subsection{constant round IOPs}
@@ -76,6 +106,7 @@ NITULESCU, Anca. zk-SNARKs: A Gentle Introduction [https:
 2020. Tech. rep. ENS Paris. Accessed: 2022-05-15.
 
 \subsection{Circuit-specific zk-SNARK}
+- implementation of zero-knowledge argument systems was not possible until very recently, with advances in blockchain technology
 - Linear PCP and pairing based cryptography
 - definitions
 - R1CS, QAP and Elliptic Curve Pairing
