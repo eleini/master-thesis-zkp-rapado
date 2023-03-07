@@ -118,6 +118,7 @@ NITULESCU, Anca. zk-SNARKs: A Gentle Introduction [https:
 \subsection{Circuit-specific zk-SNARK}
 - implementation of zero-knowledge argument systems was not possible until very recently, with advances in blockchain technology
 - Linear PCP and pairing based cryptography
+
 - definitions
 - R1CS, QAP and Elliptic Curve Pairing
 - main functionalities: trusted setup, proof and verify
@@ -133,7 +134,7 @@ NITULESCU, Anca. zk-SNARKs: A Gentle Introduction [https:
 
 
 \subsection{Towards Universal Setup zk-SNARK}
-PLONK is a zk-SNARK with a universal trusted set-up, which produces a structured reference string (SRS). The SRS is of size \(d\), used for circuits of up to \(\leq d\) gates. This universal SNARK has fully succinct verification and low prover run time \citep{PLONKcryptoeprint:2019/953}, compared to its predecessor Sonic \citep{SONIC10.1145/3319535.3339817}, which was the first universal and fully succinct SNARK. PLONK is based on constant round polynomial IOP and uses the polynomial commitment scheme based on \citet{Kate2010ConstantSizeCT, PLONKcryptoeprint:2019/953}. The trusted setup is universal and updateable: it can be used for the entire scheme and does not have to produced for every problem (circuit), e.g., in Groth16. Also, the Kate commitment scheme can be replaced by any other polynomial commitment scheme, e.g., FRI (see chapter 5.2.3). 
+\textit{Permutations over Lagrange-bases for Oecumenical Non-interactive Arguments of Knowledge} (PLONK) is a zk-SNARK with a universal trusted set-up, which produces a \textit{structured reference string} (SRS). The SRS is of size \(d\), used for circuits of up to \(\leq d\) gates. This universal SNARK has fully succinct verification and low prover run time \citep{PLONKcryptoeprint:2019/953}, compared to its predecessor Sonic \citep{SONIC10.1145/3319535.3339817}, which was the first universal and fully succinct SNARK. PLONK is based on constant round polynomial IOP and uses the polynomial commitment scheme based on \citet{Kate2010ConstantSizeCT}. It is presented as a non-interactive protocol, obtained through Fiat-Shamir transformation \citep{PLONKcryptoeprint:2019/953}. The trusted setup is universal and updatable: it can be used for the entire scheme and does not have to produced for every problem (circuit), e.g., in Groth16. Also, the Kate commitment scheme can be replaced by any other polynomial commitment scheme, e.g., FRI (see chapter 5.2.3). 
 Kate commitments use the elliptic curve generated points published in the public key after trusted setup (see chapter 6.1 for detailed description) to commit to a polynomial of degree \(d\). The first \(d+1\) points are used to evaluate the polynomial at the respective coefficient. The underlying assumptions can be attributed to the \textit{Schwartz-Zippel lemma}.\\ 
 
     \text{\parbox{450pt}{\textbf{Schwartz-Zippel Lemma.} \textit{Let \(f(x)\) be a non-zero polynomial with degree \(d\), over \begin{math}\mathbb{F}^n\end{math}, then for a randomly chosen \(r\), the probability of \(f(r) = 0\) is at most \(\frac{d}{n}\). \\}}}
@@ -149,14 +150,40 @@ The computation is first converted into an arithmetic circuit. Then, the arithme
 	\label{fig:plonk}
 \end{figure}
 
+Similar to circuit-specific zk-SNARKs, e.g., Groth16, the computation has to be flattened for the protocol to process it. The problem is represented in an arithmetic circuit, consisting of gates that can be either representing an addition or a multiplication. Then, the arithmetic circuit is transformed into a constraint system representing the wires of the circuit. In analogy to circuit-specific zk-SNARKs, the constraint system is dependent on the number of gates (see chapter 6.1 for a simple example implementation). In PLONK, the constraint system is normalized into a specific form, which will be presented shortly, and is referred to as part of the public input in \citet{PLONKcryptoeprint:2019/953}. 
+It is distinguished between constraints per gate and constraints across gates in the arithmetic circuit. The formalization system of gate constraints is the following:
+
+\begin{align}
+    Q_{L}a + Q_{L}b + Q_{O}c + Q_{M}ab + Q_C = 0
+\end{align}
+
+\(a, b, c\) represent the left, right and output gate wire. \(M, C\) stand for multiplication and constant. This standardized form allows representation of addition and multiplication. Setting \(Q_{M}ab = 0, \ Q_C=0, \ Q_{O}c = -1 \) and the rest to 1 will represent \(a + b - c = 0\). Setting \(Q_{L}a =1,\ Q_{L}b =1,\ Q_{O}c = -1\) and the rest to 0 will represent multiplication. Each gate is represented in the form presented in 5.1. Similar to the R1CS previously described, \(Q_{L}a, Q_{L}b, Q_{O}c, Q_{M}ab, Q_C\) can be expressed as vectors that hold the circuit structure. Again, in analogy with the R1CS, \(a, b, c\) can be expressed as vectors as well, which are the witness assignments. In correlation to chapter 5.2.1, these witness assignments might be private and only known to the prover.
+In this constraint system, there are vectors \(Q_{L}, Q_{L}, Q_{O}, Q_{M}, Q_C, a, b, c\). Using the indices of these vectors as x, they can be transformed into polynomials of evaluation format. As an example, let us define one of the vectors in a circuit with 4 gates to illustrate the procedure. 
+
+\begin{align}
+    Q_L = (1,0,1,0) \text{ converts into the set of points } {(0,1), (1,0), (2,1), (3,0)}.
+\end{align}
+
+The set of points matches a degree 3 polynomial, which can be shown in a coordinate system (see Figure \ref{fig:examplepoly}). Through Lagrange Interpolation, the concrete polynomial in coefficient form can be calculated. 
+\begin{figure}[hbt]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Pictures/example_polynomial.png}
+	\caption{Example polynomial \(Q_{L}(x)\) evaluated from the points in 5.2. Lagrange Interpolation yields coefficient form \(Q_{L}(x) = - 0.6667x^3 + 3x^2 - 3.3333x + 1\)}
+	\label{fig:examplepoly}
+\end{figure}
+
+This procedure is applied to all Q-vectors and the vectors a, b, c to transform them from constants into polynomials. The corresponding function obtained is
+\begin{align}
+    f(x) = Q_{L}(x)a(x) + Q_{R}(x)b(x) + Q_{O}(x)c(x) + Q_{M}(x)a(x)b(x) + Q_{C}(x) = 0\\
+    f(x) = Z(x)H(x)
+\end{align}
+
+This will allow to compress as much information as possible into a single source, i.e., a polynomial. 
+
+
 \begin{comment}
-    PLONK
-    explain CRS and SRS and why SRS is better
-Constant round polynomial IOP plus Kate commitment
--definitions
--history
--plonk, it is a SNARK
--main functionality
+copy constraints
+polynomial commitment scheme succinct verification
 \end{comment}
 
 \subsection{FRI-STARK}
