@@ -9,7 +9,7 @@ Say we want to prove we know a secret x so that
 In this case, our secret is x = 3.
 In practice, we would use Hiding and Modular Arithmetic instead of real numbers and calculations since these are easy to forge and find solutions to, which will make the proof useless. For R1CS and QAP we will proceed with real numbers examples to show the underlying mechanisms. The next two sub chapters will demonstrate how any computation that needs to be proven can be converted into polynomial format.
 
-A. Arriving at a R1CS
+\subsubsection{Arriving at a R1CS}
 
 A rank-1 constraint system is a mathematical format to help us reduce our problem into a less complex problem. First, we flatten the equation by writing a short program that would break down the different steps to solve the equation.
 
@@ -123,7 +123,7 @@ C&=\begin{pmatrix}
 \end{pmatrix}
 \end{align*}
 
-B. From a R1CS to QAP
+\subsubsection{From a R1CS to QAP}
 
 The R1CS shows three matrices A, B, C representing the four gates each of length six. It is transformed into a Quadratic Arithmetic Program (QAP) by expressing polynomials as sums of Lagrange Interpolation. This results in three sets of polynomials A, B and C, each consisting of six polynomials of degree three. In the following, we will summarize the reason of setting up a QAP instead of continuing with the R1CS. From now on, A, B, C will be referred to as matrices with polynomial coefficients as values instead of the numbers seen above. Lagrange Interpolation allows us to come up with polynomial coefficients, which represent each gate, when evaluated at an x in the range of number of constraints (gates). With x = 1, the Lagrange Interpolation can be explained quite well, because it means that we can just add up the coefficients of the polynomials in A, B and C. Each set of polynomial is built so that evaluated at an x, whereby x has to be in the range of the number of gates (constraints), will deliver the specific value of x and 0 for the other values in that specific range.
 
@@ -184,8 +184,8 @@ Ultimately, in our example H(X) is also a polynomial. We know the QAP is correct
 
 Practically, the coefficients of each polynomial in A, B and C are publicly known. The same can be said for Z(X) through knowing the number of constraints (in this example we have four constraints. The prover can use the circuit to create vector s, calculate A(X), B(X) and C(X), as well as T(X). Subsequently, the prover can calculate the coefficients of H(X) by dividing T(X) / Z(X). However, there is no zero-knowledge yet, since the prover has to prove knowledge of vector s and H(X) without revealing it.
 \newpage
-C. Hiding
 
+\subsubsection{Hiding}
 As touched upon earlier, there are information made publicly known. Zk-SNARKs are dependent on a trusted set-up releasing these parameters. The goal is to prove knowledge of the polynomial H(X) with all its coefficients without disclosing any of this information. Therefore, the trusted set-up also provides a random secret point P. Note, that P is hashed, calculated once and deleted from memory. Depending on the number of constraints, a certain amount of P values are needed. In our example, we have four constraints, which needs \(P = {1, P, P^2, P^3}\), whereby the value of \(P^3\) corresponds to the value of \(x^3\) when the polynomials are evaluated. The following values of P are provided
 
 \begin{align}
@@ -222,7 +222,7 @@ By checking that
 \end{align}
 we can prove that indeed the same coefficients of vector s were used. This way it is nearly impossible to come up with numbers that hold true for another P and to create proofs without the knowledge of the coefficients.
 
-D. Homomorphic Hiding
+\subsubsection{Homomorphic Hiding}
 
 \(y = hh(x)\) is a hashing function. It is collision resistant, i.e. you cannot guess anything of x from y. For zero-knowledge proofs, this property alone is not sufficient. The hashing function should also preserve algebraic structures, so the checks in , e.g., (10) can be performed. Let us divide the term \textit{Homomorphic Hiding} into two sections to explain in more detail.
 
@@ -242,7 +242,7 @@ where G is a value in the finite field \begin{math}\mathbb{F}_p\end{math} and y 
 
 With homomorphic hiding being introduced, we know all the tools being used to prove that we can calculate the equation in (8) with the polynomials from the QAP and the same values of vector s, without knowing any P and u * P. We know how the proof is calculated without revealing our solution vector s. The next sub chapter deals with the verification if the above equations hold true, without revealing the solution vector s.
 
-E. Elliptic Curve Pairing
+\subsubsection{Elliptic Curve Pairing}
 
 The goal of zero-knowledge algorithms is to create a succinct proof that a defined computation with given inputs produces certain known outputs, without revealing any information about them and to show that the constraints of that computation hold. Eventually, we want to check if the following equality holds true, i.e., that after transforming our problem into polynomial structure, we know some polynomials so that
 
@@ -321,7 +321,7 @@ Pairings are bilinear maps that combine elements of two spaces to receive an ele
 
 The result of all steps performed previously is an incomplete homomorphic multiplication that enables us to check that the correct polynomial coefficients were used for \(A(x), B(x), C(x)\), as well as the same solution vector \(s\). It is incomplete, because not more than 2 elements can be multiplied. However, this just satisfies the use case for zk-SNARKS. 
 
-F. Groth16
+\subsubsection{Groth16}
 
 Now we covered all necessary basics to understand the Groth16 NIZK proof algorithm. In the following, we will cover the setup, proof and verification steps in Groth16.
 Let us define the given parameters:\\
@@ -352,7 +352,7 @@ Let us define the given parameters:\\
     \end{tabular}
 \end{table}
 
-1. Key generation
+\subsubsection{Key generation}
 
 The proving and verification key are obtained from the Common Reference String (CRS) via multi-party computation. From \begin{math}\mathbb{F}_p\end{math}, a set of random values is generated. This toxic waste (tw), or trapdoor, must be secret and forgotten from memory, because knowledge of it enables forged proofs. Note, that \begin{math}\tau\end{math} is the random point \(P\) from our examples. From the toxic waste, polynomial \(L_i(x)\) is defined:
 \begin{align}
@@ -399,7 +399,7 @@ The verification key consists of the following elements:
     \item precomputed pairing \([\alpha * \beta]_T\), which is a \begin{math}\mathbb{G}_T\end{math} element
 \end{itemize}
 
-2. Generating the proof
+\subsubsection{Generating the proof}
 
 Two random numbers \(r, t\) are generated from \begin{math}\mathbb{F}_p\end{math}, that are used to compute
 
@@ -414,7 +414,7 @@ The proof \begin{math}\pi\end{math} consists of two elements from \begin{math}\m
     \pi = ([A]_1, [B]_2, [C]_1)
 \end{align}
 
-3. Verification
+\subsubsection{Verification}
 
 In Groth16, three pairings are checked during verification. \begin{math}[\alpha * \beta]_T\end{math} is a precomputed pairing and is made available in the setup phase. The verification computation receives proof \begin{math} \pi\end{math} and accepts it only if the following equation holds:
 \begin{align}
@@ -484,6 +484,7 @@ Eventually, we get the equality check we wanted to achieve (13). The use of the 
 - use case support system for predictive maintenance
 \subsection{Implementation and Results}
 - description of circom, snarkjs implementation
+- graphic of how the zkDApp works
 \subsection{Evaluation}
 - comparison of groth16 and plonk performance
 - limitations of the implementation
@@ -496,4 +497,4 @@ Eventually, we get the equality check we wanted to achieve (13). The use of the 
 - Campanelli et al 2022: improvement on zkSNARKS with Merkle Trees -->HARISA, could be used for the architecture
 
 - build zk DAPP for document verification with circom snarkjs on hardhat test network
-- maybe use snarkj Groth16 first and then PLONK as future outlook, when TurboPLONK support will come in snarkjs
+- maybe use snarkjs Groth16 first and then PLONK as future outlook, when TurboPLONK support will come in snarkjs
