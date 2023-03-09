@@ -1,5 +1,5 @@
 \chapter{Zero-Knowledge Proofs}
-This chapter surveys selective literature about zero knowledge proofs for practical design application. The goal is to familiarize the reader with the content classification of zero-knowledge proofs in cryptography, and to give an introduction and comparison of main argument systems widely used as of today. Zero-knowledge proof systems belong to the domain of verifiable computation. Verifiable computation (VC) makes use of cryptographic protocols and arguments to verify that a computation was performed correctly. Arguments allow for false proofs only if they require very high computational power. 
+This chapter surveys selective literature about zero knowledge proofs for practical design application. The goal is to familiarize the reader with the content classification of zero-knowledge proofs in cryptography, and to give an introduction and comparison of main argument systems widely used as of today. Zero-knowledge proof systems belong to the domain of verifiable computation \citep{Simunic}. Verifiable computation (VC) makes use of cryptographic protocols and arguments to verify that a computation was performed correctly. Arguments allow for false proofs only if they require very high computational power. 
 
 The introduction of interactive proof systems (IPs) by \citet{GoldwasserIPs} and \citet{BabaiIPs} shows that only correct proofs are valid and malicious proving strategies cannot be verified. Traditional proofs are static and are made for easy, step-wise computation verification, whereas IPs require interaction between prover and verifier. In computational complexity theory, interactive proof systems are abstract machines exchanging messages between prover and verifier to convince the verifier that these sets of strings belong to a language \(L\). Here, the formal language \(L\) is defining a decision problem, i.e., a computational problem that has only two outputs, yes and no. Examples of sets of strings in \(L\) can be, that a certain Bitcoin transaction is valid, \(x = 7\) for a given \(f(x)\), or a certain object belongs to a specific merkle tree. The untrusted prover has unlimited computational power and the verifier is honest and computationally restricted. Advances in computational complexity theory during that time showed that IPs are more efficient and belong to a wider class than the traditional \textbf{NP}, i.e., problems solvable in deterministic polynomial time by reading proof strings of polynomial length \citep{SassonIOPsinproceedings}. In 1987, it was shown that every language belonging to NP has zero-knowledge proof systems \citep{anymental10.1145/28395.28420}. Later, it was shown that the class of \textbf{IP}, i.e., problems solvable by interactive proof systems, lies in \textbf{PSPACE}, i.e., problems solvable in polynomial space \citep{Shamir10.1145/146585.146609}, and that every language \(L\) in polynomial time has an interactive proof system \citep{Lund10.1145/146585.146605}. The complexity class of IP describes prover and verifier interaction in a polynomial number of rounds. Other important advances in computational complexity theory are \textbf{MIP=NEXP} \citep{Laszlo} and the \textbf{PCP theorem} \citep{PCPTheorem10.1145/278298.278306}. These works resulted in a set of proof and argument systems, that will be introduced in this chapter. \citet{Thaler} gives a further, exhaustive overview of all systems and in-depth protocol descriptions. 
 
@@ -134,10 +134,10 @@ NITULESCU, Anca. zk-SNARKs: A Gentle Introduction [https:
 
 
 \subsection{Towards Universal Setup zk-SNARK}
-\textit{Permutations over Lagrange-bases for Oecumenical Non-interactive Arguments of Knowledge} (PLONK) is a zk-SNARK with a universal trusted set-up, which produces a \textit{structured reference string} (SRS). The SRS is of size \(d\), used for circuits of up to \(\leq d\) gates. This universal SNARK has fully succinct verification and low prover run time \citep{PLONKcryptoeprint:2019/953}, compared to its predecessor Sonic \citep{SONIC10.1145/3319535.3339817}, which was the first universal and fully succinct SNARK. PLONK is based on constant round polynomial IOP and uses the polynomial commitment scheme based on \citet{Kate2010ConstantSizeCT}. It is presented as a non-interactive protocol, obtained through Fiat-Shamir transformation \citep{PLONKcryptoeprint:2019/953}. The trusted setup is universal and updatable: it can be used for the entire scheme and does not have to produced for every problem (circuit), e.g., in Groth16. Also, the Kate commitment scheme can be replaced by any other polynomial commitment scheme, e.g., FRI (see chapter 5.2.3). 
-Kate commitments use the elliptic curve generated points published in the public key after trusted setup (see chapter 6.1 for detailed description) to commit to a polynomial of degree \(d\). The first \(d+1\) points are used to evaluate the polynomial at the respective coefficient. The underlying assumptions can be attributed to the \textit{Schwartz-Zippel lemma}.\\ 
+\textit{Permutations over Lagrange-bases for Oecumenical Non-interactive Arguments of Knowledge} (PLONK) is a zk-SNARK with a universal trusted set-up, which produces a \textit{structured reference string} (SRS). The SRS is of size \(d\), used for circuits of up to \(\leq d\) gates. This universal SNARK has fully succinct verification and low prover run time \citep{PLONKcryptoeprint:2019/953}, compared to its predecessor Sonic \citep{SONIC10.1145/3319535.3339817}, which was the first universal and fully succinct SNARK. PLONK is based on constant round polynomial IOP and uses the polynomial commitment scheme based on \citet{Kate2010ConstantSizeCT}. It is presented as a non-interactive protocol, obtained through Fiat-Shamir transformation \citep{PLONKcryptoeprint:2019/953}. The trusted setup is universal and updatable: it can be used for the entire scheme and does not have to be produced for every problem (circuit), e.g., in Groth16. Also, the Kate commitment scheme can be replaced by any other polynomial commitment scheme, e.g., FRI (see chapter 5.2.3). 
+Kate commitments use the elliptic curve generated points published in the public key after trusted setup, similar to Groth16 (see chapter 6.1 for detailed description), to commit to a polynomial of degree \(d\). The first \(d+1\) points are used to evaluate the polynomial at the respective coefficient. The underlying assumptions can be attributed to the \textit{Schwartz-Zippel lemma}.\\ 
 
-    \text{\parbox{450pt}{\textbf{Schwartz-Zippel Lemma.} \textit{Let \(f(x)\) be a non-zero polynomial with degree \(d\), over \begin{math}\mathbb{F}^n\end{math}, then for a randomly chosen \(r\), the probability of \(f(r) = 0\) is at most \(\frac{d}{n}\). \\}}}
+    \text{\parbox{450pt}{\textbf{Schwartz-Zippel Lemma.} \textit{Let \(f(x)\) be a non-zero polynomial with degree \(d\) over \begin{math}\mathbb{F}^n\end{math}, then, for a randomly chosen \(r\), the probability of \(f(r) = 0\) is at most \(\frac{d}{n}\). \\}}}
     
 The \textit{Schwartz-Zippel lemma} proves that the polynomial evaluates to 0 at any point with high probability, if it evaluates to 0 at a given random \(r\). If two polynomials evaluate equally at \(r\), they are equal at every point with high probability. In a polynomial commitment scheme this suggestion is beneficial. The prover evaluates the polynomial at the random \(r\) chosen by the verifier, and sends it along with a proof. If the proof is valid, the verifier concludes that the result of the prover is also valid \citep{Kate2010ConstantSizeCT}.
 
@@ -154,10 +154,10 @@ Similar to circuit-specific zk-SNARKs, e.g., Groth16, the computation has to be 
 It is distinguished between constraints per gate and constraints across gates in the arithmetic circuit. The formalization system of gate constraints is the following:
 
 \begin{align}
-    Q_{L}a + Q_{L}b + Q_{O}c + Q_{M}ab + Q_C = 0
+    Q_{L}a + Q_{R}b + Q_{O}c + Q_{M}ab + Q_C = 0
 \end{align}
 
-\(a, b, c\) represent the left, right and output gate wire. \(M, C\) stand for multiplication and constant. This standardized form allows representation of addition and multiplication. Setting \(Q_{M}ab = 0, \ Q_C=0, \ Q_{O}c = -1 \) and the rest to 1 will represent \(a + b - c = 0\). Setting \(Q_{L}a =1,\ Q_{L}b =1,\ Q_{O}c = -1\) and the rest to 0 will represent multiplication. Each gate is represented in the form presented in 5.1. Similar to the R1CS previously described, \(Q_{L}a, Q_{L}b, Q_{O}c, Q_{M}ab, Q_C\) can be expressed as vectors that hold the circuit structure. Again, in analogy with the R1CS, \(a, b, c\) can be expressed as vectors as well, which are the witness assignments. In correlation to chapter 5.2.1, these witness assignments might be private and only known to the prover.
+\(L, R, O\) represent the left, right and output gate wire. \(M, C\) stand for multiplication and constant. This standardized form allows representation of addition and multiplication. Setting \(Q_{M}ab = 0, \ Q_C=0, \ Q_{O}c = -1 \) and the rest to 1 will represent \(a + b - c = 0\). Setting \(Q_{L}a =1,\ Q_{L}b =1,\ Q_{O}c = -1\) and the rest to 0 will represent multiplication. Each gate is represented in the form presented in 5.1. Similar to the R1CS previously described, \(Q_{L}a, Q_{L}b, Q_{O}c, Q_{M}ab, Q_C\) can be expressed as vectors that hold the circuit structure. Again, in analogy with the R1CS, \(a, b, c\) can be expressed as vectors as well, which are the witness assignments. In correlation to chapter 5.2.1, these witness assignments might be private and only known to the prover.
 In this constraint system, there are vectors \(Q_{L}, Q_{L}, Q_{O}, Q_{M}, Q_C, a, b, c\). Using the indices of these vectors as x, they can be transformed into polynomials of evaluation format. As an example, let us define one of the vectors in a circuit with 4 gates to illustrate the procedure. 
 
 \begin{align}
@@ -199,20 +199,21 @@ In practice, the permutation accumulators are not expressed in dependency of vec
 \subsubsection{Summary}
 After transforming all the constraints intro sets of polynomials, the following checks need to be performed to verify the proofs \citep{PLONKcryptoeprint:2019/953, buterinplonk}. Through the polynomial commitment scheme based on \citep{Kate2010ConstantSizeCT}, these checks can be verified. Elliptic curve points are generated at random, similar to circuit based zk-SNARKS, and used to evaluate the polynomials. Elliptic curve pairings allow to check whether the equations hold true without any of the generated points, or polynomials to be revealed. 
 The equation in (5.3) is the main equation of the circuit that needs to be checked. Then, in total, there are six permutation accumulator functions for the witness assignment vectors and their copy constraints. The equation check in (5.4) is resulting into six rounds:
-
 \begin{align}
-    P_{a}(\omega x) - P_{a}(x)(v_1 + x + v_2a(x)) = Z(x)H_{1}(x) \\
-    P_{a'}(\omega x) - P_{a'}(x)(v_1 + x + v_2a(x)) = Z(x)H_{2}(x) \\
-    P_{b}(\omega x) - P_{b}(x)(v_1 + x + v_2b(x)) = Z(x)H_{3}(x) \\
-    P_{b'}(\omega x) - P_{b'}(x)(v_1 + x + v_2b(x)) = Z(x)H_{4}(x) \\
-    P_{c}(\omega x) - P_{c}(x)(v_1 + x + v_2c(x)) = Z(x)H_{5}(x) \\
-    P_{c'}(\omega x) - P_{c'}(x)(v_1 + x + v_2c(x)) = Z(x)H_{6}(x) \\
 \end{align}
+\begin{align*}
+    P_{a}(\omega x) - P_{a}(x)(v_1 + x + v_2a(x)) = Z(x)H_{1}(x) \\
+    P_{a'}(\omega x) - P_{a'}(x)(v_1 + \sigma_{a}(x) + v_2a(x)) = Z(x)H_{2}(x) \\
+    P_{b}(\omega x) - P_{b}(x)(v_1 + gx + v_2b(x)) = Z(x)H_{3}(x) \\
+    P_{b'}(\omega x) - P_{b'}(x)(v_1 + \sigma_{b}(x) + v_2b(x)) = Z(x)H_{4}(x) \\
+    P_{c}(\omega x) - P_{c}(x)(v_1 + g^{2}x + v_2c(x)) = Z(x)H_{5}(x) \\
+    P_{c'}(\omega x) - P_{c'}(x)(v_1 + \sigma_{c}(x) + v_2c(x)) = Z(x)H_{6}(x)
+\end{align*}
 
 There are constraints for the accumulator to be checked which result from (5.7):
 \begin{align}
     P_{a}(1) = P_{b}(1) = P_{c}(1) = P_{a'}(1) = P_{b'}(1) = P_{c'}(1) = 1 \\
-    P_{a}(\omega^n)P_{b}(\omega^n)P_{c}(\omega^n) = P_{a'}(\omega^n)P_{b'}(\omega^n)P_{c'}(\omega^n)\\
+    P_{a}(\omega^n)P_{b}(\omega^n)P_{c}(\omega^n) = P_{a'}(\omega^n)P_{b'}(\omega^n)P_{c'}(\omega^n)
 \end{align}
 
 The only program specific polynomials that need to be computed upfront by prover and verifier are the \(Q\)-polynomials from the circuit and the \(\sigma\)-permutation polynomials. The verifier algorithm only stores commitments to these polynomials. The user inputs are the witness assignments \(a(x), b(x), c(x)\), the accumulators \(P\) from above and the different \(H\) for every round. Although the verification is efficient, the proof size is still an area of improvement. For the implementation of plonk in circom and snarkjs, see chapter 6.2.2.
@@ -242,20 +243,26 @@ Deng et al 2022: history of range proofs, cuproof as example
 -Kim Lee 2019: overview on range proof protocols
 
 
-\section{Opportunities and Use Cases}
-
+\section{Application Domains and Use Cases}
+sedlmeier et al 2022:
+- despite successfull research in blockchain based applications, little adoption in businesses beyond financial sector
+- one challenge for adoption: visbility of sensitive data
+- excessive transparency in blockchain applications and need for privacy preservation of sensitive data, restricted visibility
+- ZKPs as one possible solution
+- Godden et al describe it as increasing conciousness about data ownership and privacy led to research in privacy enhancing technologies (PETs)
+- sources from Zhang et al 2021 PipeZK overview of the different Anwendungsbereiche of ZKPs-->what is verifiable outsourcing as application example?
+-SLR showed these main application domains for ZKP: Identity Management, Data Sharing/Traceability, Blockchain Scaling
+- with the following use cases:
 -e-government:e-voting/digital election
-
 -healthcare: purchasing medical insurance contracts, patient data exchange/access
 -e-auction/bidding systems
 -cloud computing: zk port knocking, data deduplication, authentication schemes for cloud servers
 -blockchain scaling: decrease comp cost for tx verification, zkRollups, zkSync
 -querying: link traversal, zk-SQL SPARQL queries, zk based traceability systems
 
-- Sedlmeier et al: overcoming transparency vs. privacy
-- Godden et al overview of ZKP use cases: verifiable comp., linked data, identity management, access control
+
 - ZKPs belong to verifiable computation, succinct blockchain Simunic et al 2022
-- sources from Zhang et al 2021 PipeZK overview of the different Anwendungsbereiche of ZKPs-->what is verifiable outsourcing as application example?
+
 - Maller et al 2019 Sonic: verifiable outsourcing computation example paper
 
 \subsection{Identity Protection and Authentication}

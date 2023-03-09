@@ -324,47 +324,29 @@ The result of all steps performed previously is an incomplete homomorphic multip
 \subsubsection{Groth16}
 
 Now we covered all necessary basics to understand the Groth16 NIZK proof algorithm. In the following, we will cover the setup, proof and verification steps in Groth16.
-Let us define the given parameters:\\
-
+Let us define the given parameters:
+\setlength{\tabcolsep}{2ex}
+{\renewcommand{\arraystretch}{1.5}%
 \begin{table}[ht]
-    \centering
-    \begin{tabular}{m{0.35\linewidth} | m{0.6\linewidth}}
-        \centering
-        \(n,m\) &  number of constraints, number of variables\\
-        \hline \centering
-        \begin{math}\mathbb{F}_p\end{math} & finite field of prime order p \\
-        \hline \centering
-         \begin{math}\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T\end{math} & groups of points of prime order p satisfying an elliptic curve\\
-         \hline \centering
-         \begin{math}\mathbb{G}_1 \times \mathbb{G}_2 \to \mathbb{G}_T\end{math}& bilinear pairing \\
-         \hline \centering
-         \begin{math}g_T = e(g_1, g_2)\end{math}& generators with mapping \\
-         \hline \centering
-         \begin{math}\bigl\{A_i(X), B_i(X), C_i(X)\bigl\}_{i=0}^m\end{math} & encoded computation as result of R1CS and QAP three sets of polynomials of degree \(n-1\)\\
-         \hline \centering
-         \(Z(x) = (x-1)*(x-2)* \ (x-3)...(x-(n-1))\) &  minimal polynomial, known because n is known \\
-         \hline \centering
-         \(l\) & number of public inputs \\
-         \hline \centering
-         \((s_1,...,s_l)\) & elements of witness whose inputs are public (e.g., out = 35 in our example)\\
-         \hline \centering
-         \((s_{l+1},s_{l+2},...s_m)\) & elements of witness for secret input x, with \(s_0 = 1\) \\
-    \end{tabular}
+	\centering
+	    \caption{Groth16 given parameters}
+		\begin{tabular}{| m{0.35\linewidth} | m{0.6\linewidth} |}
+		\hline
+		\textbf{Parameter} & \textbf{Definition}\\ \hline
+            \(n,m\) & number of constraints, number of variables\\ \hline
+            \begin{math}\mathbb{F}_p\end{math} & finite field of prime order p\\ \hline 
+            \begin{math}\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T\end{math} & groups of points of prime order p satisfying an elliptic curve\\ \hline
+            \begin{math}\mathbb{G}_1 \times \mathbb{G}_2 \to \mathbb{G}_T\end{math}& bilinear pairing \\ \hline
+            \begin{math}g_T = e(g_1, g_2)\end{math}& generators with mapping \\\hline
+            \begin{math}\bigl\{A_i(X), B_i(X), C_i(X)\bigl\}_{i=0}^m\end{math} & encoded computation as result of R1CS and QAP three sets of polynomials of degree \(n-1\)\\ \hline
+            \(Z(x) = (x-1)*(x-2) * \newline (x-3)...(x-(n-1))\) &  minimal polynomial, known because n is known \\ \hline
+            \(l\) & number of public inputs \\ \hline
+            \((s_1,...,s_l)\) & elements of witness whose inputs are public \newline (e.g., out = 35 in our example) \\ \hline
+            \((s_{l+1},s_{l+2},...s_m)\) & elements of witness for secret input x, with \(s_0 = 1\) \\ \hline
+	\end{tabular}
+\label{tab:Groth16Params}
 \end{table}
 
-\begin{table}[!]
-	\centering
-	\caption{Beispiel 2 zum Einfügen einer Tabelle}
-		\begin{tabular}{| c c |}
-		\hline
-		\textbf{Taxonomie} & \textbf{Anzahl} \\ \hline
-             Verstorben & 104            \\ \hline
-      Pflegeheim       & 88    \\ \hline 
-Genesen&77\\ \hline
-	\end{tabular}
-
-\label{tab:Betreuungsende}
-\end{table} 
 \subsubsection{Key generation}
 
 The proving and verification key are obtained from the Common Reference String (CRS) via multi-party computation. From \begin{math}\mathbb{F}_p\end{math}, a set of random values is generated. This toxic waste (tw), or trapdoor, must be secret and forgotten from memory, because knowledge of it enables forged proofs. Note, that \begin{math}\tau\end{math} is the random point \(P\) from our examples. From the toxic waste, polynomial \(L_i(x)\) is defined:
