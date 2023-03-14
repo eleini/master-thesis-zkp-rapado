@@ -250,19 +250,22 @@ Deng et al 2022: history of range proofs, cuproof as example
 
 
 \section{Application Domains and Use Cases}
-Zero-knowledge proofs find broader implementation due to increasing interest in decentralized applications in recent years. However, despite successful research efforts in distributed ledger technology, there is only limited adoption of blockchain-based solutions outside the financial sector. One of the main challenges, pointed out by (SEDLMEIER), is the need to make sensitive data visible. The high transparency blockchain offers collides with the need to preserve privacy and allow for restricted visibility. GODDEN describe it as increasing consciousness to preserve data confidentiality and ownership, which leads to the development of privacy enhancing technologies. The literature review (SLR approach is described in chapter 4) shows that general purpose zero-knowledge proofs find implementation as essential elements in domains with enhanced privacy preserving efforts. ZKP implementations can be categorized into the following application domains: identity protection and authentication, data sharing and traceability, and, system scaling and protocol enhancements. Use cases from these application domains are clustered according to the problem domain they are attempting to solve.
+Zero-knowledge proofs find broader implementation due to increasing interest in decentralized applications in recent years. However, despite successful research efforts in distributed ledger technology, there is only limited adoption of blockchain-based solutions outside the financial sector. One of the main challenges, pointed out by (SEDLMEIER), is the need to make sensitive data visible. The high transparency blockchain offers collides with the need to preserve privacy and allow for restricted visibility. GODDEN describe it as increasing consciousness to preserve data confidentiality and ownership, which leads to the development of privacy enhancing technologies. The literature review (SLR approach is described in chapter 4) shows that general purpose zero-knowledge proofs find implementation as essential elements in domains with enhanced privacy preserving efforts. ZKP implementations can be categorized into the following application domains: \textit{Identity Management}, \textit{Data Sharing and Traceability}, and, \textit{System Scaling and Protocol Enhancements}. Use cases from these application domains are clustered according to the problem domain they are attempting to solve (Table \ref{tab:domains}): (1) \textit{Electronic Voting and Government}, (2) \textit{Electronic Auctions}, (3) \textit{Data Queries and Traceability}, (4) \textit{Electronic Healthcare}, (5) \textit{Cloud Security}, and (6) \textit{Scaling and Performance}.
 
 \setlength{\tabcolsep}{2ex}
 {\renewcommand{\arraystretch}{1.5}%
-\begin{table}[!]
+\begin{table}[ht]
 	\centering
-	    \caption{Application domains}
-		\begin{tabular}{| m{0.35\linewidth} | m{0.6\linewidth} |}
+	    \caption{Selective Literature Overview - Problem Domains}
+		\begin{tabular}{| m{0.02\linewidth} | m{0.3\linewidth} | m{0.4\linewidth} |}
 		\hline
-		\textbf{Application Domain} & \textbf{Selective Literature Overview}\\ \hline
-            Identity Management & electronic government, self-sovereign identity and authentication, online auctions, cloud computing\\ \hline
-            Data Sharing, Traceability & CircuitTree, digital healthcare, online auctions, ERP Systems, \\ \hline 
-            System scaling, protocol enhancement & PipeZK, Cuproof, bulletproof+, transaction verification, quantum security, Sonic, QuickSilver, Ethereum scaling with zkSync and zkRollups \\  \hline        
+		\textbf{} & \textbf{Problem Domain} & \textbf{Literature} \\ \hline
+            1 & Electronic Voting and \newline Government &  \\  \hline
+            2 & Electronic Auctions &  \\ \hline 
+            3 & Data Queries and \newline Traceability &  \\  \hline
+            4 & Electronic Healthcare &  \\  \hline 
+            5 & Cloud Security &  \\  \hline 
+            6 & Scaling and Performance &  \\  \hline 
 	\end{tabular}
 \label{tab:domains}
 \end{table}
@@ -295,16 +298,23 @@ Motivated by recent developments in personal data protection laws, BONSAD presen
 
 Current privacy preserving efforts in governmental biometric identification did not leave traditional cryptography yet. GUO et al propose a novel approach to decrease governmental expenses and enable scaling of the systems. A zk-SNARKs based approach is presented which reduces efficiency and eliminates fingerprint template disclosure. First, the fingerprint features are extracted by calculating the Euclidean distance of points collected. If the sizes of the distances match a certain threshold, the authentication is passed. This computation is being converted into a zk-SNARK friendly, polynomial computation with specific constraints that resulted from the first step. Then, this computation is transferred into a circuit, then to a R1CS, and later into a QAP with three polynomial matrices. The trusted setup generates proving and verifying key via CRS. The prover algorithm creates the prove with proving key and private witness and thee verifier algorithm can perform the verification through elliptic curve pairing. The Groth16 algorithm was used as basis to apply it to the biometric authentication example, which leaves improvement for disposing the trusted setup requirement and QAP computational time.
 
+QUEREJETA AZURMENDI
+
 \subsection{Electronic Auctions}
+Zero-knowledge proof implementation efforts for bid e-auction schemes aim at preventing the exposure of bid information and bid price, as well as protecting the bidder's identity. LI AND XUE show that the goal can be met, while in addition, the use of an auctioneer no longer becomes necessary. The latest bid price is hidden through Pedersen's commitment scheme, and the ZKP algorithm makes use of Bulletproofs so the bidder can prove that the new bidding price is higher than the previous price. Every participating bidder can verify it. The sealed-bid auction smart contract interacts with the blockchain by publishing the commitments and initializing the bidding process for the owner. The information about goods is also encrypted in the process, as well as the price and winning bidder. All participants verified the price and the winner without obtaining knowledge about them. This decentralized e-auction scheme ensures sealability and fairness, while ensuring privacy of the participants. Although there is no cost involved to engage a third party auctioneer, the productive cost of running such a platform remain to be explored.
+
+Similar implementations without the use of public blockchain structures are found in WANG ZHAO MU, who make use of Hyperledger. Members of the consortium are able to make use of private channels for secure communication, while effectively realizing the overall use of smart contracts and transaction privacy. In the endorsement process, the bidder initiates the transaction and the client submits it to the endorsing peer. The endorsing peer simulates the transaction proposal and verifies it. The transaction is initiated in the ledger and returned to the platform. In the ordering process, the platform performs a combination of transaction and endorsement to be sent to the ordering peer. This peer puts the transactions into transaction blocks for every channel and delivers them to the committing peer. In the verification process, the committing peer verifies the transactions in the blocks, submits them to the ledger and send notification to the platform. Zero-knowledge proofs are used to manage the participants' identity and enable only authorized users of sending requests to the client. Despite the promising architecture of Hyperledger Fabric, the practical adoptions can get very complex, depending on the use cases. This implementation requires more computational resources, in combination with the use of zero-knowledge proofs in particular.
+
 \subsection{Data Queries and Traceability}
 Protected data sharing, securing data queries and corresponding outputs have become increasingly important during the COVID-19 pandemic. GODDEN propose Circuitree, a ZKP-based tool that can be used to exchange verified pieces of information in zero-knowledge, and implement the example of digital COVID certificates. The underlying query language is Datalog. A Datalog verifier is presented, which provides verification about each logical querying step in the reasoning process. This zero-knowledge Datalog engine is fed with domain-specific sets of rules, e.g., vaccination, test and recovery data. The verifier, e.g., the restaurant with specific entry rules during the COVID-19 pandemic, creates this rule set in Circuitree. Thee prover, e.g., a vaccinated person, declares their facts to Circuitree and signs them. This builds the tree-like R1CS structure, which is converted into a bulletproof based system. The prover can create the proof by querying the Datalog engine and, e.g., provide it to the restaurant for admission.
 
 The problem of missing privacy preserving traceability for product development and supply chain data is being addressed in XUE WANG. Parties in the industrial product development sphere are enabled to track the development history of products without trusting each other. There are three main layers to the newly-proposed process architecture. The traceability application layer authenticates data owners and interacts with a third party, the traceability agent. The data privacy layer, which contains the zero-knowledge proof implementation, is responsible for generating traceability features in zero-knowledge and interacting with the traceability data providers, e.g., another partner in the production process inquiring to trace some data on a specific product. The data traceability request is being processed to create a proof via a smart contract. The data owner acts as verifier of this proof. The traceability features and use of the smart contract happens in the physical data layer and is mainly performed by a third party. The traceability process can be entirely monitored publicly, which solves the transparency problem in the industry, while preserving the traceability inquiries and adapting to the low-trust environment of the participants.
 
 \begin{comment}
-    - Xue and Wang: traceability use case applicable to pred. maintenance problem
+Fang, Near, Darias, Zhang 2021
+more papers on machine learning code verification ZKPs-->look in ACM pdf
+- Xue and Wang: traceability use case applicable to pred. maintenance problem
 -link traversal, SQL
--healthcare
 -zero knowledge static program analysis: proof that a secret code is correct (Fang, Near, Darias, Zhang 2021)
 \end{comment}
 
@@ -313,28 +323,28 @@ Patient monitoring nowadays appears to be increasingly remote, i.e., health data
 
 Patient health data privacy protection efforts also reach the medical insurance purchase and claim process, as underlined by ZHENG et al and WANG ET AL. Health data is shared in a secure channel and the patient identity is disclosed to a minimum using non-interactive zero-knowledge proofs. Patients provide their health data in a regulated and authenticated manner via smart contracts. Hereby, the hospital acts as fully trusted data generator, interacting with the smart contract. Patients can obtain their medical data from the hospital, which will provide a unique identity for them. The insurance companies publish their restrictions and requirements, e.g., for purchasing a medical insurance, via smart contracts on-chain. These requirements are used by the hospital to build the constraint system and circuit, and finally to produce a proof, alongside with the encrypted medical data and identity of the patient. The medical insurance company can verify this proof and the smart contract can initiate the process of purchasing or claiming between patient and insurance company, without compromising patient identity and sensitive health data insights. The validity of the payment transaction is verified by other peers in the blockchain.
 
+HUANG ET AL
+
 \subsection{Cloud Security}
-\subsection{Scaling Solutions}
 \begin{comment}
--yang yang et al
--salleras et al
-    - Bonsad et al use case decentralized identity for nationality
-- Guo et al: e-government example
-- Wang et al: hospital as trusted party, insurance receives proofs and cashes out, patient's medical data protected at all times
-- Shi et al (2022): Schnorr ZKP used to proof user identity-->a bit old fashioned ZKP used maybe??
-- Hunag et al 2020: good use case for MRO data sharing? zk SNARKS
-- Major,Buchanan(2020): port knocking authentication scheme
-- Kanagamani, Karuppiah(2021): data deduplication cloud computing with in-line block matching and ZKP properties
--Soonhyeong 2021: better verification with EVM to verify non-maliciousness of blocks (zKSNARKS used)
+-Major Buchanan 2020
+-Kanagamani
 - Munivel Kannammal (2019): authentication scheme as additional security to prevent mobile phone password attacks on cloud storage server
 - Liu Wang Peng Xing 2019: remote authentication for mobile cloud computing
--cloud computing
--egovernment, eauctions
 \end{comment}
+
+\subsection{Scaling and Performance}
 \begin{comment}
-    - zk Roll ups, more sources needed
+- yang yang et al
+- salleras et al
+- deng et al
+-Soonhyeong 2021: better verification with EVM to verify non-maliciousness of blocks (zKSNARKS used)
+- zk Roll ups, more sources needed
 - Xu Chen(2021): new algorithms for zero knowledge set membership for ZK-scaling, based and compared to zkSync
+Yang, Weng, Sarkar, Wang: memory effieciency enahncements
+- Shi et al (2022): Schnorr ZKP used to proof user identity-->a bit old fashioned ZKP used maybe??
 \end{comment}
+
 
 
 \section{Challenges}
