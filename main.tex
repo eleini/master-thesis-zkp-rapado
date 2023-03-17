@@ -18,7 +18,7 @@ twoside,paper=a4,headings=small]{scrbook}
 \usepackage{natbib}	
 \usepackage[style=iso]{datetime2}
 \setcitestyle{round,aysep={}} 		% Indizierg. in runden Klammern, zw. Autor u. Jahr
-\usepackage[latin1]{inputenc} 		% Umlaute im Text
+%\usepackage[latin1]{inputenc} 		% Umlaute im Text
 \usepackage[english]{babel}			% Rechtschreibg.
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}				% Schriftfamilie
@@ -28,6 +28,7 @@ twoside,paper=a4,headings=small]{scrbook}
 \graphicspath{{./Pictures/}}          % Pfad zu den Pictures
 
 \usepackage{url}					% URL's formatieren (z.B. in Literatur) 
+\usepackage{setspace} 				% Zeileneinstellung
 \usepackage[colorlinks,linkcolor=black,citecolor=black,urlcolor=black]{hyperref} 				% für Hyperlinks in PDF-Dokumenten   
   
 \usepackage{tabularx} 				% bessere Gestaltung von Tabellen
@@ -43,7 +44,6 @@ twoside,paper=a4,headings=small]{scrbook}
 
 \usepackage{mdwlist}				% Listen
 
-\usepackage{setspace} 				% Zeileneinstellung
 \newtheorem{mydef}{Merksatz}  		% Falls Beispiele, Merksätze m. fortl. Nr. gebr. werden
 \newtheorem{bsp}{Beispiel}
 
@@ -68,7 +68,6 @@ twoside,paper=a4,headings=small]{scrbook}
 % Document
 % -----------------------------------
 \begin{document}
-
 \frontmatter 
     \include{./Cover/cover} 			% Titelblatt
     \newpage
