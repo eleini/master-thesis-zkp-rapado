@@ -11,14 +11,14 @@ The next sub chapters are structured according to the design approach described 
 
 \section{From Proof Systems towards Argument Systems}
 
-A mathematical proof in the context of computer science and cryptography is any object that convinces a verifier that a statement is correct. Mathematical proofs embody what is defined in the complexity class NP. A proof system is a structured scheme that outputs a decision of whether a statement is correct or incorrect. In general, there are three properties that are desirable for proof systems \citep{GoldwasserIPs}, which will be introduced shortly. Throughout this chapter, these properties will be revisited more exhaustively.\\
+A mathematical proof in the context of computer science and cryptography is any object that convinces a verifier that a statement is correct. Mathematical proofs embody what is defined in the complexity class NP. A proof system is a structured scheme that outputs a decision of whether a statement is correct or incorrect. In general, there are three properties that are desirable for proof systems \citep{GoldwasserIPs}, which will be introduced shortly. Throughout this chapter, these properties will be revisited more exhaustively.
 
-\begin{center}
+\begin{itemize}
     \text{\parbox{420pt}{
-    1. The procedure to create and verify proofs should be efficient and fast. \\
-    2. \textit{Completeness}: True statements should have a convincing proof of their validity. \\
-    3. \textit{Soundness}: If a statement is incorrect, there is no possibility of it having a convincing proof. \\}}
-\end{center}
+    \item The procedure to create and verify proofs should be \textit{efficient and fast}. 
+    \item \textit{Completeness}: True statements should have a convincing proof of their validity.
+    \item \textit{Soundness}: If a statement is incorrect, there is no possibility of it having a convincing proof.}}
+\end{itemize}
 
 Unlike argument systems, proof systems do not limit the malicious prover in its computational power (\textit{statistical soundness}). Using cryptographic primitives and restricting the prover, e.g., probabilistic polynomial time proof, so that it cannot break the primitives, describes the design towards argument systems, which are computationally sound \citep{ArgSystems, MicaliArgSys}. Each proof system presented makes assumptions on the prover. However, only with the use of cryptographic tools and zero-knowledge, these proof systems can be extended with additional properties to yield zero-knowledge argument systems of various kinds.
 
@@ -45,11 +45,10 @@ what are those, little history
 
 \subsection{Interactive Proofs}
 
-In interactive proof systems, the prover with unlimited computational resources interacts with a computationally bound verifier in order to convince the verifier of the correctness of a statement. The verifier randomly challenges the prover, which is referred to as coin tosses \citep{GoldwasserCoinTosses}. These challenges happen in rounds, until there are sufficient tests run and the verifier is convinced. \citet{GoldwasserIPs} defined an interactive proof system that is private, i.e., that the verifiers challenges are not publicly accessible, whereas the interactive proof system of \citet{BabaiIPs} allows the coin tosses to be publicly accessible by the prover.\\
-
-    \text{\parbox{450pt}{\textbf{Interactive Proof System.} \textit{\(L\) is a language over \(\{0,1\}^n\), with n representing the input size domain of n-bit strings. An interactive protocol is a interactive proof system if after \(k\) rounds, the probabilistic verifier in polynomial time exchanged \(k\) messages with the computationally unrestricted prover, and has to either accept or decline the correctness of the prover's proposition. IP is the complexity class of problems solvable by a k-round interactive proof system.\\}}}
-
-  
+In interactive proof systems, the prover with unlimited computational resources interacts with a computationally bound verifier in order to convince the verifier of the correctness of a statement. The verifier randomly challenges the prover, which is referred to as coin tosses \citep{GoldwasserCoinTosses}. These challenges happen in rounds, until there are sufficient tests run and the verifier is convinced. \citet{GoldwasserIPs} defined an interactive proof system that is private, i.e., that the verifiers challenges are not publicly accessible, whereas the interactive proof system of \citet{BabaiIPs} allows the coin tosses to be publicly accessible by the prover.
+\begin{align*}
+    \text{\parbox{450pt}{\textbf{Interactive Proof System.} \textit{\(L\) is a language over \(\{0,1\}^n\), with n representing the input size domain of n-bit strings. An interactive protocol is a interactive proof system if after \(k\) rounds, the probabilistic verifier in polynomial time exchanged \(k\) messages with the computationally unrestricted prover, and has to either accept or decline the correctness of the prover's proposition. IP is the complexity class of problems solvable by a k-round interactive proof system.}}}
+\end{align*}
 The transcript is the order in which messages are exchanged. The prover and verifier are functions \(P(x), V(x)\) with common input \(x\). The overall distribution of all transcriptions between prover and verifier is called \(View_V(P(x), V(x))\), which is bound by the number of rounds between \(P\)and \(V\). \(P\) provides a result that satisfies the proposition, e.g., \(y\) to a function \(f(x) = y\). \(P\) and \(V\) exchange a transcript of messages \((m_1, m_2, m_3, ..., m_k)\), whereby both parties take turns and the last message is sent by the prover. Note, that \(V\) is probabilistic with internal randomness \(r\). Hence, the output depends on \((V, x, r, P)\) and is \(\{0,1\}\), i.e., \(1\) if the statement is correct, and \(0\) if it is incorrect \citep{GoldwasserIPs, BabaiIPs}. Interactive proof systems have completeness error \(\delta_c\) and soundness error \(\delta_s\) . For any input \(x\), there must be a convincing proof that \(f(x)\) is correct. Incorrect statements for \(y \neq f(x)\) cannot result in a convincing proof, i.e., a malicious prover does not exist IP systems are valid if \(\delta_c, \delta_s \leq 1/3\) \citep{Thaler}.
 \subsubsection{Non-interactive, publicly verifiable arguments}
 The \textit{Fiat-Shamir transformation} takes any interactive proof system based on public coin tosses and transforms it into a non-interactive, publicly verifiable system. This transformation can be described effectively with the use of an ideal cryptographic assumption called \textit{Random Oracle Model (ROM)}. 
@@ -82,10 +81,46 @@ proof of knowledge
 obtaining zero knowledge from it: verifier learns nothing about the witness
 \end{comment}
 
-
-
 \subsection{MIPs}
 \subsection{Linear PCPs}
+\textit{Probabilistically Checkable Proofs} (PCPs) differ from previously introduced proofs, because there is no need for the prover to answer queries based on the current or previous query content posted by the verifier. The polynomial time verifier is provided with oracle access to a static proof string \begin{math} \pi \end{math}, whereby the proof is queried and the result of it only depends on the currently processed query \citep{PCP}. The breakthrough of powerful, pairing-based schemes is attributable to \citet{GennaroLinPCP}, who introduced \textit{Quadratic Arithmetic Programs} (QAPs), as variant of quadratic span programs. Quadratic span programs are more efficient, because they only satisfy boolean circuits. Therefore, the introduction of QAPs is important to represent more practical computations, e.g., multiplication gates, whereby the efficiency lies in the usability for effectively solving more natural problems. Any arithmetic circuit instance can be transformed into instances of a \textit{rank-1 constraint system} (R1CS).
+\begin{align*}
+    \text{\parbox{450pt}{\textbf{R1CS.} \textit{A R1CS is an intermediate representation of the computational problem, which is used to perform the application of argument systems. Given a set of \(n \times m \text{ matrices} \ A, B, C\), with values derived from a finite field \begin{math} \mathbb{F} \end{math}. A R1CS instance is called satisfiable, if there exists a solution vector \(z \in\) \begin{math} \mathbb{F}^n \end{math} with \(z_1 = 1\), so that}}}
+\end{align*}
+\begin{align*}
+    (A \cdot z) \circ (B \cdot z) = C \cdot z.
+\end{align*}
+For every \(i\)th row each of the three matrices, belonging to the finite field circuit size, the following equation must hold true:
+\begin{align}
+    \langle a_i, z \rangle \cdot \langle b_i, z \rangle - \langle c_i, z\rangle = 0 
+\end{align}
+
+In practice, \(z\) is known by the prover. The solution vector also has a public input, namely the result to a computation (refer to chapter 6.1 for example calculations). The goal is to arrive at an univariate polynomial \(t(x)\), when divided by the minimal polynomial, represents a secret polynomial \(h(x)\) without remainder. The minimal polynomial is always known, if the number of constraints are known, and is a multiple of \(t(x)\). In the linear PCP, (5.1) is evaluated in linear, constant time. The QAP is obtained by taking each value of each row of the R1CS matrices as output of a polynomial, which is to be calculated. The polynomial results to that specific value in the R1CS, when evaluated at \(X = \{1, 2, ..., \text{number of constraints}\}\). Given these constraints, the three sets of polynomials are calculated via the sum of \textit{Lagrange Interpolation}.
+\begin{align*}
+    \text{\parbox{450pt}{\textbf{Lagrange Interpolation.} \textit{The polynomial obtained through Lagrange Interpolation is the polynomial \(P(x)\) of degree at most \(\leq (n-1)\) and passes through the n points \((x_1, y_1 = f(x_1)), (x_2, y_2 = f(x_2), ..., (x_n, y_n = f(x_n))\), that are given. It is denoted by}}}
+\end{align*}
+\begin{align}
+        P(x) = \sum_{j=1}^{n} P_j(x)
+\end{align}
+\begin{align*}
+        P_j(x) = y_j * \prod_{\substack{k = 1 \\ k \neq j}}^{n}\frac{x-x_k}{x_j-x_k}
+\end{align*}
+\begin{align*}
+    \text{\parbox{450pt}{\textbf{Example.} \textit{Let \(n = 2\) with the three given points \([1,0], [2,1], [3,0]\). The polynomial obtained through Lagrange Interpolation is: 
+    }}}
+\end{align*}
+\begin{align*}
+    P(x) = \sum_{j=1}^{2}\left(y_j*\prod_{\substack{k = 1 \\ k \neq j}}^{n}\frac{x-x_k}{x_j-x_k}\right)
+    &= 0 * \frac{(x-2)(x-3)}{(1-2)(1-3)}+1*\frac{(x-1)(x-3)}{(2-1)(2-3)}\\
+    &= 0 * \frac{(x-1)(x-2)}{(3-1)(3-2)} = \frac{x^2-4x+3}{-1}\\
+    &= -x^2+4x-3
+\end{align*}
+Each gate is the \(x\) value and the values of the R1CS matrix column are the corresponding \(y\) values for the computation, so that the QAP can be obtained. It consists of three sets of polynomials (see chapter 6.1 for example calculations). Each interpolation calculation receives n points (number of constraints), and the result is a polynomial of degree \(n-1\). Multiplying each polynomial in the matrices with the solution vector yields the final polynomials \(A(x), B(x), C(x)\), whereby 
+\begin{align}
+    \frac{A(x) * B(x) - C_(x)}{Z(x)} = H(x).
+\end{align}
+In a linear PCP, the proof consists of evaluations of linear functions, which is created by the prover. Soundness is guaranteed against a dishonest prover by ensuring that the proofs are relying on a specific structure. The verifier is querying the proof. By transforming linear PCPs into non-interactive argument systems, the trusted setup issues proving and verifying keys, which are used to perform checks using pairing-based cryptography. Many systems rely on this feature, e.g., Groth16, whose mathematical tools and general protocol procedures are presented in 5.2.1.
+
 \subsection{constant round IOPs}
 \subsection{Polynomial IOPs}
 %(focus on chapter 10.6, combine with preliminaries from previous chapters in Thaler)
@@ -117,11 +152,12 @@ NITULESCU, Anca. zk-SNARKs: A Gentle Introduction [https:
 
 \subsection{Circuit-specific zk-SNARK}
 \begin{comment}
-    - implementation of zero-knowledge argument systems was not possible until very recently, with advances in blockchain technology
+- implementation of zero-knowledge argument systems was not possible until very recently, with advances in blockchain technology
 - Linear PCP and pairing based cryptography
 
 - definitions
-- R1CS, QAP and Elliptic Curve Pairing
+- trusted setup, CRS, toxic waste
+- FFT and Elliptic Curve Pairing
 - main functionalities: trusted setup, proof and verify
 - history
 - Groth16
@@ -137,9 +173,10 @@ NITULESCU, Anca. zk-SNARKs: A Gentle Introduction [https:
 
 \subsection{Towards Universal Setup zk-SNARK}
 \textit{Permutations over Lagrange-bases for Oecumenical Non-interactive Arguments of Knowledge} (PLONK) is a zk-SNARK with a universal trusted set-up, which produces a \textit{structured reference string} (SRS). The SRS is of size \(d\), used for circuits of up to \(\leq d\) gates. This universal SNARK has fully succinct verification and low prover run time \citep{PLONKcryptoeprint:2019/953}, compared to its predecessor Sonic \citep{SONIC10.1145/3319535.3339817}, which was the first universal and fully succinct SNARK. PLONK is based on constant round polynomial IOP and uses the polynomial commitment scheme based on \citet{Kate2010ConstantSizeCT}. It is presented as a non-interactive protocol, obtained through Fiat-Shamir transformation \citep{PLONKcryptoeprint:2019/953}. The trusted setup is universal and updatable: it can be used for the entire scheme and does not have to be produced for every problem (circuit), e.g., in Groth16. Also, the Kate commitment scheme can be replaced by any other polynomial commitment scheme, e.g., FRI (see chapter 5.2.3). 
-Kate commitments use the elliptic curve generated points published in the public key after trusted setup, similar to Groth16 (see chapter 6.1 for detailed description), to commit to a polynomial of degree \(d\). The first \(d+1\) points are used to evaluate the polynomial at the respective coefficient. The underlying assumptions can be attributed to the \textit{Schwartz-Zippel lemma}.\\ 
-
-    \text{\parbox{450pt}{\textbf{Schwartz-Zippel Lemma.} \textit{Let \(f(x)\) be a non-zero polynomial with degree \(d\) over \begin{math}\mathbb{F}^n\end{math}, then, for a randomly chosen \(r\), the probability of \(f(r) = 0\) is at most \(\frac{d}{n}\). \\}}}
+Kate commitments use the elliptic curve generated points published in the public key after trusted setup, similar to Groth16 (see chapter 6.1 for detailed description), to commit to a polynomial of degree \(d\). The first \(d+1\) points are used to evaluate the polynomial at the respective coefficient. The underlying assumptions can be attributed to the \textit{Schwartz-Zippel lemma}.
+\begin{align*}
+    \text{\parbox{450pt}{\textbf{Schwartz-Zippel Lemma.} \textit{Let \(f(x)\) be a non-zero polynomial with degree \(d\) over \begin{math}\mathbb{F}^n\end{math}, then, for a randomly chosen \(r\), the probability of \(f(r) = 0\) is at most \(\frac{d}{n}\).}}}
+\end{align*}
     
 The \textit{Schwartz-Zippel lemma} proves that the polynomial evaluates to 0 at any point with high probability, if it evaluates to 0 at a given random \(r\). If two polynomials evaluate equally at \(r\), they are equal at every point with high probability. In a polynomial commitment scheme this suggestion is beneficial. The prover evaluates the polynomial at the random \(r\) chosen by the verifier, and sends it along with a proof. If the proof is valid, the verifier concludes that the result of the prover is also valid \citep{Kate2010ConstantSizeCT}.
 
@@ -170,7 +207,7 @@ The set of points matches a degree 3 polynomial, which can be shown in a coordin
 \begin{figure}[hbt]
 	\centering
 	\includegraphics[width=0.6\textwidth]{Pictures/example_polynomial.png}
-	\caption{Example polynomial \(Q_{L}(x)\) evaluated from the points in 5.2. Lagrange Interpolation yields coefficient form \(Q_{L}(x) = - 0.6667x^3 + 3x^2 - 3.3333x + 1\)}
+	\caption{Example polynomial \(Q_{L}(x)\) evaluated at the points in 5.2. Lagrange Interpolation yields coefficient form \(Q_{L}(x) = - 0.6667x^3 + 3x^2 - 3.3333x + 1\)}
 	\label{fig:examplepoly}
 \end{figure}
 
@@ -220,14 +257,9 @@ There are constraints for the accumulator to be checked which result from (5.7):
 
 The only program specific polynomials that need to be computed upfront by prover and verifier are the \(Q\)-polynomials from the circuit and the \(\sigma\)-permutation polynomials. The verifier algorithm only stores commitments to these polynomials. The user inputs are the witness assignments \(a(x), b(x), c(x)\), the accumulators \(P\) from above and the different \(H\) for every round. Although the verification is efficient, the proof size is still an area of improvement. For the implementation of plonk in circom and snarkjs, see chapter 6.2.2.
 
-\begin{comment}
-copy constraints
-polynomial commitment scheme succinct verification
-\end{comment}
-
 \subsection{FRI-STARK}
 \begin{comment}
-    with FRI-based polynomial commitment
+with FRI-based polynomial commitment
 -does not use R1CS
 -fri starks
 -Salleras et al 2021
@@ -235,7 +267,7 @@ polynomial commitment scheme succinct verification
 
 \subsection{Bulletproofs}
 \begin{comment}
-    with discrete-log based polynomial commitment
+with discrete-log based polynomial commitment
 - uses R1CS too
 - they are non-interactive,
 - they are zk arguments of knowledge
@@ -248,12 +280,11 @@ Deng et al 2022: history of range proofs, cuproof as example
 -Kim Lee 2019: overview on range proof protocols
 \end{comment}
 
-
 \section{Application Domains and Use Cases}
 Zero-knowledge proofs find broader implementation due to increasing interest in decentralized applications in recent years. However, despite successful research efforts in distributed ledger technology, there is only limited adoption of blockchain-based solutions outside the financial sector. One of the main challenges, pointed out by \citet{SedlmeirTransparencyChallenge}, is the need to make sensitive data visible. The high transparency blockchain offers collides with the need to preserve privacy and allow for restricted visibility. \citet{Godden} describe it as increasing consciousness to preserve data confidentiality and ownership, which leads to the development of privacy enhancing technologies. The literature review (SLR approach is described in chapter 4) shows that general purpose zero-knowledge proofs find implementation as essential elements in domains with enhanced privacy preserving efforts. ZKP implementations can be categorized into the following application domains: \textit{Identity Management}, \textit{Data Sharing and Traceability}, and, \textit{System Scaling and Protocol Enhancements}. Use cases from these application domains are clustered according to the problem domain they are attempting to solve (Table \ref{tab:domains}): (1) \textit{Electronic Voting and Government}, (2) \textit{Electronic Auctions}, (3) \textit{Data Queries and Traceability}, (4) \textit{Electronic Healthcare}, (5) \textit{Cloud Security}, and (6) \textit{Scaling and Performance}.
 
 \setlength{\tabcolsep}{2ex}
-{\renewcommand{\arraystretch}{1.5}%
+\renewcommand{\arraystretch}{1.5}%
 \begin{table}[ht]
 	\centering
 	    \caption{Selective Literature Overview - Problem Domains}
@@ -345,8 +376,6 @@ Apart from research work focusing on cloud authentication, there are implementat
 Yang, Weng, Sarkar, Wang: memory effieciency enahncements
 - Shi et al (2022): Schnorr ZKP used to proof user identity-->a bit old fashioned ZKP used maybe??
 \end{comment}
-
-
 
 \section{Challenges}
 - challenges can go into evaluation/comparisons of the 4 zkps

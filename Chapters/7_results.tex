@@ -162,9 +162,13 @@ The QAP for our example is shown as follows:
         4.0 & -7.0 & 3.5 & -0.5
     \end{bmatrix}
 \end{align*}
-The corresponding values in A, B and C represent polynomial coefficients and shall be read from right to left, e.g. \(A1(X) = 0.833x^3 - 5x^2 + 9.166x -5\).
-
-For example, evaluating A, B and C at x = 1 means to adding up the coefficients of the first polynomial of A, which will result in a value. Then, the next polynomial in A etc. It will result in a vector of length six and will be correct if the values match vector a from the first gate in our R1CS.
+The corresponding values in A, B and C represent polynomial coefficients and shall be read from right to left, e.g. \(A1(X) = 0.833x^3 - 5x^2 + 9.166x -5\). For example:
+\begin{align}
+     X = 1 \\
+    A1(1) = 0, A2(1) = 1, A3(1) = 0, A4(1) = 0, A5(1) = 0, A6(1) = 0
+\end{align}
+Comparing the results with the first vector a of the first gate, we see that the results represent the first gate.
+For example, evaluating A, B and C at x = 1 means to adding up the coefficients of the first polynomial of A, which will result in a value matching to the vector value in the first gate. Then, the next polynomial in A etc. It will result in a vector of length six and will be correct if the values match vector a from the first gate in our R1CS. The same is done by evaluating the polynomials with \(X\), whereby \(X\) starts at 1 and ends at the number of gates, in our case \(X=\{1,2,3,4\}\).
 However, it would be cumbersome to evaluate each constraint of the R1CS individually. This is why we can make use of the QAP to check whether the dot product equation of the polynomials will hold:
 \begin{align}
     A\cdot \Vec{s} * B\cdot \Vec{s} - C\cdot \Vec{s} = H(X) * Z(X)
@@ -326,7 +330,7 @@ The result of all steps performed previously is an incomplete homomorphic multip
 Now we covered all necessary basics to understand the Groth16 NIZK proof algorithm. In the following, we will cover the setup, proof and verification steps in Groth16.
 Let us define the given parameters:
 \setlength{\tabcolsep}{2ex}
-{\renewcommand{\arraystretch}{1.5}%
+\renewcommand{\arraystretch}{1.5}%
 \begin{table}[ht]
 	\centering
 	    \caption{Groth16 given parameters}
@@ -380,7 +384,7 @@ The proving key consists of the following elements:
 \begin{itemize}
     \item \([(\alpha, \beta, 1, \tau, \tau^2, \tau^3, ..., \tau^{n-1}, \frac{L_{l+1}(\tau)}{\delta}, ..., \frac{L_m(\tau)}{\delta})]_1\)
     \item \([(1, \gamma, \delta)]_2\)
-    \item circuit information about the polynomials:\\
+    \item circuit information about the polynomials: \\
     \(A_0(X), A_1(X), ..., A_m(X)\),\\
     \(B_0(X), B_1(X), ..., B_m(X)\),\\
     \(C_0(X), C_1(X), ..., C_m(X)\),\\
