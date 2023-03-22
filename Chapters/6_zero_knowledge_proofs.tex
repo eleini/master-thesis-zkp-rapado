@@ -1,5 +1,5 @@
 \chapter{Zero-Knowledge Proofs}
-This chapter surveys selective literature about zero knowledge proofs for practical design application. The goal is to familiarize the reader with the content classification of zero-knowledge proofs in cryptography, and to give an introduction and comparison of main argument systems widely used as of today. Zero-knowledge proof systems belong to the domain of verifiable computation \citep{Simunic}. Verifiable computation (VC) makes use of cryptographic protocols and arguments to verify that a computation was performed correctly. Arguments allow for false proofs only if they require very high computational power. 
+This chapter surveys selective literature about zero knowledge proofs for practical design application. The goal is to familiarize the reader with the content classification of zero-knowledge proofs in cryptography, and to give an introduction and comparison of main argument systems widely used as of today. Zero-knowledge proof systems belong to the domain of verifiable computation \citep{Simunic}AHMAD ET AL 2018. Verifiable computation (VC) makes use of cryptographic protocols and arguments to verify that a computation was performed correctly. Arguments allow for false proofs only if they require very high computational power. 
 
 The introduction of interactive proof systems (IPs) by \citet{GoldwasserIPs} and \citet{BabaiIPs} shows that only correct proofs are valid and malicious proving strategies cannot be verified. Traditional proofs are static and are made for easy, step-wise computation verification, whereas IPs require interaction between prover and verifier. In computational complexity theory, interactive proof systems are abstract machines exchanging messages between prover and verifier to convince the verifier that these sets of strings belong to a language \(L\). Here, the formal language \(L\) is defining a decision problem, i.e., a computational problem that has only two outputs, yes and no. Examples of sets of strings in \(L\) can be, that a certain Bitcoin transaction is valid, \(x = 7\) for a given \(f(x)\), or a certain object belongs to a specific merkle tree. The untrusted prover has unlimited computational power and the verifier is honest and computationally restricted. Advances in computational complexity theory during that time showed that IPs are more efficient and belong to a wider class than the traditional \textbf{NP}, i.e., problems solvable in deterministic polynomial time by reading proof strings of polynomial length \citep{SassonIOPsinproceedings}. In 1987, it was shown that every language belonging to NP has zero-knowledge proof systems \citep{anymental10.1145/28395.28420}. Later, it was shown that the class of \textbf{IP}, i.e., problems solvable by interactive proof systems, lies in \textbf{PSPACE}, i.e., problems solvable in polynomial space \citep{Shamir10.1145/146585.146609}, and that every language \(L\) in polynomial time has an interactive proof system \citep{Lund10.1145/146585.146605}. The complexity class of IP describes prover and verifier interaction in a polynomial number of rounds. Other important advances in computational complexity theory are \textbf{MIP=NEXP} \citep{Laszlo} and the \textbf{PCP theorem} \citep{PCPTheorem}. These works resulted in a set of proof and argument systems, that will be introduced in this chapter. \citet{Thaler} gives a further, exhaustive overview of all systems and in-depth protocol descriptions. 
 
@@ -63,7 +63,7 @@ The Fiat-Shamir transformation \citep{ROMFiat1986HowTP} removes the need for pro
 	\caption{Generic Fiat Shamir Transformation illustrated (based on \citet{Thaler})}
 	\label{fig:FST}
 \end{figure}
-Argument systems are obtained by applying polynomial commitment schemes to proof systems, whereby the prover commits to a low-degree polynomial. It allows for polynomial evaluation verification without possessing all the information of this polynomial.  Polynomial commitment schemes generically are used to proof that a polynomial, evaluated at a specific input results in a specific output. The prover commits to the polynomial, which can be perceived as some object hiding the polynomial, e.g., similar to a hash. The verifier challenges the commitment with a random value. The committer then creates a proof that the polynomial evaluates at that random value at a specific point. The polynomial itself is not revealed. In interactive proof systems with an honest prover running in polynomial time, e.g., GKR protocol, any arithmetic circuit can be evaluated \citep{GKR10.1145/1374376.1374396}. Arithmetic circuits are gates that operate on two types, i.e., addition and multiplication. Retrospectively, it is an important achievement, since arbitrary computer programs can be expressed via arithmetic circuits, which is the basis layer of many zero-knowledge protocols as of today. More mathematical tools for understanding the functionality of argument systems are covered in chapter 5.2.
+Argument systems are obtained by applying polynomial commitment schemes to proof systems, whereby the prover commits to a low-degree polynomial. It allows for polynomial evaluation verification without possessing all the information of this polynomial.  Polynomial commitment schemes generically are used to proof that a polynomial, evaluated at a specific input results in a specific output. The prover commits to the polynomial, which can be perceived as some object hiding the polynomial, e.g., similar to a hash. The verifier challenges the commitment with a random value. The committer then creates a proof that the polynomial evaluates at that random value at a specific point. The polynomial itself is not revealed. In interactive proof systems with an honest prover running in polynomial time, e.g., GKR protocol, any arithmetic circuit can be evaluated \citep{GKR10.1145/1374376.1374396}. Arithmetic circuits have gates that operate on two types, i.e., addition and multiplication. Besides gates, there are wires, that carry integer variables. Retrospectively, it is an important achievement, since arbitrary computer programs can be expressed via arithmetic circuits, which is the basis layer of many zero-knowledge protocols as of today. More mathematical tools for understanding the functionality of argument systems are covered in chapter 5.2.
 \begin{comment}
 introduced by  GOLDWASSER, Shafi; MICALI, Silvio; RACKOFF, Charles. The
 knowledge complexity of interactive proof systems. SIAM Journal
@@ -129,6 +129,7 @@ In a linear PCP, the proof consists of evaluations of linear functions, which is
 
 
 \begin{comment}
+- Chen et al (2022) very good paper for this
 - what is zero knowledge definition
 - what means indistinguishable
 - different types of zero-knowledge (perfect, statistical, computational)
@@ -154,22 +155,23 @@ NITULESCU, Anca. zk-SNARKs: A Gentle Introduction [https:
 \begin{comment}
 - implementation of zero-knowledge argument systems was not possible until very recently, with advances in blockchain technology
 - Linear PCP and pairing based cryptography
-
-- definitions
-- trusted setup, CRS, toxic waste
-- FFT and Elliptic Curve Pairing
-- main functionalities: trusted setup, proof and verify
-- history
-- Groth16
-- performance enhancements by Groth\& Maller 2017, Lipmaa 2019 and Kim Lee Oh 2020 as the newest contribution with only one single verification
-- Luong and Park easy Intro
+- - Luong and Park easy Intro
 - Yang Yang et al: Intro Groth16, R1C1, QAP easy examples
-- Baghery et al. mathematical backings if needed
-- Benamara: ECs and pairings, good math paper 
-- Guo et al: QAP, Bilinear Maps, R1CS theory
+
+
+1) definitions:
+- FFT
+
+- trusted setup, CRS, toxic waste: 
+
+
+- Elliptic Curve Pairing: - Benamara: ECs and pairings source
+
+2)main functionalities: Gro16 paper also
+- trusted setup, proof and verify-->BENAMARA, Guo et al: QAP, Bilinear Maps, R1CS theory
+
+- performance enhancements by Groth\& Maller 2017, Lipmaa 2019 and Kim Lee Oh 2020 as the newest contribution with only one single verification
 \end{comment}
-
-
 
 \subsection{Towards Universal Setup zk-SNARK}
 \textit{Permutations over Lagrange-bases for Oecumenical Non-interactive Arguments of Knowledge} (PLONK) is a zk-SNARK with a universal trusted set-up, which produces a \textit{structured reference string} (SRS). The SRS is of size \(d\), used for circuits of up to \(\leq d\) gates. This universal SNARK has fully succinct verification and low prover run time \citep{PLONKcryptoeprint:2019/953}, compared to its predecessor Sonic \citep{SONIC10.1145/3319535.3339817}, which was the first universal and fully succinct SNARK. PLONK is based on constant round polynomial IOP and uses the polynomial commitment scheme based on \citet{Kate2010ConstantSizeCT}. It is presented as a non-interactive protocol, obtained through Fiat-Shamir transformation \citep{PLONKcryptoeprint:2019/953}. The trusted setup is universal and updatable: it can be used for the entire scheme and does not have to be produced for every problem (circuit), e.g., in Groth16. Also, the Kate commitment scheme can be replaced by any other polynomial commitment scheme, e.g., FRI (see chapter 5.2.3). 
@@ -236,7 +238,7 @@ A proof is generated by using these permutations and computing the values of all
 In practice, the permutation accumulators are not expressed in dependency of vector size \(n\), but through high order roots of unity, whereby the field elements satisfy \(\omega^n = 1\). Also, all values are expressed as elements within a finite field of prime order \(p\), similar to the circuit specific zk-SNARKs. The X coordinates are not expressed as indices dependent of vector size \(n\), but with \(omega\) and some random element \(g\) in the field.
 
 \subsubsection{Summary}
-After transforming all the constraints intro sets of polynomials, the following checks need to be performed to verify the proofs \citep{PLONKcryptoeprint:2019/953, buterinplonk}. Through the polynomial commitment scheme based on \citep{Kate2010ConstantSizeCT}, these checks can be verified. Elliptic curve points are generated at random, similar to circuit based zk-SNARKS, and used to evaluate the polynomials. Elliptic curve pairings allow to check whether the equations hold true without any of the generated points, or polynomials to be revealed. 
+After transforming all the constraints intro sets of polynomials, the following checks need to be performed to verify the proofs \citep{PLONKcryptoeprint:2019/953, buterinplonk} CHEN ET AL 2022. Through the polynomial commitment scheme based on \citep{Kate2010ConstantSizeCT}, these checks can be verified. Elliptic curve points are generated at random, similar to circuit based zk-SNARKS, and used to evaluate the polynomials. Elliptic curve pairings allow to check whether the equations hold true without any of the generated points, or polynomials to be revealed. 
 The equation in (5.3) is the main equation of the circuit that needs to be checked. Then, in total, there are six permutation accumulator functions for the witness assignment vectors and their copy constraints. The equation check in (5.4) is resulting into six rounds:
 \begin{align}
 \end{align}
@@ -281,7 +283,7 @@ Deng et al 2022: history of range proofs, cuproof as example
 \end{comment}
 
 \section{Application Domains and Use Cases}
-Zero-knowledge proofs find broader implementation due to increasing interest in decentralized applications in recent years. However, despite successful research efforts in distributed ledger technology, there is only limited adoption of blockchain-based solutions outside the financial sector. One of the main challenges, pointed out by \citet{SedlmeirTransparencyChallenge}, is the need to make sensitive data visible. The high transparency blockchain offers collides with the need to preserve privacy and allow for restricted visibility. \citet{Godden} describe it as increasing consciousness to preserve data confidentiality and ownership, which leads to the development of privacy enhancing technologies. The literature review (SLR approach is described in chapter 4) shows that general purpose zero-knowledge proofs find implementation as essential elements in domains with enhanced privacy preserving efforts. ZKP implementations can be categorized into the following application domains: \textit{Identity Management}, \textit{Data Sharing and Traceability}, and, \textit{System Scaling and Protocol Enhancements}. Use cases from these application domains are clustered according to the problem domain they are attempting to solve (Table \ref{tab:domains}): (1) \textit{Electronic Voting and Government}, (2) \textit{Electronic Auctions}, (3) \textit{Data Queries and Traceability}, (4) \textit{Electronic Healthcare}, (5) \textit{Cloud Security}, and (6) \textit{Scaling and Performance}.
+Zero-knowledge proofs find broader implementation due to increasing interest in decentralized applications in recent years. However, despite successful research efforts in distributed ledger technology, there is only limited adoption of blockchain-based solutions outside the financial sector. One of the main challenges, pointed out by \citet{SedlmeirTransparencyChallenge}, is the need to make sensitive data visible. The high transparency blockchain offers collides with the need to preserve privacy and allow for restricted visibility. \citet{Godden} describe it as increasing consciousness to preserve data confidentiality and ownership, which leads to the development of privacy enhancing technologies. The literature review (SLR approach is described in chapter 4) shows that general purpose zero-knowledge proofs find implementation as essential elements in domains with enhanced privacy preserving efforts. ZKP implementations can be categorized into the following application domains: \textit{Identity Management}, \textit{Data Sharing and Traceability}, and, \textit{System Scaling} \citep{PipeZK}(MORAIS ET AL, CHEN ET AL). Use cases from these application domains are clustered according to the problem domain they are attempting to solve (Table \ref{tab:domains}): (1) \textit{Electronic Voting and Government}, (2) \textit{Electronic Auctions}, (3) \textit{Data Queries and Traceability}, (4) \textit{Electronic Healthcare}, (5) \textit{Cloud Security}, and (6) \textit{Scaling and Performance}.
 
 \setlength{\tabcolsep}{2ex}
 \renewcommand{\arraystretch}{1.5}%
@@ -296,31 +298,12 @@ Zero-knowledge proofs find broader implementation due to increasing interest in 
             3 & Data Queries and \newline Traceability & \citet{Godden, XueWang}  \\  \hline
             4 & Electronic Healthcare & \citet{LuongPark, ZHENG, WangEtAl, Huangetal} \\  \hline 
             5 & Cloud Security & \citet{LiuWangPengXing, Major, Munivel, Kanagamani} \\  \hline 
-            6 & Scaling and Performance &  \\  \hline 
+            6 & Scaling &  \\  \hline 
 	\end{tabular}
 \label{tab:domains}
 \end{table}
 
 \begin{comment}
-sedlmeier et al 2022:
-- despite successfull research in blockchain based applications, little adoption in businesses beyond financial sector
-- one challenge for adoption: visbility of sensitive data
-- excessive transparency in blockchain applications and need for privacy preservation of sensitive data, restricted visibility
-- ZKPs as one possible solution
-- Godden et al describe it as increasing conciousness about data ownership and privacy led to research in privacy enhancing technologies (PETs)
-- sources from Zhang et al 2021 PipeZK overview of the different Anwendungsbereiche of ZKPs-->what is verifiable outsourcing as application example?
--SLR showed these main application domains for ZKP: Identity Management, Data Sharing/Traceability, Blockchain Scaling
-- with the following use cases:
--e-government:e-voting/digital election
--healthcare: purchasing medical insurance contracts, patient data exchange/access
--e-auction/bidding systems
--cloud computing: zk port knocking, data deduplication, authentication schemes for cloud servers
--blockchain scaling: decrease comp cost for tx verification, zkRollups, zkSync
--querying: link traversal, zk-SQL SPARQL queries, zk based traceability systems
-
-
-- ZKPs belong to verifiable computation, succinct blockchain Simunic et al 2022
-
 - Maller et al 2019 Sonic: verifiable outsourcing computation example paper
 \end{comment}
 
@@ -342,11 +325,10 @@ Protected data sharing, securing data queries and corresponding outputs have bec
 The problem of missing privacy preserving traceability for product development and supply chain data is being addressed in \citet{XueWang}. Parties in the industrial product development sphere are enabled to track the development history of products without trusting each other. There are three main layers to the newly-proposed process architecture. The traceability application layer authenticates data owners and interacts with a third party, the traceability agent. The data privacy layer, which contains the zero-knowledge proof implementation, is responsible for generating traceability features in zero-knowledge and interacting with the traceability data providers, e.g., another partner in the production process inquiring to trace some data on a specific product. The data traceability request is being processed to create a proof via a smart contract. The data owner acts as verifier of this proof. The traceability features and use of the smart contract happens in the physical data layer and is mainly performed by a third party. The traceability process can be entirely monitored publicly, which solves the transparency problem in the industry, while preserving the traceability inquiries and adapting to the low-trust environment of the participants.
 
 \begin{comment}
-Fang, Near, Darias, Zhang 2021
-more papers on machine learning code verification ZKPs-->look in ACM pdf
+- Fang, Near, Darias, Zhang 2021
 - Xue and Wang: traceability use case applicable to pred. maintenance problem
--link traversal, SQL
--zero knowledge static program analysis: proof that a secret code is correct (Fang, Near, Darias, Zhang 2021)
+- FAFALIOS YANNIS TZITZIKAS: link traversal, SQL
+- zero knowledge static program analysis: proof that a secret code is correct (Fang, Near, Darias, Zhang 2021)
 \end{comment}
 
 \subsection{Electronic Healthcare}
@@ -365,16 +347,15 @@ Password attacks have increased, especially observing the rising usage of cloud 
 
 Apart from research work focusing on cloud authentication, there are implementation efforts to make use of zero-knowledge proofs for storing only one single copy of the same data on cloud servers, i.e., data deduplication efforts. Motivated by mass data storage outsourcing to third party cloud computing providers, data deduplication and dynamic ownership are promising areas of development. On the assumption that the cloud server is honest, but curious, \citet{Kanagamani} propose a data deduplication scheme using in-line block matching and interactive zero-knowledge proofs. The cloud server performs the deduplication check by verifying the proof of ownership of the file and checking whether a copy of the file is already stored, while learning no further information about the ownership and the file. Before the initial upload, the file should been hashed already. The server registers users and provides them with a public key and secret key. By applying another hashing algorithm on the file hash, the encryption key is obtained. Further, this key is hashed once more to obtain the tag. The tag is referred to by the cloud server to check whether a subsequently uploaded file already exists. The user chooses a random encryption key, which is different and encrypts the encryption key to obtain a ciphertext. The tag, ciphertext, user identifier and the proof is stored in the cloud server. The proof is obtained by combining in-line block matching with zero knowledge proof generation. The file is divided into blocks and each block is used to perform a exponential equation with some primes \(a\) and calculated in modular arithmetic with another prime \(mod \ b\). All computations are performed using a multiplicative cyclic group \begin{math} \mathbb{G} \end{math} with prime order \(t\). The result of each calculation forms a sequence of individual block proofs, which are the file proof. The server receives the proof, together with the data described above, and checks if the tag matches any other tag of a file stored previously. For verification, group keys are generated, which are used to perform bilinear pairing checks, i.e., similar to zk-SNARKS, e.g., Groth16. The public key of the file is taken, alongside random prime numbers to obtain the group key.The ciphertext is encrypted with the group key by the server and stored together with the ownership information. Each time the ownership changes, the server uses the existing proofs to send challenges to the allegedly new owner. The new owner responds by creating secret values from the challenge received. Once the server can verify the proof, secret and response, another group key is generated and used to encrypt the ciphertext of the file. The ownership information can be changed. The server did not learn anything more than there has been a change in ownership and that the file only exists once. 
 
-\subsection{Scaling and Performance}
+\subsection{Scaling}
 \begin{comment}
-- yang yang et al
-- salleras et al
-- deng et al
+-start with zk Roll ups, sources: Chen et al (2022): very good overview on rollups, validium, zkEVM with TinyRAM, recursive SNARK by MatterLabs
+
+good implementation papers:
+- Xu Chen(2021)-->Seite 307 in GoodNotes: new algorithms for zero knowledge set membership for ZK-scaling, based and compared to zkSync
 -Soonhyeong 2021: better verification with EVM to verify non-maliciousness of blocks (zKSNARKS used)
-- zk Roll ups, more sources needed
-- Xu Chen(2021): new algorithms for zero knowledge set membership for ZK-scaling, based and compared to zkSync
-Yang, Weng, Sarkar, Wang: memory effieciency enahncements
-- Shi et al (2022): Schnorr ZKP used to proof user identity-->a bit old fashioned ZKP used maybe??
+-Yang, Weng, Sarkar, Wang: memory effieciency enahncements
+
 \end{comment}
 
 \section{Challenges}
@@ -401,7 +382,7 @@ Yang, Weng, Sarkar, Wang: memory effieciency enahncements
 -Huang et al 2020: 1)privacy preserving and security: confidentiality, availability, integrity, privacy-preserving, traceability, single point of failure 2) performance evaluation: computing cost, number of startup nodes, privacy protection, time to generate NIZK keypair, NIZK proof, verify NIZK proof
 -Zhang et al 2021 PipeZK proof generation enhancement
 - Maller et al 2019 Sonic: better structured SRS in linear size to speed up proof verification
-
+- Chen et al (2022): future of ZK are zk-STARKS
 \subsection{Performance Analysis}
 -Liu et al, Zheng at al: semihonest model evaluation topics-> computational complexity, communication complexity, experimental evaluation
 - Liu Wang Peng Xing 2019: remote authentication for mobile cloud computing, Real-Or-Random model and BAN logic for security evaluation REGARDING different attacks
