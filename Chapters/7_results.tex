@@ -1,6 +1,6 @@
 \chapter{Implementation and Results}
 \section{Groth16 proof and verification}
-Let us use an example to illustrate the underlying mathematical methods that are applied in a zk-SNARK. The example calculation will use the KoE assumption due to complexity reasons. In practice, the FFT is applied. First, the arithmetic circuit is transformed into a R1CS. The R1CS is used to obtain the QAP. Homomorphic hiding, elliptic curves and pairing-based cryptography are introduced in more detail and put in context for the next steps of the calculation. Finally, the Groth16 protocol is introduced: First, the key generation steps are explained. Second, the proof is generated. Lastly, the verification steps are illustrated. Formal definitions are found in 5.2.
+Let us use an example to illustrate the underlying mathematical methods that are applied in zk-SNARK. The example calculation will use the KoE assumption for simplification. In practice, the FFT is applied. First, the arithmetic circuit is transformed into a R1CS. The R1CS is used to obtain the QAP. Homomorphic hiding, elliptic curves and pairing-based cryptography are introduced in more detail and put in context for the next steps of the calculation. Finally, the Groth16 protocol is introduced: First, the key generation steps are explained. Second, the proof is generated. Lastly, the verification steps are illustrated. Formal definitions are found in 5.2.
 
 Say we want to prove we know a secret x so that
 
@@ -11,7 +11,7 @@ In practice, we would use hiding and modular arithmetic instead of real numbers 
 
 \subsubsection{Arriving at a R1CS}
 
-A rank-1 constraint system is a mathematical format to help us reduce our problem into a less complex problem. First, we flatten the equation by writing a short program that would break down the different steps to solve the equation.
+A rank-1 constraint system is a mathematical format to help us reduce our problem into a less complex computational problem. First, we flatten the equation by writing a short program that would break down the different steps to solve the equation.
 
 \begin{enumerate}
     \item \(sum1 = x * x\)
@@ -20,11 +20,11 @@ A rank-1 constraint system is a mathematical format to help us reduce our proble
     \item \(out = sum2 + 5\)
 \end{enumerate}
 
-As shown above, we arrive at an arithmetic circuit with 4 gates with the solution variables
+As shown above, we arrive at an arithmetic circuit with 4 gates and the solution variables
 \[x = 3, y = 27, sum1 = 9, sum2 = 30, out = 35.\]
 
-From this, we can construct the solution vector s, which has to start with a dummy variable of value 1, which we call \textit{one}.
-Now, the solution vector s is
+From this, we can construct the solution vector \(s\) , which has to start with a dummy variable of value 1, which we call \textit{one}.
+Now, the solution vector \(s\) is
 \begin{align}
     \Vec{s} &= \begin{pmatrix}
      one \\ x \\ out \\ sum1 \\ y \\ sum2
@@ -32,42 +32,42 @@ Now, the solution vector s is
 \end{align}
 Each gate will be represented so that
 \begin{align}
-     \Vec{s}\cdot\Vec{a} * \Vec{s}\cdot\Vec{b} - \Vec{s}\cdot\Vec{c} = 0
+     \Vec{s}\cdot\Vec{a_i} * \Vec{s}\cdot\Vec{b_i} - \Vec{s}\cdot\Vec{c_i} = 0
 \end{align}
 
 Let us go through every gate and assign the values for a, b and c.
 For the first gate \(sum1 = x*x\), the values of a, b and c are assigned as follows:
 \begin{align*}
-    a &=\begin{bmatrix}
+    a_1 &=\begin{bmatrix}
         0 & 1 & 0 & 0 & 0 & 0
     \end{bmatrix}
 \end{align*}
 \begin{align*}
-    b&=\begin{bmatrix}
+    b_1&=\begin{bmatrix}
         0 & 1 & 0 & 0 & 0 & 0 
     \end{bmatrix}
 \end{align*}
 \begin{align*}
-    c&=\begin{bmatrix}
+    c_1&=\begin{bmatrix}
         0 & 0 & 0 & 1 & 0 & 0
     \end{bmatrix}
 \end{align*}
 
 This is correct, because the dot product of s and a, multiplied by the dot product of a and b, subtracted by the dot product of s and c is 0 (6.2).
 
-This procedure is applied to every gate. Let us show more complex gates to underline the calculation. For example, the third gate and the fourth gate. The third gate \(sum2=y+x\) could be approached as the first gate, by setting the variables in the equation to 1. However, this would not fulfill the equation shown in (6.2). Therefore, the correct values for a, b, and c are
+This procedure is applied to every gate. Let us show more complex gates to underline the calculation. For example, the third gate and the fourth gate. The third gate \(sum2=y+x\) could be approached as the first gate, by setting the variables in the equation to 1. However, this would not fulfill the equation shown in (6.2). Therefore, the correct values for \(a_3, b_3 \text{ and }c_3\) are
 \begin{align*}
-    a &=\begin{bmatrix}
+    a_3 &=\begin{bmatrix}
         0 & 1 & 0 & 0 & 0 & 0
     \end{bmatrix}
 \end{align*}
 \begin{align*}
-    b&=\begin{bmatrix}
+    b_3&=\begin{bmatrix}
         1 & 0 & 0 & 0 & 0 & 0 
     \end{bmatrix}
 \end{align*}
 \begin{align*}
-    c&=\begin{bmatrix}
+    c_3&=\begin{bmatrix}
         0 & 0 & 0 & 0 & 0 & 1
     \end{bmatrix}
 \end{align*}
@@ -75,11 +75,11 @@ This procedure is applied to every gate. Let us show more complex gates to under
 Here, we make use of the dummy vector \textit{one}, so that we can arrive at 
 \[30 * 1 - 30 = 0.\]
 
-The fourth gate \(out=sum2+5\) also has to be approached by holding true to the dot product equation in (6.2). We have to make use of the dummy vector once again. Setting the values of one, sum2 and out to 1 will give us the following incorrect solution:
+The fourth gate \(out=sum2+5\) also has to be approached by holding true to the dot product equation in (6.2) as well. We have to make use of the dummy vector once again. Setting the values of \(one, sum2 \text{ and } out\)  to 1 will give us the following incorrect solution:
 \begin{align*}
-     \Vec{s}\cdot\Vec{a} * \Vec{s}\cdot\Vec{b} - \Vec{s}\cdot\Vec{c} \neq 0.
+     \Vec{s}\cdot\Vec{a_4} * \Vec{s}\cdot\Vec{b_4} - \Vec{s}\cdot\Vec{c_4} \neq 0.
 \end{align*}
-The calculation shows \(30 * 1 - 35 \neq 0\), which means we need to add 5, so that the dot product of vector s and a adds up to 35. Therefore, the values of a, b and c for the fourth gate are as follows:
+The calculation shows \(30 * 1 - 35 \neq 0\), which means we need to add 5, so that the dot product of vector \(s \text{ and } a\) adds up to 35. Therefore, the values of \(a_4, b_4 \text{ and }c_4\) are as follows:
 \begin{align*}
     a &=\begin{bmatrix}
         5 & 0 & 0 & 0 & 0 & 1
@@ -96,7 +96,7 @@ The calculation shows \(30 * 1 - 35 \neq 0\), which means we need to add 5, so t
     \end{bmatrix}
 \end{align*}
 
-By combining our results as follows, we can set up the corresponding R1CS:
+By combining our results into matrices, we can set up the corresponding R1CS:
 
 \begin{align}
 A&=\begin{pmatrix}
@@ -125,12 +125,10 @@ C&=\begin{pmatrix}
 
 \subsubsection{From R1CS to QAP}
 
-The R1CS shows three matrices A, B, C representing the four gates each of length six. It is transformed into a Quadratic Arithmetic Program (QAP) by expressing polynomials as sums of Lagrange Interpolation (chapter 5.2.2). This results in three sets of polynomials A, B and C, each consisting of six polynomials of degree three. In the following, we will summarize the reason of setting up a QAP instead of continuing with the R1CS. Lagrange Interpolation allows us to come up with polynomial coefficients, which represent each gate, when evaluated at an x in the range of number of constraints (gates). With X = 1, the Lagrange Interpolation can be explained quite well, because it means that we can just add up the coefficients of the polynomials in A, B and C. Each set of polynomial is built so that evaluated at an X, whereby X has to be in the range of the number of gates (constraints), will deliver the specific value of X and 0 for the other values in that specific range.
-
-The QAP for our example is shown as follows:
-
+The R1CS shows three matrices \(A, B \text{ and }C\) representing the four gates each of length six. It is transformed into a QAP by expressing polynomials as sums of Lagrange Interpolation (chapter 5.2.2). This results in three sets of polynomials \(A_i(X), B_i(X) \text{ and }C_i(X)\) each consisting of six polynomials of degree three. In the following, we will summarize the reason of setting up a QAP instead of continuing with the R1CS. Lagrange Interpolation allows us to come up with polynomial coefficients, which represent each gate, when evaluated at an X in the range of number of constraints (gates). With X = 1, the Lagrange Interpolation can be explained quite well, because it means that we can just add up the coefficients of the polynomials in \(A_i(X), B_i(X) \text{ and }C_i(X)\). Each set of polynomial is built so that evaluated at a gate X, whereby X has to be in the range of the number of gates (constraints), will deliver the specific value of X and 0 for the other values in that specific range.\newline
+The QAP for our example:
 \begin{align*}
-    A \\
+    A_i(X) \\
     \begin{bmatrix}
         -5.0 & 9.166 & -5.0 & 0.833 \\
         8.0 & -11.33 & 5.0 & -0.666 \\
@@ -141,7 +139,7 @@ The QAP for our example is shown as follows:
     \end{bmatrix} \\
 \end{align*}
 \begin{align*}
-        B \\
+        B_i(X) \\
     \begin{bmatrix}
         3.0 & -5.166 & 2.5 & -0.333 \\
         -2.0 & 5.166 & -2.5 & 0.333 \\
@@ -152,7 +150,7 @@ The QAP for our example is shown as follows:
     \end{bmatrix}
 \end{align*}
 \begin{align*}
-        C \\
+        C_i(X) \\
     \begin{bmatrix}
         0.0 & 0.0 & 0.0 & 0.0 \\
         0.0 & 0.0 & 0.0 & 0.0 \\
@@ -162,52 +160,51 @@ The QAP for our example is shown as follows:
         4.0 & -7.0 & 3.5 & -0.5
     \end{bmatrix}
 \end{align*}
-The corresponding values in A, B and C represent polynomial coefficients and shall be read from right to left, e.g. \(A1(X) = 0.833x^3 - 5x^2 + 9.166x -5\). For example:
+The corresponding values in the matrices represent polynomial coefficients and shall be read from right to left, e.g. \(A1(X) = 0.833x^3 - 5x^2 + 9.166x -5\). For example:
 \begin{align}
      X = 1 \\
     A1(1) = 0, A2(1) = 1, A3(1) = 0, A4(1) = 0, A5(1) = 0, A6(1) = 0
 \end{align}
 Comparing the results with the first vector a of the first gate, we see that the results represent the first gate.
-For example, evaluating A, B and C at X = 1 means to adding up the coefficients of the first polynomial of A, which will result in a value matching to the vector value in the first gate. Then, the next polynomial in A etc. It will result in a vector of length six and will be correct if the values match vector a from the first gate in our R1CS. The same is done by evaluating the polynomials with \(X\), whereby \(X\) starts at 1 and ends at the number of gates, in our case \(X=\{1,2,3,4\}\).
-However, it would be cumbersome to evaluate each constraint of the R1CS individually. This is why we can make use of the QAP to check whether the dot product equation of the polynomials will hold:
+For example, evaluating \(A, B \text{ and }C\) at X = 1 means to adding up the coefficients of the first polynomial of \(A\) , which will result in a value matching to the vector value in the first gate. Then, the next polynomial in A etc. It will result in a vector of length six and will be correct if the values match vector a from the first gate in our R1CS. The same is done by evaluating the polynomials with X, whereby X starts at 1 and ends at the number of gates, in our case \(X=\{1,2,3,4\}\).
+However, it would be cumbersome to evaluate each constraint individually. This is why we can make use of the QAP to check whether the dot product equation of the polynomials will hold:
 \begin{align}
-    A\cdot \Vec{s} * B\cdot \Vec{s} - C\cdot \Vec{s} = H(X) * Z(X)
+    A_i(X)\cdot \Vec{s} * B_i(X)\cdot \Vec{s} - C_i(X)\cdot \Vec{s} = H(X) * Z(X)
 \end{align}
-Interestingly, the left side of the equation is our target polynomial T(X), which we want to proof. Also, \(A \cdot \Vec{s} = A(X), B \cdot \Vec{s} = B(X),  C \cdot \Vec{s} = C(X).\) 
-Therefore, \(T(X) = A(X) * B(X) - C(X)\), which should be already familiar by revisiting (6.2), but this time the inputs are polynomials.
-Now, let's have a look at the right side of the equation in (4). Z(X) is known if we know the number of constraints. In Groth16, it is made available in the trusted setup. In this case, we have four gates, so we arrive at
+Interestingly, the left side of the equation is our target polynomial \(T(X)\), which we want to proof.
+Now, let's have a look at the right side of the equation in (6.6). \(Z(X)\) is known if we know the number of constraints. In Groth16, it is made available in the trusted setup. In this case, we have four gates, so we arrive at
 \begin{align}
     Z(X) = (x-1)(x-2)(x-3)(x-4)
 \end{align}
-H(X) is the hiding of our initial minimal example, those input we don't want to share, but prove we know the solution to. What role hiding plays will be explained later. Now, we want to still finish looking at the equation in (6.6). In essence, we want to proof we know a polynomial and its solution, so that
+\(H(X)\) is the hiding of our initial minimal example, those input we don't want to share, but prove we know the solution to. What role hiding plays will be explained shortly. Now, we want to still finish looking at the equation in (6.6). In essence, we want to proof we know a polynomial and its solution, so that
 \begin{align}
     T(X) / Z(X) = H(X)
 \end{align}
-Ultimately, in our example H(X) is also a polynomial. We know the QAP is correct, if H(X) is a polynomial without remainder. In this example, the resulting
+Ultimately, in our example, \(H(X)\) is also a polynomial. We know the QAP is correct, if \(H(X)\) is a polynomial without remainder. In this example, the resulting
 \[H(X) = -0.44x^3 + 17.055x^2 - 3.666x.\]
 
-Practically, the coefficients of each polynomial in A, B and C are publicly known. The same can be said for Z(X) through knowing the number of constraints (in this example we have four constraints). The prover can use the circuit to create vector s, calculate A(X), B(X) and C(X), as well as T(X). Subsequently, the prover can calculate the coefficients of H(X) by dividing T(X) / Z(X). However, there is no zero-knowledge yet, since the prover has to prove knowledge of vector s and H(X) without revealing it.
+Practically, the coefficients of each polynomial in \(A_i(X), B_i(X) \text{ and }C_i(X)\) are publicly known. The same can be said for \(Z(X)\) through knowing the number of constraints (in this example we have four constraints). The prover can calculate the coefficients of \(H(X)\) by dividing T(X) / \(Z(X)\). However, there is no zero-knowledge yet, since the prover has to prove knowledge of vector \(s\) and \(H(X)\) without revealing it.
 \newpage
 
 \subsubsection{Hiding}
-As touched upon earlier, there are information made publicly known. Zk-SNARKs are dependent on a trusted setup releasing these parameters. The goal is to prove knowledge of the polynomial H(X) with all its coefficients without disclosing any of this information. Therefore, the trusted setup also provides a random secret point P. Note, that P is hashed, calculated once and deleted from memory. Depending on the number of constraints, a certain amount of P values are needed. In our example, we have four constraints, which needs \(P = {1, P, P^2, P^3}\), whereby the value of \(P^3\) corresponds to the value of \(x^3\) when the polynomials are evaluated. The following values of P are provided
+Zk-SNARKs are dependent on a trusted setup releasing these parameters. The goal is to prove knowledge of the polynomial \(H(X)\) with all its coefficients without disclosing any of this information. Therefore, the trusted setup also provides a random secret point \(P\). Note, that \(P\) is hashed, calculated once and deleted from memory. Depending on the number of constraints, a certain amount of \(P\) values are needed. In our example, we have four constraints, which need \(P = {1, P, P^2, P^3}\), whereby the value of \(P^3\) corresponds to the value of \(x^3\) when the polynomials are evaluated. The following values of \(P\) are provided
 
 \begin{align}
     hh(1), hh(P), hh(P^2), ..., hh(P^\textsuperscript{(no. of constraints - 1)})
 \end{align}
 
-The trusted setup makes these values publicly available in the CRS (Common Reference String).
+The trusted setup makes these values publicly available in the CRS.
 
-With our previous knowledge, we know that the prove will be
+With our previous knowledge, we know that the prove will consist of
 \begin{align}
     \frac{hh[A(P)] * hh[B(P)] - hh[C(P)])}{hh[Z(P)]} = hh[H(P)]
 \end{align}
 
-The hidings of our polynomials are numbers, that currently can just be forged. The following will show how it can be proven that these numbers are hidings of the polynomials A(X), B(X) and C(X) in P, which is not known to anybody. Furthermore, we need to prove that in order to arrive at A(X), B(X) and C(X), the same solution vector s was used (6.6). 
+The hidings of our polynomials are numbers, that currently can just be forged. The following will show how it can be proven that these numbers are hidings of the polynomials \(A(X)\), \(B(X)\) and \(C(X)\) in \(P\) which is not known to anybody. Furthermore, we need to prove that in order to arrive at \(A(X)\), \(B(X)\) and \(C(X)\), the same solution vector \(s\) was used (6.6). 
 
-In order to approach the first problem, proving that the hidings of A(X),  B(X) and C(X) were actually calculated in P, we need to "extend" P by the same number, namely \(u\). The CRS consists also of \(hh(u*P), hh(u*P^2), hh(u*P^3)\), etc., i.e., it consists of two sets of hidings. We know that A(X) is a linear combination of the values of vector s inserted into the polynomials A1, A2, A3, etc. of A. B calculating \(hh[A(P)]\) and \(hh[A(u*P)]\) and looking if \(hh[A(P)] = u * hh[A(u*P]\) holds true, shows that the hiding of A(X) calculated in P is indeed a result of linear combination of A1, A2, A3, etc. and the values of the vector s (6.6). All we did is to prove that the same sets of hidings of P were use to arrive at these numbers. The same is applied to the hidings of B(X), C(X) in P.
+In order to approach the first problem, proving that the hidings of \(A(X)\),  \(B(X)\) and \(C(X)\) were actually calculated in \(P\), we need to "extend" \(P\) by the same number, namely \(u\). The CRS consists also of \(hh(u*P), hh(u*P^2), hh(u*P^3)\), etc., i.e., it consists of two sets of hidings. We know that \(A(X)\) is a linear combination of the values of vector s inserted into the polynomials A1, A2, A3, etc. of A. B calculating \(hh[A(P)]\) and \(hh[A(u*P)]\) and looking if \(hh[A(P)] = u * hh[A(u*P]\) holds true, shows that the hiding of \(A(X)\) calculated in \(P\)is indeed a result of linear combination of A1, A2, A3, etc. and the values of the vector s (6.6). All we did is to prove that the same sets of hidings of \(P\)were use to arrive at these numbers. The same is applied to the hidings of \(B(X)\), \(C(X)\) in P.
 
-For the second problem, to prove the same values of vector s were used to arrive at the hidings of A(X), B(X) and C(X) in P, a similar approach can be used. In our example, vector s has six solution variables. We use a new variable K as
+For the second problem, to prove the same values of vector s were used to arrive at the hidings of \(A(X)\), \(B(X)\) and C(X) in \(P\) a similar approach can be used. In our example, vector s has six solution variables. We use a new variable K as
 \begin{align}
     K = K1 + K2 + K3 + K4 + K5 + K6
 \end{align}
@@ -224,7 +221,7 @@ By checking that
 \begin{align}
     hh[K(P)] = one*hh[K1] + x * hh[K2] + out * hh[K3] + ... + sum2 * hh[K6],
 \end{align}
-we can prove that indeed the same coefficients of vector s were used. This way it is nearly impossible to come up with numbers that hold true for another P and to create proofs without the knowledge of the coefficients.
+we can prove that indeed the same coefficients of vector s were used. This way it is nearly impossible to come up with numbers that hold true for another \(P\)and to create proofs without the knowledge of the coefficients.
 
 \subsubsection{Homomorphic Hiding}
 
@@ -243,7 +240,7 @@ We need to express variables in a finite field as of modulo p with p being a lar
 \end{align}
 where G is a value in the finite field \begin{math}\mathbb{F}_p\end{math} and y will always be expressed as modulo p.
 
-With homomorphic hiding being introduced, we know all the tools being used to prove that we can calculate the equation in (6.8) with the polynomials from the QAP and the same values of vector s, without knowing any P and u * P. We know how the proof is calculated without revealing our solution vector s. The following deals with the verification if the above equations hold true, without revealing the solution vector s.
+With homomorphic hiding being introduced, we know all the tools being used to prove that we can calculate the equation in (6.8) with the polynomials from the QAP and the same values of vector s, without knowing any \(P\)and u * P. We know how the proof is calculated without revealing our solution vector s. The following deals with the verification if the above equations hold true, without revealing the solution vector s.
 
 \subsubsection{Elliptic Curve Pairing}
 
@@ -253,7 +250,7 @@ The goal of PCP and pairing-based zero-knowledge algorithms is to create a succi
     \frac{A(x) * B(x)}{Z(x)} = H(x) + C(x)
 \end{align}
 
-We have the polynomials A, B and C, not expressed in real numbers, but mapped to a finite field with a large prime number. We can calculate H(x) as in (6.8). Now, we are going to use generators for each of our polynomial to produce points on an elliptic curve. This is necessary to make use of pairing, which allows us to check if equations, e.g., (6.13), hold true without knowing the actual variable values in these equations. In the following, some preliminaries will be introduced to create a basis for the Groth16 CRS generation, and proofing and verification mechanism.
+We have the polynomials \(A, B \text{ and }C\), not expressed in real numbers, but mapped to a finite field with a large prime number. We can calculate \(H(X)\) as in (6.8). Now, we are going to use generators for each of our polynomial to produce points on an elliptic curve. This is necessary to make use of pairing, which allows us to check if equations, e.g., (6.13), hold true without knowing the actual variable values in these equations. In the following, some preliminaries will be introduced to create a basis for the Groth16 CRS generation, and proofing and verification mechanism.
 
 Elliptic curves are used to define collision resistant one-way functions, i.e., homomorphic hiding functions. An elliptic curve is a polynomial, e.g., the elliptic curve used in Bitcoin (Figure 1). 
 
@@ -322,7 +319,7 @@ Pairings are bilinear maps that combine elements of two spaces to receive an ele
     e: \mathbb{G}_1 \times \mathbb{G}_2 \to \mathbb{G}_T
 \end{align}
 
-The result of all steps performed previously is an incomplete homomorphic multiplication that enables us to check that the correct polynomial coefficients were used for \(A(x), B(x), \text{ and }C(x)\), as well as the same solution vector \(s\). It is incomplete, because not more than two elements can be multiplied. However, this just satisfies the use case for zk-SNARKs. 
+The result of all steps performed previously is an incomplete homomorphic multiplication that enables us to check that the correct polynomial coefficients were used for \(A(x), B(X), \text{ and }C(x)\), as well as the same solution vector \(s\). It is incomplete, because not more than two elements can be multiplied. However, this just satisfies the use case for zk-SNARKs. 
 
 \subsubsection{Groth16}
 

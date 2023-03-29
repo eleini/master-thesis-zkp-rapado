@@ -1,13 +1,13 @@
 \chapter{Zero-Knowledge Proofs}
-This chapter surveys selective literature about zero knowledge proofs for practical design application. The goal is to familiarize the reader with the content classification of zero-knowledge proofs in cryptography, and to give an introduction and comparison of main argument systems widely used as of today. Zero-knowledge proof systems belong to the domain of verifiable computation \citep{Simunic}AHMAD ET AL 2018. Verifiable computation (VC) makes use of cryptographic protocols and arguments to verify that a computation was performed correctly. Arguments allow for false proofs only if they require very high computational power. 
+This chapter surveys selective literature about zero knowledge proofs for practical design application. The goal is to familiarize the reader with the content classification of zero-knowledge proofs in cryptography, and to give an introduction and comparison of main argument systems widely used as of today. Zero-knowledge proof systems belong to the domain of verifiable computation \citep{Simunic, Ahmad}. Verifiable computation (VC) makes use of cryptographic protocols and arguments to verify that a computation was performed correctly. Arguments allow for false proofs only if they require very high computational power. 
 
 The introduction of interactive proof systems (IPs) by \citet{GoldwasserIPs} and \citet{BabaiIPs} shows that only correct proofs are valid and malicious proving strategies cannot be verified. Traditional proofs are static and are made for easy, step-wise computation verification, whereas IPs require interaction between prover and verifier. In computational complexity theory, interactive proof systems are abstract machines exchanging messages between prover and verifier to convince the verifier that these sets of strings belong to a language \(L\). Here, the formal language \(L\) is defining a decision problem, i.e., a computational problem that has only two outputs, yes and no. Examples of sets of strings in \(L\) can be, that a certain Bitcoin transaction is valid, \(x = 7\) for a given \(f(x)\), or a certain object belongs to a specific merkle tree. The untrusted prover has unlimited computational power and the verifier is honest and computationally restricted. Advances in computational complexity theory during that time showed that IPs are more efficient and belong to a wider class than the traditional \textbf{NP}, i.e., problems solvable in deterministic polynomial time by reading proof strings of polynomial length \citep{SassonIOPsinproceedings}. In 1987, it was shown that every language belonging to NP has zero-knowledge proof systems \citep{anymental10.1145/28395.28420}. Later, it was shown that the class of \textbf{IP}, i.e., problems solvable by interactive proof systems, lies in \textbf{PSPACE}, i.e., problems solvable in polynomial space \citep{Shamir10.1145/146585.146609}, and that every language \(L\) in polynomial time has an interactive proof system \citep{Lund10.1145/146585.146605}. The complexity class of IP describes prover and verifier interaction in a polynomial number of rounds. Other important advances in computational complexity theory are \textbf{MIP=NEXP} \citep{Laszlo} and the \textbf{PCP theorem} \citep{PCPTheorem}. These works resulted in a set of proof and argument systems, that will be introduced in this chapter. \citet{Thaler} gives a further, exhaustive overview of all systems and in-depth protocol descriptions. 
 
-The examined proof systems are secure against computationally unrestricted provers: \textit{Interactive Proof (IP), Multi-prover Interactive Proof (MIP), linear Probabilistically Checkable Proof (PCP), and Interactive Oracle Proof (IOP)}. 
+The examined proof systems are secure against computationally unrestricted provers: \textit{Interactive Proof (IP), linear Probabilistically Checkable Proof (PCP), and Interactive Oracle Proof (IOP)}. 
 
 Combining the systems above with cryptographic tools to force certain behavior in the proof generation will create an argument system. Argument systems are considered to be zero-knowledge, if and only if the proof does not reveal anything but its own validity \citep{GoldwasserIPs}. Adding certain properties, e.g. non-interactivity, succinctness, and knowledge, will design a certain argument of knowledge, e.g. zk-SNARK (zero-knowledge succinct non-interactive argument of knowledge). Different zk-SNARKS and notions will be examined in more detail.
 
-The next sub chapters are structured according to the design approach described above. First, IPs, MIPs, PCPs, and IOPs will be defined. Through the combination with polynomial commitment schemes argument systems can be designed. Non-interactivity is achieved through Fiat-Shamir transformation. Second, properties and mathematical tools will be introduced to describe different arguments of knowledge: zk-SNARK, FRI-STARK and bulletproofs. Third, real-world applications of zero-knowledge proof systems will be summarized. Lastly, the different proof systems will be evaluated in different application scenarios.
+The next sub chapters are structured according to the design approach described above. First, IPs, PCPs, and IOPs will be defined. Through the combination with polynomial commitment schemes argument systems can be designed. Non-interactivity is achieved through Fiat-Shamir transformation. Second, properties and mathematical tools will be introduced to describe different arguments of knowledge: zk-SNARK, FRI-STARK and bulletproofs. Third, real-world applications of zero-knowledge proof systems will be summarized. Lastly, the different proof systems will be evaluated in different application scenarios.
 
 \section{From Proof Systems towards Argument Systems}
 
@@ -49,7 +49,17 @@ In interactive proof systems, the prover with unlimited computational resources 
 \begin{align*}
     \text{\parbox{450pt}{\textbf{Interactive Proof System.} \textit{\(L\) is a language over \(\{0,1\}^n\), with n representing the input size domain of n-bit strings. An interactive protocol is a interactive proof system if after \(k\) rounds, the probabilistic verifier in polynomial time exchanged \(k\) messages with the computationally unrestricted prover, and has to either accept or decline the correctness of the prover's proposition. IP is the complexity class of problems solvable by a k-round interactive proof system.}}}
 \end{align*}
-The transcript is the order in which messages are exchanged. The prover and verifier are functions \(P(x), V(x)\) with common input \(x\). The overall distribution of all transcriptions between prover and verifier is called \(View_V(P(x), V(x))\), which is bound by the number of rounds between \(P\)and \(V\). \(P\) provides a result that satisfies the proposition, e.g., \(y\) to a function \(f(x) = y\). \(P\) and \(V\) exchange a transcript of messages \((m_1, m_2, m_3, ..., m_k)\), whereby both parties take turns and the last message is sent by the prover. Note, that \(V\) is probabilistic with internal randomness \(r\). Hence, the output depends on \((V, x, r, P)\) and is \(\{0,1\}\), i.e., \(1\) if the statement is correct, and \(0\) if it is incorrect \citep{GoldwasserIPs, BabaiIPs}. Interactive proof systems have completeness error \(\delta_c\) and soundness error \(\delta_s\) . For any input \(x\), there must be a convincing proof that \(f(x)\) is correct. Incorrect statements for \(y \neq f(x)\) cannot result in a convincing proof, i.e., a malicious prover does not exist IP systems are valid if \(\delta_c, \delta_s \leq 1/3\) \citep{Thaler}.
+The transcript is the order in which messages are exchanged. The prover and verifier are functions \(P(x), V(x)\) with common input \(x\). The overall distribution of all transcriptions between prover and verifier is called \(View_V(P(x), V(x))\), which is bound by the number of rounds between \(P\)and \(V\). \(P\) provides a result that satisfies the proposition, e.g., \(y\) to a function \(f(x) = y\). \(P\) and \(V\) exchange a transcript of messages \((m_1, m_2, m_3, ..., m_k)\), whereby both parties take turns and the last message is sent by the prover. Note, that \(V\) is probabilistic with internal randomness \(r\). Hence, the output depends on \((V, x, r, P)\) and is \(\{0,1\}\), i.e., \(1\) if the statement is correct, and \(0\) if it is incorrect \citep{GoldwasserIPs, BabaiIPs}. Interactive proof systems have completeness error \(\delta_c\) and soundness error \(\delta_s\) . For any input \(x\), there must be a convincing proof that \(f(x)\) is correct. Incorrect statements for \(y \neq f(x)\) cannot result in a convincing proof, i.e., a malicious prover does not exist IP systems are valid if \(\delta_c, \delta_s \leq 1/3\) \citep{Thaler}. IPs with \(k\) provers are multi-prover interactive proofs (MIPs), introduced by \citet{MIPsBen}, and extended by \citet{MIPsSetty} to allow for the design of succinct arguments. MIPs are characterized by no information sharing and non-adaptivity of provers. The probabilistic polynomial time verifier acts similarly as in IPs, but the challenges sent are not shared among the different provers. The prover's response \(i\) does not depend on the \(i-1\) interactions in the transcript, i.e., the prover cannot react based on the previous messages, because there is at least another prover \(p_j\) whose messages are not known to \(p_i\) for \(i\neq j\) .
+
+\begin{comment}
+Some definitions are still missing:
+randomness
+completeness
+soundness
+statistical soundness
+computational soundness
+\end{comment}
+
 \subsubsection{Non-interactive, publicly verifiable arguments}
 The \textit{Fiat-Shamir transformation} takes any interactive proof system based on public coin tosses and transforms it into a non-interactive, publicly verifiable system. This transformation can be described effectively with the use of an ideal cryptographic assumption called \textit{Random Oracle Model (ROM)}. 
 \subsubsection{Random Oracle Model}
@@ -64,24 +74,19 @@ The Fiat-Shamir transformation \citep{ROMFiat1986HowTP} removes the need for pro
 	\label{fig:FST}
 \end{figure}
 Argument systems are obtained by applying polynomial commitment schemes to proof systems, whereby the prover commits to a low-degree polynomial. It allows for polynomial evaluation verification without possessing all the information of this polynomial.  Polynomial commitment schemes generically are used to proof that a polynomial, evaluated at a specific input results in a specific output. The prover commits to the polynomial, which can be perceived as some object hiding the polynomial, e.g., similar to a hash. The verifier challenges the commitment with a random value. The committer then creates a proof that the polynomial evaluates at that random value at a specific point. The polynomial itself is not revealed. In interactive proof systems with an honest prover running in polynomial time, e.g., GKR protocol, any arithmetic circuit can be evaluated \citep{GKR10.1145/1374376.1374396}. Arithmetic circuits have gates that operate on two types, i.e., addition and multiplication. Besides gates, there are wires, that carry integer variables. Retrospectively, it is an important achievement, since arbitrary computer programs can be expressed via arithmetic circuits, which is the basis layer of many zero-knowledge protocols as of today. More mathematical tools for understanding the functionality of argument systems are covered in chapter 5.2.
+\subsubsection{Zero-Knowledge}
 \begin{comment}
-introduced by  GOLDWASSER, Shafi; MICALI, Silvio; RACKOFF, Charles. The
-knowledge complexity of interactive proof systems. SIAM Journal
-on computing. 1989, vol. 18, no. 1, pp. 186–208.
-GKR protocol-->why? GKR protocol is general-purpose in the sense that it solves the problem of arithmetic circuit evaluation, and any problem in P can
-be “efficiently” reduced to circuit evaluation
-randomness
-completeness
-soundness
-statistical soundness
-computational soundness
-fiat shamir transformation for non interactive
+-Thaler simulator zero knowledge definition
+-indistinguishable: Thaler
+- statistical (proofs) and computaional (arguments) soundness
+- 3 types of zero-knwoledge: perfect, statistical and computational
+- so with honest verifier assumption at least 6 types of protocols: Eleanor Birrell and Salil Vadhan. Composition of zero-knowledge proofs with efficient
+provers. In Theory of Cryptography Conference, pages 572–587. Springer, 2010. 172
+
 knowledge soundness
 proof of knowledge
 obtaining zero knowledge from it: verifier learns nothing about the witness
 \end{comment}
-
-\subsection{MIPs}
 \subsection{Linear PCPs}
 \textit{Probabilistically Checkable Proofs} (PCPs) differ from previously introduced proofs, because there is no need for the prover to answer queries based on the current or previous query content posted by the verifier. The polynomial time verifier is provided with oracle access to a static proof string \begin{math} \pi \end{math}, whereby the proof is queried and the result of it only depends on the currently processed query \citep{PCP}. The breakthrough of powerful, pairing-based schemes is attributable to \citet{GennaroLinPCP}, who introduced \textit{Quadratic Arithmetic Programs} (QAPs), as variant of quadratic span programs. Quadratic span programs are more efficient, because they only satisfy boolean circuits. Therefore, the introduction of QAPs is important to represent more practical computations, e.g., multiplication gates, whereby the efficiency lies in the usability for effectively solving more natural problems. Any arithmetic circuit instance can be transformed into instances of a \textit{rank-1 constraint system} (R1CS).
 \begin{align*}
@@ -125,8 +130,10 @@ In a linear PCP, the proof consists of evaluations of linear functions, which is
 \subsection{Polynomial IOPs}
 %(focus on chapter 10.6, combine with preliminaries from previous chapters in Thaler)
 
-\section{Zero-knowledge non-interactive arguments of knowledge}
+The proof systems introduced in this chapter form the base layer of zero-knowledge succinct, non-interactive arguments of knowledge. The proof is convincing and the witness is valid, while the verifier learns nothing about it except for its validity and cannot be convinced by an invalid witness (completeness, soundness and zero-knowledge). The zero-knowledge IPs by \citet{GoldwasserIPs} described in 5.1.1 were the begin of research and implementations towards zk-SNARKs.
 
+\section{Zero-knowledge succinct, non-interactive arguments of knowledge}
+Following the first zero-knowledge IPs \citep{GoldwasserIPs}, \citet{Blum1991} introduce the common reference string (CRS) and create non-interactive zero-knowledge proofs with only one message to be shared, i.e., the proof. Subsequently, research on reducing the proof size increased, \citet{Micali} introduces the first non-interactive zero-knowledge proof with sublinear proof size. Building on these findings, the first zk-SNARKs for circuit satisfiability uses proofs that are constant-size and uses pairings to efficiently check the polynomial equations without revealing any information, e.g., coefficients \citep{Groth2010ShortPN}. \citet{GennaroLinPCP} continue with increasing the efficiency of polynomial equation verification and introduce QAPs. \citet{Pinocchio} makes use of it and develops the Pinocchio protocol, that utilizes QAPs and the knowledge of coefficients to efficiently verify polynomial equations through eight pairing checks without revealing any decodings. This protocol is enhanced by \citet{Groth2016OnTS}, reducing the proof size again and decreasing the number of pairing checks to three. It is widely used as of today and the characteristics of succinctness and non-interactivity make it particularly useful in blockchain, e.g., in Zcash and Circom \citep{chen2022review}. In the following, different zk-SNARK designs will be defined. Current research focuses on quantum resistant systems \citep{chen2022review}, hence, FRI-STARK and bulletproofs will be introduced as well. 
 
 \begin{comment}
 - Chen et al (2022) very good paper for this
@@ -158,9 +165,8 @@ NITULESCU, Anca. zk-SNARKs: A Gentle Introduction [https:
 - - Luong and Park easy Intro
 - Yang Yang et al: Intro Groth16, R1C1, QAP easy examples
 
-
 1) definitions:
-- FFT
+- FFT, KEA knowledge of exponent assumption
 
 - trusted setup, CRS, toxic waste: 
 
