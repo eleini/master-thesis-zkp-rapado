@@ -15,9 +15,9 @@ A mathematical proof in the context of computer science and cryptography is any 
 
 \begin{itemize}
     \text{\parbox{420pt}{
-    \item The procedure to create and verify proofs should be \textit{efficient and fast}. 
-    \item \textit{Completeness}: True statements should have a convincing proof of their validity.
-    \item \textit{Soundness}: If a statement is incorrect, there is no possibility of it having a convincing proof.}}
+    \item The procedure to create and verify proofs should be \textbf{efficient and fast}. 
+    \item \textbf{Completeness}: True statements should have a convincing proof of their validity.
+    \item \textbf{Soundness}: If a statement is incorrect, there is no possibility of it having a convincing proof.}}
 \end{itemize}
 
 Unlike argument systems, proof systems do not limit the malicious prover in its computational power (\textit{statistical soundness}). Using cryptographic primitives and restricting the prover, e.g., probabilistic polynomial time proof, so that it cannot break the primitives, describes the design towards argument systems, which are computationally sound \citep{ArgSystems, MicaliArgSys}. Each proof system presented makes assumptions on the prover. However, only with the use of cryptographic tools and zero-knowledge, these proof systems can be extended with additional properties to yield zero-knowledge argument systems of various kinds.
@@ -75,18 +75,14 @@ The Fiat-Shamir transformation \citep{ROMFiat1986HowTP} removes the need for pro
 \end{figure}
 Argument systems are obtained by applying polynomial commitment schemes to proof systems, whereby the prover commits to a low-degree polynomial. It allows for polynomial evaluation verification without possessing all the information of this polynomial.  Polynomial commitment schemes generically are used to proof that a polynomial, evaluated at a specific input results in a specific output. The prover commits to the polynomial, which can be perceived as some object hiding the polynomial, e.g., similar to a hash. The verifier challenges the commitment with a random value. The committer then creates a proof that the polynomial evaluates at that random value at a specific point. The polynomial itself is not revealed. In interactive proof systems with an honest prover running in polynomial time, e.g., GKR protocol, any arithmetic circuit can be evaluated \citep{GKR10.1145/1374376.1374396}. Arithmetic circuits have gates that operate on two types, i.e., addition and multiplication. Besides gates, there are wires, that carry integer variables. Retrospectively, it is an important achievement, since arbitrary computer programs can be expressed via arithmetic circuits, which is the basis layer of many zero-knowledge protocols as of today. More mathematical tools for understanding the functionality of argument systems are covered in chapter 5.2.
 \subsubsection{Zero-Knowledge}
-\begin{comment}
--Thaler simulator zero knowledge definition
--indistinguishable: Thaler
-- statistical (proofs) and computaional (arguments) soundness
-- 3 types of zero-knwoledge: perfect, statistical and computational
-- so with honest verifier assumption at least 6 types of protocols: Eleanor Birrell and Salil Vadhan. Composition of zero-knowledge proofs with efficient
-provers. In Theory of Cryptography Conference, pages 572–587. Springer, 2010. 172
+If the verifier knows nothing about the statement and the witness, but its validity, the algorithm will run in zero-knowledge. This property can be described by making use of a simulator notion \citep{Thaler}: There exists a prover and probabilistic polynomial time verifier strategy under the honest verifier assumption. For any probabilistic polynomial time verifier strategy, there is a probabilistic polynomial time algorithm (simulator), that can depend on the verifier strategy, which produces outputs that are indistinguishable from the distribution of transcripts generated through the prover and verifier strategy interactions. The simulator ensures, that the verifier only learns that \(x \in L\). Under the honest verifier assumption, there are at least six types of zero-knowledge protocols, whereby the notion of simulator output and transcript distribution being indistinguishable is at focus \citep{zktypes}:
+\begin{itemize}
+    \item \textbf{Perfect Zero-Knowledge}: The output of the simulator \(S(x)\) and the distribution of the transcript created through prover and verifier strategy interaction \(View_V(P(x), V(x))\) within the protocol is identical. 
+    \item \textbf{Statistical Zero-Knowledge}: \(S(x) \text{ and } View_V(P(x), V(x))\) have a negligible statistical distance, given a polynomial number of samples from the distributions.
+    \item \textbf{Computational Zero-Knowledge}: \(S(x) \text{ and } View_V(P(x), V(x))\) can be distinguished with negligible probability, only if a polynomial number of samples is given.
+\end{itemize}
+Resuming the definition in 5.1, soundness is divided into statistical (for proof systems) and computational (for argument systems) soundness. Argument systems are computationally sound, i.e., allow for applying cryptographic primitives. The computationally bound prover cannot break these primitives, unlike the unbound prover in proof systems, which are statistically sound \citep{Thaler}. The verifier not only learn that a statement is true, but also has to be convinced that the prover knows a witness that is true. The simulator is able to extract that witness information through interaction with the algorithm (knowledge soundness) \citep{NitulescuGentleIntroSNARKs}.
 
-knowledge soundness
-proof of knowledge
-obtaining zero knowledge from it: verifier learns nothing about the witness
-\end{comment}
 \subsection{Linear PCPs}
 \textit{Probabilistically Checkable Proofs} (PCPs) differ from previously introduced proofs, because there is no need for the prover to answer queries based on the current or previous query content posted by the verifier. The polynomial time verifier is provided with oracle access to a static proof string \begin{math} \pi \end{math}, whereby the proof is queried and the result of it only depends on the currently processed query \citep{PCP}. The breakthrough of powerful, pairing-based schemes is attributable to \citet{GennaroLinPCP}, who introduced \textit{Quadratic Arithmetic Programs} (QAPs), as variant of quadratic span programs. Quadratic span programs are more efficient, because they only satisfy boolean circuits. Therefore, the introduction of QAPs is important to represent more practical computations, e.g., multiplication gates, whereby the efficiency lies in the usability for effectively solving more natural problems. Any arithmetic circuit instance can be transformed into instances of a \textit{rank-1 constraint system} (R1CS).
 \begin{align*}
@@ -185,7 +181,6 @@ Kate commitments use the elliptic curve generated points published in the public
 \begin{align*}
     \text{\parbox{450pt}{\textbf{Schwartz-Zippel Lemma.} \textit{Let \(f(x)\) be a non-zero polynomial with degree \(d\) over \begin{math}\mathbb{F}^n\end{math}, then, for a randomly chosen \(r\), the probability of \(f(r) = 0\) is at most \(\frac{d}{n}\).}}}
 \end{align*}
-    
 The \textit{Schwartz-Zippel lemma} proves that the polynomial evaluates to 0 at any point with high probability, if it evaluates to 0 at a given random \(r\). If two polynomials evaluate equally at \(r\), they are equal at every point with high probability. In a polynomial commitment scheme this suggestion is beneficial. The prover evaluates the polynomial at the random \(r\) chosen by the verifier, and sends it along with a proof. If the proof is valid, the verifier concludes that the result of the prover is also valid \citep{Kate2010ConstantSizeCT}.
 
 The computation is first converted into an arithmetic circuit. Then, the arithmetic circuit is used to obtain a constraint system, similar to the R1CS from the previous chapter. Both have only one multiplication allowed per gate. However, PLONK only allows for one addition per gate, as long as it is not a constant. This constraint system also comes with copy constraints, which are used to transform the system into polynomials. The verification is executed using a polynomial commitment scheme (see Figure \ref{fig:plonk}).
@@ -244,7 +239,7 @@ A proof is generated by using these permutations and computing the values of all
 In practice, the permutation accumulators are not expressed in dependency of vector size \(n\), but through high order roots of unity, whereby the field elements satisfy \(\omega^n = 1\). Also, all values are expressed as elements within a finite field of prime order \(p\), similar to the circuit specific zk-SNARKs. The X coordinates are not expressed as indices dependent of vector size \(n\), but with \(omega\) and some random element \(g\) in the field.
 
 \subsubsection{Summary}
-After transforming all the constraints intro sets of polynomials, the following checks need to be performed to verify the proofs \citep{PLONKcryptoeprint:2019/953, buterinplonk} CHEN ET AL 2022. Through the polynomial commitment scheme based on \citep{Kate2010ConstantSizeCT}, these checks can be verified. Elliptic curve points are generated at random, similar to circuit based zk-SNARKS, and used to evaluate the polynomials. Elliptic curve pairings allow to check whether the equations hold true without any of the generated points, or polynomials to be revealed. 
+After transforming all the constraints intro sets of polynomials, the following checks need to be performed to verify the proofs \citep{PLONKcryptoeprint:2019/953, buterinplonk, chen2022review}. Through the polynomial commitment scheme based on \citep{Kate2010ConstantSizeCT}, these checks can be verified. Elliptic curve points are generated at random, similar to circuit based zk-SNARKS, and used to evaluate the polynomials. Elliptic curve pairings allow to check whether the equations hold true without any of the generated points, or polynomials to be revealed. 
 The equation in (5.3) is the main equation of the circuit that needs to be checked. Then, in total, there are six permutation accumulator functions for the witness assignment vectors and their copy constraints. The equation check in (5.4) is resulting into six rounds:
 \begin{align}
 \end{align}
@@ -289,7 +284,7 @@ Deng et al 2022: history of range proofs, cuproof as example
 \end{comment}
 
 \section{Application Domains and Use Cases}
-Zero-knowledge proofs find broader implementation due to increasing interest in decentralized applications in recent years. However, despite successful research efforts in distributed ledger technology, there is only limited adoption of blockchain-based solutions outside the financial sector. One of the main challenges, pointed out by \citet{SedlmeirTransparencyChallenge}, is the need to make sensitive data visible. The high transparency blockchain offers collides with the need to preserve privacy and allow for restricted visibility. \citet{Godden} describe it as increasing consciousness to preserve data confidentiality and ownership, which leads to the development of privacy enhancing technologies. The literature review (SLR approach is described in chapter 4) shows that general purpose zero-knowledge proofs find implementation as essential elements in domains with enhanced privacy preserving efforts. ZKP implementations can be categorized into the following application domains: \textit{Identity Management}, \textit{Data Sharing and Traceability}, and, \textit{System Scaling} \citep{PipeZK}(MORAIS ET AL, CHEN ET AL). Use cases from these application domains are clustered according to the problem domain they are attempting to solve (Table \ref{tab:domains}): (1) \textit{Electronic Voting and Government}, (2) \textit{Electronic Auctions}, (3) \textit{Data Queries and Traceability}, (4) \textit{Electronic Healthcare}, (5) \textit{Cloud Security}, and (6) \textit{Scaling and Performance}.
+Zero-knowledge proofs find broader implementation due to increasing interest in decentralized applications in recent years. However, despite successful research efforts in distributed ledger technology, there is only limited adoption of blockchain-based solutions outside the financial sector. One of the main challenges, pointed out by \citet{SedlmeirTransparencyChallenge}, is the need to make sensitive data visible. The high transparency blockchain offers collides with the need to preserve privacy and allow for restricted visibility. \citet{Godden} describe it as increasing consciousness to preserve data confidentiality and ownership, which leads to the development of privacy enhancing technologies. The literature review (SLR approach is described in chapter 4) shows that general purpose zero-knowledge proofs find implementation as essential elements in domains with enhanced privacy preserving efforts. ZKP implementations can be categorized into the following application domains: \textit{Identity Management}, \textit{Data Sharing and Traceability}, and, \textit{System Scaling} \citep{PipeZK, chen2022review, morais2019survey}. Use cases from these application domains are clustered according to the problem domain they are attempting to solve (Table \ref{tab:domains}): (1) \textit{Electronic Voting and Government}, (2) \textit{Electronic Auctions}, (3) \textit{Data Queries and Traceability}, (4) \textit{Electronic Healthcare}, (5) \textit{Cloud Security}, and (6) \textit{Scaling and Performance}.
 
 \setlength{\tabcolsep}{2ex}
 \renewcommand{\arraystretch}{1.5}%
@@ -398,3 +393,9 @@ good implementation papers:
 -maybe too little literature for an own sub chapter
 -Simunic et al mention need for more sustainable solutions in blockchain privacy preserving through ZKPs
 -elements from Sedlmeier Völter Strüker (2021): ZKPs are more sustainable 
+
+\begin{comment}
+    end this chapter with (maybe):
+    - ZKPs still need more practical implementations and adoption in real life use cases
+    - main problem is black box appearance of ZKPs and lack of awareness on how they can be leveraged and when does what work in specific scenarios and on what conditions
+\end{comment}
