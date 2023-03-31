@@ -327,7 +327,7 @@ Preliminaries to understand the Groth16 protocol have been covered. In the follo
 
 \setlength{\tabcolsep}{2ex}
 \renewcommand{\arraystretch}{1.5}%
-\begin{table}[hb]
+\begin{table}[hbt]
 	\centering
 	    \caption{Groth16 given parameters}
 		\begin{tabular}{| m{0.35\linewidth} | m{0.6\linewidth} |}
@@ -469,8 +469,51 @@ Eventually, we get the equality check we wanted to achieve (6.15). The use of th
 \subsection{Summary of Requirements}
 - use case support system for predictive maintenance
 \subsection{Implementation and Results}
-- description of circom, snarkjs implementation
+
+\begin{comment}
+- description of circom, snarkjs implementation: https://docs.circom.io/
+-->powers of tau cerenomy, no trusted set up with plonk
+
 - graphic of how the zkDApp works
+
+- the submitter puts in the info, commits on chain, creates the proof
+- the proof is only verifiable, once the attesters have attested to the information
+- attesters can access their info via attestation links and compute decryption locally
+- once attested to, the verifier can view the truthfulness of the data, not the data itself
+- with the proof at hand, the verifier can verify the proof in zero knowledge on chain, without learning anything about the underlying data other than that it is attested to as true by the right insitutions
+- any other participant can see the latest encrypted verified information on chain, and that the intitution(s) have successfully attested and it is true
+
+0: ZkDocSchema.ts: in zkdocs-lib
+- the schema that makes use of the json template created by verifier
+- defines valid operators (add, sub, none) and constraint types (less than, greater than)
+- validates if template matches to constraint ops and types, and also valid institutions
+- also has some value validations in it, e.g., only positive numbers, encodings up to 31 characters only due to finite field size 
+
+1: ZkDocument.sol smart contract:
+- stores: trusted institutions, commitments per field, the selected attester addresses, field indices of the fields that have been verified by attester(s), address of submitter
+- generates nonce for each field and runs commitment scheme
+- it can add and remove trusted institution(s) from the set of trusted (addValidInstitution, addValidInstitutions, removeValidInstitution)
+- it has function to attest-->only the attester specified by the committer can attest and this function checks it and also checks that the field index that the attester wants to attest to matches with the one specified by the committer, flips the bit for the field indices to true (attested)
+- function attestMultiple--> runs attest function for all field indices specified
+- postFields: posts the commitments and checks 1)that the commitment length matches the number of fields 2) that the correct number of insitutions that have to attest is in the commitment 3) that the commitment is unique and has not been posted already
+-validateSubmitter: checks that all fields have been attested by attestor(s) and fills pubSignals array for plonk with all commitments, verifies the zk proof by using the verifyProof function in IPlonkVerifier.sol
+- stores keccak256 hash of the schema to prevent client side attacks
+- getFieldIndex: gets fieldindex in form of keccak256 hashfrom schema 
+
+2:ZkDocGenerator.ts:
+- acts as a wrapper for circom and snarkjs
+- builds the circuit with buildAll(), generated the Plonk Verifier with all the necessary parameters in the plonk zk-SNARKs (zkey, circuit cache artifacts)
+- generated the constraint string also and looks up the field indices directly in the schema that have to be attested to
+
+
+3: the circuit circuit.circom
+sets the constraints, checks for each field if commitment == poseidon3(value, nonce)
+
+5 zkdocs-ui:
+- SchemaUtils.ts finds the correct schema from keccak256 schema hash, uses zkdocs-lib to get fields and indices, schema constraints and institutions to validate
+-zkdocs-lib also has the necessary functions declared for poseidon and keccak256 hashing for schema and its content
+\end{comment}
+
 \subsection{Evaluation}
 - comparison of groth16 and plonk performance
 - limitations of the implementation
