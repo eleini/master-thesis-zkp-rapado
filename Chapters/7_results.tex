@@ -465,15 +465,21 @@ Now, we can replace A and B. We also see that the middle of the equation is \(L_
 Eventually, we get the equality check we wanted to achieve (6.15). The use of the secret encoded values \(\alpha, \beta\) of the toxic waste (6.22) force the prover algorithm to use the same coefficients of the solution vector (witness) to compute \(A(X), B(X), C(X)\). \(\gamma, \delta\) ensure that the public inputs of order \(l\) are independent from the solution vector (witness). In order to achieve the zero-knowledge aspect, \(r, s\) are used to randomly shift the proof.
 
 \section{Plonk-based zk-DApp}
-- definition of plonk and comparison to groth16/differences and why
+
+\subsubsection{Circom, snarkjs}
+The zero-knowledge part of the zk-DApp is implemented via circom and snarkjs, which are developed by iden3. iden3 is an open-source project focused on scalable and distributed identity systems on zero-knowledge proofs, i.e., providing protocols, data structures, and modules. The current objectives include achieving self-sovereign identities free of charge, minimizing on-chain transactions, re-designing privacy with non-reusable proofs, creating complete products, e.g., user wallets, and focusing on community standardization \citep{iden3aboutus}. Circom is Rust-based and allows to write and compile arithmetic circuits. In circom, there is a data type called field elements, which are values modulo a large prime number and based on the BN128 elliptic curve by default \citep{circom} By compiling the circuit, R1CS files are generated: the constraint system in binary format, a symbols file for debugging, and files that are necessary to generate the witness. In order to compute the witness, an input file in json format needs to be specified, that contains the witness information. In the zk-DApp, the submitter enters the information to be verified, which is processed according to an input schema. The witness is computed and saved in a file format accepted by snarkjs. Snarkjs is a JavaScript library that continues with the outputs from circom and executes a specified zero-knowledge proof protocol, e.g., currently, Groth16, Plonk, and Fflonk are supported \citep{snarkjsdoc}. For this use case, snarkjs' plonk implementation is utilized. For the verification, as well as intermediate result hashes, a powers of tau file is utilized, so that the multi-party computation can be performed. In Groth16, it is utilized during the trusted setup (5.2.1). In plonk, this is the source of public randomness (5.2.2). Figure \ref{fig:zk-DAppgeneral} shows the main steps performed for a plonk-based zk-DApp. Plonk does not require a trusted ceremony for each circuit, i.e., the powers of tau ceremony is universal. After compiling the circuit and calculating the witness, the snarkjs plonk can be setup. A final protocol transcript key (zkey) is generated and verified. It is the zero-knowledge key that includes proving and verification key \citep{snarkjsdoc}. From the zkey, the verification key is exported in json format. With this verification key file, the final zkey file and the witness file, the proof file, and the file with the public inputs and outputs are generated. These two files and the verification key are used to verify the proof. The verifier is transformed into a smart contract (PlonkVerifier.sol), that is performing the verification. In order to utilize the PlonkVerifier smart contract that is exported in the previous step, an interface needs to be created (IPlonkVerifier.sol), which initiates verifyProof and outputs a true or false. With every user input, a witness and proof are calculated. The commitment is posted and the smart contract deployed. Once verified, the frontend shows an update, e.g., a green highlighting for a successfully flipped bit. 
+\begin{figure}[hbt]
+	\centering
+		\includegraphics[width=1.0\textwidth]{Pictures/circom snarkj plonk process flow.png}
+	\caption{plonk-based zk-DApp high-level process flow}
+	\label{fig:zk-DAppgeneral}
+\end{figure}
 \subsection{Summary of Requirements}
 - use case support system for predictive maintenance
 \subsection{Implementation and Results}
 
+\subsubsection{Sequence of events}
 \begin{comment}
-- description of circom, snarkjs implementation: https://docs.circom.io/
--->powers of tau cerenomy, no trusted set up with plonk
-
 - graphic of how the zkDApp works
 
 - the submitter puts in the info, commits on chain, creates the proof
@@ -482,6 +488,14 @@ Eventually, we get the equality check we wanted to achieve (6.15). The use of th
 - once attested to, the verifier can view the truthfulness of the data, not the data itself
 - with the proof at hand, the verifier can verify the proof in zero knowledge on chain, without learning anything about the underlying data other than that it is attested to as true by the right insitutions
 - any other participant can see the latest encrypted verified information on chain, and that the intitution(s) have successfully attested and it is true
+\end{comment}
+\subsubsection{Highlighted features}
+\begin{comment}
+- description of circom, snarkjs implementation: https://docs.circom.io/
+- more details : https://medium.com/@yujiangtham/writing-a-zero-knowledge-dapp-fd7f936e2d43
+-->powers of tau cerenomy, no trusted set up with plonk
+
+
 
 0: ZkDocSchema.ts: in zkdocs-lib
 - the schema that makes use of the json template created by verifier
