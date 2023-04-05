@@ -465,38 +465,79 @@ Now, we can replace A and B. We also see that the middle of the equation is \(L_
 Eventually, we get the equality check we wanted to achieve (6.15). The use of the secret encoded values \(\alpha, \beta\) of the toxic waste (6.22) force the prover algorithm to use the same coefficients of the solution vector (witness) to compute \(A(X), B(X), C(X)\). \(\gamma, \delta\) ensure that the public inputs of order \(l\) are independent from the solution vector (witness). In order to achieve the zero-knowledge aspect, \(r, s\) are used to randomly shift the proof.
 
 \section{Plonk-based zk-DApp}
-
+The decentralized application for zero-knowledge MRO data attestation (zk-DApp) facilitates data entries and data sharing between MRO data owners (submitters) and aviation authorities (attesters) in zero-knowledge. This software artifact attempts to ensure compatibility between the lack of trust between industry participants and the need for data verification and transparency (trade-off between requirements within the project).
 \subsubsection{Circom, snarkjs}
-The zero-knowledge part of the zk-DApp is implemented via circom and snarkjs, which are developed by iden3. iden3 is an open-source project focused on scalable and distributed identity systems on zero-knowledge proofs, i.e., providing protocols, data structures, and modules. The current objectives include achieving self-sovereign identities free of charge, minimizing on-chain transactions, re-designing privacy with non-reusable proofs, creating complete products, e.g., user wallets, and focusing on community standardization \citep{iden3aboutus}. Circom is Rust-based and allows to write and compile arithmetic circuits. In circom, there is a data type called field elements, which are values modulo a large prime number and based on the BN128 elliptic curve by default \citep{circom} By compiling the circuit, R1CS files are generated: the constraint system in binary format, a symbols file for debugging, and files that are necessary to generate the witness. In order to compute the witness, an input file in json format needs to be specified, that contains the witness information. In the zk-DApp, the submitter enters the information to be verified, which is processed according to an input schema. The witness is computed and saved in a file format accepted by snarkjs. Snarkjs is a JavaScript library that continues with the outputs from circom and executes a specified zero-knowledge proof protocol, e.g., currently, Groth16, Plonk, and Fflonk are supported \citep{snarkjsdoc}. For this use case, snarkjs' plonk implementation is utilized. For the verification, as well as intermediate result hashes, a powers of tau file is utilized, so that the multi-party computation can be performed. In Groth16, it is utilized during the trusted setup (5.2.1). In plonk, this is the source of public randomness (5.2.2). Figure \ref{fig:zk-DAppgeneral} shows the main steps performed for a plonk-based zk-DApp. Plonk does not require a trusted ceremony for each circuit, i.e., the powers of tau ceremony is universal. After compiling the circuit and calculating the witness, the snarkjs plonk can be setup. A final protocol transcript key (zkey) is generated and verified. It is the zero-knowledge key that includes proving and verification key \citep{snarkjsdoc}. From the zkey, the verification key is exported in json format. With this verification key file, the final zkey file and the witness file, the proof file, and the file with the public inputs and outputs are generated. These two files and the verification key are used to verify the proof. The verifier is transformed into a smart contract (PlonkVerifier.sol), that is performing the verification. In order to utilize the PlonkVerifier smart contract that is exported in the previous step, an interface needs to be created (IPlonkVerifier.sol), which initiates verifyProof and outputs a true or false. With every user input, a witness and proof are calculated. The commitment is posted and the smart contract deployed. Once verified, the frontend shows an update, e.g., a green highlighting for a successfully flipped bit. 
+The zero-knowledge part of the zk-DApp is implemented via circom and snarkjs, which are developed by iden3. iden3 is an open-source project focused on scalable and distributed identity systems on zero-knowledge proofs, i.e., providing protocols, data structures, and modules. The current objectives include achieving self-sovereign identities free of charge, minimizing on-chain transactions, re-designing privacy with non-reusable proofs, creating complete products, e.g., user wallets, and focusing on community standardization \citep{iden3aboutus}. Circom is Rust-based and allows to write and compile arithmetic circuits. In circom, there is a data type called field elements, which are values modulo a large prime number and based on the BN128 elliptic curve by default \citep{circom} By compiling the circuit, R1CS files are generated: the constraint system in binary format, a symbols file for debugging, and files that are necessary to generate the witness. In order to compute the witness, an input file in json format needs to be specified, that contains the witness information. In the zk-DApp, the submitter enters the information to be verified, which is processed according to an input schema. The witness is computed and saved in a file format accepted by snarkjs. Snarkjs is a JavaScript library that continues with the outputs from circom and executes a specified zero-knowledge proof protocol, e.g., currently, Groth16, Plonk, and Fflonk are supported \citep{snarkjsdoc}. For this use case, snarkjs' plonk implementation is utilized. For the verification, as well as intermediate result hashes, a powers of tau file is utilized, so that the multi-party computation can be performed. In Groth16, it is utilized during the trusted setup (5.2.1). In plonk, this is the source of public randomness (5.2.2). Figure \ref{fig:zk-DAppgeneral} shows the main steps performed for a plonk-based zk-DApp. Plonk does not require a trusted ceremony for each circuit, i.e., the powers of tau ceremony is universal. After compiling the circuit and calculating the witness, the snarkjs plonk can be setup. A final protocol transcript key (zkey) is generated and verified. It is the zero-knowledge key that includes proving and verification key \citep{snarkjsdoc}. From the zkey, the verification key is exported in json format. With this verification key file, the final zkey file and the witness file, the proof file, and the file with the public inputs and outputs are generated. These two files and the verification key are used to verify the proof. The verifier is transformed into a smart contract (PlonkVerifier.sol), that is performing the verification. In order to utilize the PlonkVerifier smart contract that is exported in the previous step, an interface needs to be created (IPlonkVerifier.sol), which initiates verifyProof and outputs a true or false. With every user input, a witness and proof are calculated. The commitment is posted and the smart contract deployed. Once verified, the frontend shows an update, e.g., a green highlighting. 
 \begin{figure}[hbt]
 	\centering
 		\includegraphics[width=1.0\textwidth]{Pictures/circom snarkj plonk process flow.png}
 	\caption{plonk-based zk-DApp high-level process flow}
 	\label{fig:zk-DAppgeneral}
 \end{figure}
+
+For deployment, broadcasting, and development, hardhat testnet is used. Metamask is used as crypto wallet browser plugin.
+
 \subsection{Summary of Requirements}
 - use case support system for predictive maintenance
+- MRO KPIs are found in different documents, have to be attested by different institutions: e.g. shop report -->repair shop, release certificate-->aviation authority
+- also for trading this is important information 
+- this use case resulted from requirement privacy and transparency as well as trading of parts
+- assumption: data is available
+- überleitung zur daten architektur: automatic verification of part id and its true existence through merkle tree zk verification
+
+Notizen:
+
+In den Ausblick der zk-dapp
+-für einen part die schwellenwerte finden
+-time since last service
+-validation network as attester—>Übergang zum 2.artefakt 
+
+-schwellenwerte ausgelesen werden
+-aber auch die attester müssen ausgelesen werden
+
+—>release certificate: Behörde
+—> shop report: MRO Betrieb
+
+-MRO KPIs: für den Handel, aus den MRO Daten ergeben, aus Privatsphäre/Transparenz requirement, ohne dass man Einsicht ins gesamte shop report geben will
+in the end:
+The zk-DApp is organized as follows: the backend directory stores the json input schema, the solidity smart contracts, the circom circuit and corresponding generated files (6.2). The lib directory stores shared files between backend and frontend, as well as hashing functions used , e.g, in the circuit code. The UI directory finds the correct schema to be used and also stores a copy of the final protocol transcript key and the witness generating file. It also stores the frontend code for the landing page and all corresponding pages to submit, verify and attest to MRO data.
+
 \subsection{Implementation and Results}
+In the following, the different roles and the steps to be performed in the zk-DApp is described. First, the process flow and general functionalities are depicted. Second, important implementation logic and features are highlighted with references to the implementation code. Lastly, open items and limitations are discussed.
+
+For the zk-DApp to start, the command \textit{yarn start} needs to be executed in the zkdocs-backend directory. It will start the hardhat test network and show a set of test accounts with private keys to use. These test accounts are also used for the accounts of the verifier, submitter and attesters. The next command in Figure \ref{fig:second-cmd} is also run in the same directory and deploys the schema for the MRO data entry. It triggers the circom and snarkjs ceremonies and shows the number of constraints, inputs, outputs, wires, and labels in the arithmetic circuit. Also, it shows that the corresponding R1CS, symbols and witness generating files are written successfully. Once, the setup is finished, the public keays of the deployer (submitter), plonk verifier (PlonkVerifier.sol smart contract address), and zkDoc (ZkDocument.sol smart contract address) are shown. The zkDoc public key needs to be parsed every time another set of inputs needs to be made, a verification needs to be performed, or to see the latest verification. In the end, the schema is created and the corresponding directories are listed. The UI can be started with the same command \textit{yarn start} in the zkdocs-ui directory.
+
+\begin{figure}[hbt]
+	\centering
+		\includegraphics[width=1.0\textwidth]{Pictures/second-cmd.png}
+	\caption{Initiating the deployment and plonk in circom, snarkjs in the zk-DApp backend}
+	\label{fig:second-cmd}
+\end{figure}
 
 \subsubsection{Sequence of events}
-\begin{comment}
-- graphic of how the zkDApp works
+In the zk-DApp, there are three roles: verifier, submitter, and attester. In this scenario, the verifier also acts as administrator, operating the zk-DApp. Hence, the administrator operates the schema with constraints, fields and the list of trusted institutions that are capable to attest in the zk-DApp. The submitter is in possession of MRO data, and seeks validation. The attester is assigned the task to view specific information shared with them and can validate it, i.e., attest to the data provided. The verifier can obtain the proof and verify it. Other stakeholders in the system can learn, that there is verified information, but do not learn anything besides its correctness.
 
-- the submitter puts in the info, commits on chain, creates the proof
-- the proof is only verifiable, once the attesters have attested to the information
-- attesters can access their info via attestation links and compute decryption locally
-- once attested to, the verifier can view the truthfulness of the data, not the data itself
-- with the proof at hand, the verifier can verify the proof in zero knowledge on chain, without learning anything about the underlying data other than that it is attested to as true by the right insitutions
-- any other participant can see the latest encrypted verified information on chain, and that the intitution(s) have successfully attested and it is true
-\end{comment}
+The following sequence of events refers to the landing page of the zk-DApp (Figure \ref{fig:landing-page}).
+\begin{figure}[hbt]
+	\centering
+		\includegraphics[width=1.0\textwidth]{Pictures/landingpage.png}
+	\caption{zk-DApp landing page}
+	\label{fig:landing-page}
+\end{figure}
+
+\textit{Fill Form}:
+The submitter connects their wallet and can see an input mask for MRO data entries. In this first prototype, the submitter can enter the part identifier, flight hours, the latest certificate form identifier, and MRO cycles. Once the values are added, the submitter decides which authority needs to attest to the values, e.g., FAA/Unites States, EASA. If the constraints are met, the submitter generates the proof, which results in the following: first, the proof is generated and displayed. Second, there are communication links generated, that can be parsed in another browser tab. These links are specific to the respective attesters, so the data assigned to them can be viewed. In practice, this has to be realized via separate communication channels to alert attesters, once a new set of MRO data inputs was performed. The submitter commits to these entries and the proof on-chain. Now, the values can be viewed by the respective attester and validated.
+
+\textit{Attest to MRO data}: The respective attester follows the attestation link, connects their wallet, and only sees the decrypted values of the data assigned to them for validation. The attester marks the data as true and commits the result. Once all attesters have successfully attested to the data, the verification can be initiated.
+
+\textit{Verify Form}: Another user, e.g., the administrator or any dedicated user, can perform the verification. The verifier connect their wallet and checks the attestations. The only information available is the green mark, that data has been successfully attested to, which fields have been attested to, and who attested to these field values. The values are shown in encrypted format. With the proof at hand, the verifier can verify and submit. If the attestations are correct, a bit will be flipped in the smart contract (SOURCE ZKDOCS), and the verification is successfully performed.
+
+\textit{View Verified}: Any participant can view the latest verified information. However, only the green mark is shown of whether the data is correct, the field names, and which trusted authority performed the attestation. The verifier and other participants do not learn anything besides that the information provided is correct and has been truthfully attested by a specific trusted institution.
+
 \subsubsection{Highlighted features}
+The following features are described in more detail to illustrate the underlying functionality applied in the zk-DApp. 
+
 \begin{comment}
-- description of circom, snarkjs implementation: https://docs.circom.io/
-- more details : https://medium.com/@yujiangtham/writing-a-zero-knowledge-dapp-fd7f936e2d43
--->powers of tau cerenomy, no trusted set up with plonk
-
-
-
 0: ZkDocSchema.ts: in zkdocs-lib
 - the schema that makes use of the json template created by verifier
 - defines valid operators (add, sub, none) and constraint types (less than, greater than)
@@ -519,21 +560,18 @@ The zero-knowledge part of the zk-DApp is implemented via circom and snarkjs, wh
 - builds the circuit with buildAll(), generated the Plonk Verifier with all the necessary parameters in the plonk zk-SNARKs (zkey, circuit cache artifacts)
 - generated the constraint string also and looks up the field indices directly in the schema that have to be attested to
 
-
 3: the circuit circuit.circom
 sets the constraints, checks for each field if commitment == poseidon3(value, nonce)
+- we use poseidon to show encrypted values for institutions that shall not see specific data, but we still need to check it
+- decryption happens off chain locally on the institution's end
+- institution computes commitment locally and checks with the one on chain
 
 5 zkdocs-ui:
 - SchemaUtils.ts finds the correct schema from keccak256 schema hash, uses zkdocs-lib to get fields and indices, schema constraints and institutions to validate
 -zkdocs-lib also has the necessary functions declared for poseidon and keccak256 hashing for schema and its content
 \end{comment}
 
-\subsection{Evaluation}
-- comparison of groth16 and plonk performance
-- limitations of the implementation
-- future outlook with turboplonk
-
-\section{Verification Mechanism Architecture}
+\subsection{Verification Mechanism Architecture}
 -create a architecture for verification mechanisms in Rapado, based on Sedlmeier, Völter, Strüker (2021):
 -->proof membership in a merkle tree? data structure of parts, certificates
 
@@ -541,3 +579,19 @@ sets the constraints, checks for each field if commitment == poseidon3(value, no
 
 - build zk DAPP for document verification with circom snarkjs on hardhat test network
 - maybe use snarkjs Groth16 first and then PLONK as future outlook, when TurboPLONK support will come in snarkjs
+
+\subsection{Evaluation}
+- how fast is the zk-DApp with plonk on my PC?
+- why is the architecture good -->because it tackles the assumptions that are made for the zk-DApp and focuses on another big requirement in the project: the data digitization approach
+- comparison of groth16 and plonk performance
+- limitations of the implementation
+- future outlook with turboplonk
+
+content:
+- data has to be made more available: automatic part id verification, automatic assignment of attesters according to fields (e.g. MRO cycles always done by repair shop)
+- also automatic threshold identification according to part id and part description: e.g. a turbine needs another threshold than a wing
+- data structure will dictate industry effectiveness of zero-knowledge proof implementations in the project as well as adoption
+- zk-DApp flexible and easy to adapt to further business cases
+- the data structure verification with zero-knowledge proposes another way of making use of ZKP for the requirement to create a industry standard for MRO data digitization and verification
+
+
