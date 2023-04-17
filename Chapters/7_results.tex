@@ -1,18 +1,21 @@
 \chapter{Implementation and Results}
+The following sub chapters present the results of this master's thesis. First, requirements are summarized. Subsequently, the example computation of a Groth16 proof and verification is described in detail. The first artifact, the zero-knowledge decentralized application (zk-DApp) is demonstrated. The second artifact, an architecture proposal for zero-knowledge data structure of spare part certification and meta data information is introduced. Ultimately, artifacts are evaluated and a future outlook is provided.
 
 \section{Summary of Requirements}
+The requirements positioned in previous chapters (4 and 5) can be summarized as follows: 
+
+\begin{enumerate}
+    \item Zero-knowledge proof systems are identified to be a disruptive technology in the domain of blockchain-based research and development. One project requirement is to \textbf{accumulate knowledge and current research outcomes} in this field to extend expertise within RAPADO \citep{ZedelJ}. As an outcome to the extensive literature review, the Groth16 algorithm is introduced in detail by using an example calculation problem (6.2). In the step-wise computation, the problem is split and transformed to an arithmetic circuit, arriving at a R1CS. From this, the QAP is calculated. Additionally, tools, e.g, homomorphic hiding and elliptic curve pairing are introduced. Ultimately, following the Groth16 protocol, the key and proof generation, as well as verification mechanisms are illustrated.
+    \item The requirement of \textbf{constructing a trade-off between privacy, confidentiality and transparency} arises from preliminary work in the project and at the department of information systems \citep{FornaconFrank, ZedelJ, semesterproject}. The use of blockchain-based solutions enables great transparency at the cost of confidentiality. With the constantly increasing awareness for data privacy, combined with trust issues and regulatory data confidentiality requirements in the industry, zero-knowledge proof systems have to be explored and utilized to secure adoption of project results and products in the future. The first minimal viable product (MVP) of the zk-DApp for MRO data attestations contributes to this goal and satisfies this requirement. The zk-DApp is organized as follows: the backend directory stores the json input schema, the solidity smart contracts, the circom circuit and corresponding generated files (6.2). The lib directory stores shared files between backend and frontend, as well as hashing functions used, e.g, in the circuit code. The UI directory finds the correct schema to be used and also stores a copy of the final protocol transcript key and the witness generating file. It also stores the frontend code for the landing page and all corresponding pages to submit, attest to, and verify MRO data.
+    \item Current paper-based MRO documentation of aviation spare parts largely sets the requirement for \textbf{fraud-preventive verification mechanisms, enabled though effective data formats and digitization of spare part documents}. Fraud-preventive verification is covered via the zk-DApp. However, current data digitization efforts for spare part documentation need to be further addressed: the zero-knowledge data structure architecture enables consistent and temper-proof data storage via merkle trees, and proofs specific memberships, e.g., mechanics who worked at a specific part at a given time, in zero-knowledge.
+\end{enumerate}
 
 \begin{comment}
 -research disruptive technologies and creating knowledge in the project: calculation example Groth16
 -privacy/confidentiality vs transparency : zk-DApp
 -need for fraud-preventive verification mechanism enabled through effective data formats digitization of aviation parts and document data: architecture
 
-- use case support system for predictive maintenance
-- MRO KPIs are found in different documents, have to be attested by different institutions: e.g. shop report -->repair shop, release certificate-->aviation authority
-- also for trading this is important information 
-- this use case resulted from requirement privacy and transparency as well as trading of parts
-- assumption: data is available
-- überleitung zur daten architektur: automatic verification of part id and its true existence through merkle tree zk verification
+
 
 Notizen:
 
@@ -28,19 +31,17 @@ In den Ausblick der zk-dapp
 —> shop report: MRO Betrieb
 
 -MRO KPIs: für den Handel, aus den MRO Daten ergeben, aus Privatsphäre/Transparenz requirement, ohne dass man Einsicht ins gesamte shop report geben will
-in the end:
 \end{comment}
-The zk-DApp is organized as follows: the backend directory stores the json input schema, the solidity smart contracts, the circom circuit and corresponding generated files (6.2). The lib directory stores shared files between backend and frontend, as well as hashing functions used, e.g, in the circuit code. The UI directory finds the correct schema to be used and also stores a copy of the final protocol transcript key and the witness generating file. It also stores the frontend code for the landing page and all corresponding pages to submit, attest to, and verify MRO data.
 
 \section{Groth16 proof and verification}
-Let us use an example to illustrate the underlying mathematical methods that are applied in zk-SNARK. The example calculation will use the KoE assumption for simplification. In practice, the FFT is applied. First, the arithmetic circuit is transformed into a R1CS. The R1CS is used to obtain the QAP. Homomorphic hiding, elliptic curves and pairing-based cryptography are introduced in more detail and put in context for the next steps of the calculation. Finally, the Groth16 protocol is introduced: First, the key generation steps are explained. Second, the proof is generated. Lastly, the verification steps are illustrated. Formal definitions are found in 5.2.
+Let us use an example to illustrate the underlying mathematical methods that are applied in zk-SNARK. The example calculation will use the knowledge of the coefficient assumption for simplification. In practice, the FFT is applied. First, the arithmetic circuit is transformed into a R1CS. The R1CS is used to obtain the QAP. Homomorphic hiding, elliptic curves and pairing-based cryptography are introduced in more detail and put in context for the next steps of the calculation. Finally, the Groth16 protocol is introduced: First, the key generation steps are explained. Second, the proof is generated. Lastly, the verification steps are illustrated. Formal definitions are found in 5.2.
 
 Say we want to prove we know a secret x so that
 
 \[x^3 + x + 5 = 35\]
 
 In this case, our secret is x = 3.
-In practice, we would use hiding and modular arithmetic instead of real numbers and calculations since these are easy to forge and find solutions to, which will make the proof useless. For R1CS and QAP we will proceed with real numbers examples to show the underlying mechanisms. The following will demonstrate how any computation that needs to be proven can be converted into polynomial format.
+In practice, we would use hiding and modular arithmetic instead of real numbers and calculations since these are easy to forge and find solutions to, which will make the proof useless. For R1CS and QAP we will proceed with real numbers to show the underlying mechanisms. The following will demonstrate how any computation that needs to be proven can be converted into polynomial format.
 
 \subsubsection{Arriving at a R1CS}
 
@@ -510,7 +511,7 @@ The zero-knowledge part of the zk-DApp is implemented via circom and snarkjs, wh
 For deployment, broadcasting, and development, hardhat testnet is used. Metamask is used as crypto wallet browser plugin.
 
 \subsection{Implementation and Results}
-In the following, the different roles and the steps to be performed in the zk-DApp is described. First, the process flow and general functionalities are depicted. Second, important implementation logic and features are highlighted with references to the implementation code. Lastly, open items and limitations are discussed.
+In the following, the different roles and the steps to be performed in the zk-DApp are described. First, the process flow and general functionalities are depicted. Second, important implementation logic and features are highlighted with references to the implementation code. Lastly, open items and limitations are discussed.
 
 For the zk-DApp to start, the command \textit{yarn start} needs to be executed in the zkdocs-backend directory. It will start the hardhat test network and show a set of test accounts with private keys to use. These test accounts are also used for the accounts of the verifier, submitter and attesters. The next command in Figure \ref{fig:second-cmd} is also run in the same directory and deploys the schema for the MRO data entry. It triggers the circom and snarkjs ceremonies and shows the number of constraints, inputs, outputs, wires, and labels in the arithmetic circuit. Also, it shows that the corresponding R1CS, symbols and witness generating files are written successfully. Once, the setup is finished, the public keays of the deployer (submitter), plonk verifier (PlonkVerifier.sol smart contract address), and zkDoc (ZkDocument.sol smart contract address) are shown. The zkDoc public key needs to be parsed every time another set of inputs needs to be made, a verification needs to be performed, or to see the latest verification. In the end, the schema is created and the corresponding directories are listed. The UI can be started with the same command \textit{yarn start} in the zkdocs-ui directory.
 
@@ -553,33 +554,13 @@ The following features are described in more detail to illustrate the underlying
 \item The UI finds the correct schema via the scheme hash stored, which is facilitated through \textit{SchemaUtils.ts}. From the schema hash, it obtains the corresponding schema and can utilize the files generated through the plonk procedure in circom and snarkjs (6.2).
 \end{itemize}
 \begin{comment}
-0: ZkDocSchema.ts: in zkdocs-lib
-- the schema that makes use of the json template created by verifier
-- defines valid operators (add, sub, none) and constraint types (less than, greater than)
-- validates if template matches to constraint ops and types, and also valid institutions
-- also has some value validations in it, e.g., only positive numbers, encodings up to 31 characters only due to finite field size 
-
-1: ZkDocument.sol smart contract:
-- stores: trusted institutions, commitments per field, the selected attester addresses, field indices of the fields that have been verified by attester(s), address of submitter
-- generates nonce for each field and runs commitment scheme
-- it can add and remove trusted institution(s) from the set of trusted (addValidInstitution, addValidInstitutions, removeValidInstitution)
-- it has function to attest-->only the attester specified by the committer can attest and this function checks it and also checks that the field index that the attester wants to attest to matches with the one specified by the committer, flips the bit for the field indices to true (attested)
-- function attestMultiple--> runs attest function for all field indices specified
-- postFields: posts the commitments and checks 1)that the commitment length matches the number of fields 2) that the correct number of insitutions that have to attest is in the commitment 3) that the commitment is unique and has not been posted already
--validateSubmitter: checks that all fields have been attested by attestor(s) and fills pubSignals array for plonk with all commitments, verifies the zk proof by using the verifyProof function in IPlonkVerifier.sol
-- stores keccak256 hash of the schema to prevent client side attacks
-- getFieldIndex: gets fieldindex in form of keccak256 hashfrom schema
-
-2:ZkDocGenerator.ts:
-- acts as a wrapper for circom and snarkjs
-- builds the circuit with buildAll(), generated the Plonk Verifier with all the necessary parameters in the plonk zk-SNARKs (zkey, circuit cache artifacts)
-- generated the constraint string also and looks up the field indices directly in the schema that have to be attested to
-
-3: the circuit circuit.circom
-sets the constraints, checks for each field if commitment == poseidon3(value, nonce)
-- we use poseidon to show encrypted values for institutions that shall not see specific data, but we still need to check it
-- decryption happens off chain locally on the institution's end
-- institution computes commitment locally and checks with the one on chain
+ÜBERLEITUNG: 
+- use case support system for predictive maintenance
+- MRO KPIs are found in different documents, have to be attested by different institutions: e.g. shop report -->repair shop, release certificate-->aviation authority
+- also for trading this is important information 
+- this use case resulted from requirement privacy and transparency as well as trading of parts
+- assumption: data is available
+- überleitung zur daten architektur: automatic verification of part id and its true existence through merkle tree zk verification
 \end{comment}
 
 \section{Zero-Knowledge Data Structure}
@@ -592,6 +573,7 @@ sets the constraints, checks for each field if commitment == poseidon3(value, no
 - maybe use snarkjs Groth16 first and then PLONK as future outlook, when TurboPLONK support will come in snarkjs
 
 \section{Evaluation}
+\begin{comment}
 - how fast is the zk-DApp with plonk on my PC?
 - why is the architecture good -->because it tackles the assumptions that are made for the zk-DApp and focuses on another big requirement in the project: the data digitization approach
 - comparison of groth16 and plonk performance
@@ -604,5 +586,6 @@ content:
 - data structure will dictate industry effectiveness of zero-knowledge proof implementations in the project as well as adoption
 - zk-DApp flexible and easy to adapt to further business cases
 - the data structure verification with zero-knowledge proposes another way of making use of ZKP for the requirement to create a industry standard for MRO data digitization and verification
+\end{comment}
 
 
