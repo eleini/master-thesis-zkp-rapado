@@ -2,36 +2,32 @@
 The research concept of the thesis is divided as follows: first, a systematic literature review (SLR) will be conducted according to \cite{HevnerAR2004DSiI, vomBrockeJan2019TDgs, Webster2002AnalyzingTP}. Second, Knowledge from the first part will be applied to the project RAPADO. The implementation part of this master's thesis follows an agile development approach. RAPADO use cases for zero-knowledge proof protocols are investigated, conceptualized, and evaluated, considering aspects found in previously examined literature and preliminary work at the department of information systems at Freie Universit{\"a}t Berlin. The application of acquired technical and theoretical knowledge is at focus, while the use cases implemented can be exchanged in the future during further project research. 
 
 \section{Analysis}
-The initial and current status and results of project RAPADO are reflected on. From this analysis, potential use cases and design requirements for the application of zero-knowledge proofs are derived. Following the requirement to accumulate knowledge within the project in order to build expertise in blockchain-based development for the aviation industry, the literature survey focuses on the design of zero-knowledge proofs and theoretical foundations. Opportunities and challenges are displayed by considering practical examples. The second part of the research concept is the implementation of a zero-knowledge application for the use case of MRO data attestation and verification, whereby the demonstration of technical mechanisms is highlighted.
+The initial and current status and results of project RAPADO are reflected on. From this analysis, potential use cases and design requirements for the application of zero-knowledge proofs are derived. Following the requirement to accumulate knowledge within the project in order to build expertise in blockchain-based development for the aviation industry, the literature survey focuses on the design of zero-knowledge proofs and theoretical foundations. Opportunities and challenges are displayed by considering practical examples. The second part of the research concept is the implementation of a zero-knowledge application for the use case of MRO data attestation and verification, whereby the demonstration of technical mechanisms is at focus.
 
-This master's thesis is associated with preliminary work carried out within RAPADO at the department of information systems. Immediate previous research concludes with conceptual solutions and a DApp for aviation industry MRO documentation, centering storage and traceability \citep{ZedelJ, semesterproject}. Hereby, use cases of uploading, storing, and trading aircraft spare parts certificates were given and specific blockchain platform architectures were used. This research extends previous findings. However, it takes a new perspective by further investigating possible use cases for ZKP as methods of automating verification processes, preserving data confidentiality and suggesting suitable data formats. The results are expected to represent the broader research project, i.e., beyond previously used software.
+This master's thesis is associated with preliminary work carried out within RAPADO at the department of information systems. Immediate previous research concludes with conceptual solutions and a decentralized application for aviation industry MRO documentation, centering storage and traceability \citep{ZedelJ, semesterproject}. Hereby, use cases of uploading, storing, and trading aircraft spare parts certificates were given and specific blockchain platform architectures were used. This research extends previous findings. However, it takes a new perspective by further investigating possible use cases for ZKP as methods of automating verification processes, preserving data confidentiality and suggesting suitable data formats. The results are expected to represent the broader research project, i.e., beyond previously used software.
 
-The focus of the SLR are zero-knowledge proofs with the scope definition of classification, opportunities, challenges, evaluation methods, and examples in practice. The final search string is derived from a concept map and the literature found is summarized through a concept matrix.
+The focus of the SLR are zero-knowledge proofs with the scope of classification, opportunities, challenges, evaluation methods, and examples in practice. The design of zero-knowledge proofs needs to be understood from a theoretical perspective. Application domains and use cases applicable to the research project are at focus, which excludes topics of cryptocurrencies and embedded systems. The objective of this survey is to provide an extensive overview on the design and implementation of zero knowledge proofs, as well as to bring out practical and critical implications within the domain of distributed ledger technology. The final search string is derived from a concept map(FIGURE) and the literature found is summarized through a concept matrix(FIGURE). The research question is assigned to topics of Computer Science, Mathematics, and Information Systems. For the search, the databases Web of Science (WoS), Association of Computing Machinery (ACM), zbMATH, arXiV, and Association of Information Systems (AIS) were queried. Articles were searched in title, key words, and abstract, with date restrictions back to 2018 (WoS) and 2006 (ACM). The following search string was used: (("ZKP*" OR "Zero-Knowledge*" OR "zero*knowledge*algorithm*" OR "zero*knowledge*protocol*" OR "zero*knowledge*proof*" OR "zkS*" OR "zk*SNA*" OR "zk*STA*" OR "zk*STO" OR "bulletproof*") AND ("application*" OR "example*" OR "app*") AND ("carbon*footprint*" OR "*complexity*" OR "evaluation*" OR "cost*" OR "sustainab*" OR "environment*") AND ("challenge*" OR "threat*" OR "problem*"). After deduplication, the search resulted in 580 hits, which were condensed according to the following approach. First, the result was filtered by English or German resources which have more than or equal to five citations with three times or higher past 180 days usage (560 hits). The next exclusion criteria were applied in Title and Keywords (396 hits), Abstract (319 hits), and Full-text (34 hits, other tbd), of which backward/forward search added another X hits. 
 
-\setlength{\tabcolsep}{2ex}
-\renewcommand{\arraystretch}{1.5}%
-\begin{table}[ht]
+\begin{figure}[hbt]
 	\centering
-	    \caption{Selected databases and search strings}
-		\begin{tabular}{| m{0.1\linewidth} | m{0.8\linewidth}|}
-		\hline
-		\textbf{Database} & \textbf{Search string} \\ \hline
-            Web of Science & TS=("ZKP*" OR "Zero-Knowledge*" OR "zero*knowledge* algorithm*" OR "zero*knowledge*protocol*" OR "zero*knowledge*proof*" OR "zkS*" OR "zk*SNA*" OR "zk*STA*" OR "zk*STO" OR "bulletproof*") \\  \hline
-            General search string & (("ZKP*" OR "Zero-Knowledge*" OR "zero*knowledge*algorithm*" OR "zero*knowledge*protocol*" OR "zero*knowledge*proof*" OR "zkS*" OR "zk*SNA*" OR "zk*STA*" OR "zk*STO" OR "bulletproof*") AND ("application*" OR "example*" OR "app*") AND ("carbon*footprint*" OR "*complexity*" OR "evaluation*" OR "cost*" OR "sustainab*" OR "environment*") 
-            AND ("challenge*" OR "threat*" OR "problem*")\\ \hline
-            ACM Digital \newline Library & TITLE:("ZKP*" OR "Zero-Knowledge*" OR "zero*knowledge*algorithm*" OR "zero*knowledge*protocol*" OR "zero*knowledge*proof*" OR "zkS*" OR "zk*SNA*" OR "zk*STA*" OR "zk*STO" OR "bulletproof*") \newline
-            \newline
-            (+) ALL:(("ZKP*" OR "Zero-Knowledge*" OR "zero*knowledge*algorithm*" OR "zero*knowledge*protocol*" OR "zero*knowledge*proof*" OR "zkS*" OR "zk*SNA*" OR "zk*STA*" OR "zk*STO" OR "bulletproof*") AND ("application*" OR "example*" OR "app*") AND ("carbon*footprint*" OR "*complexity*" OR "evaluation*" OR "cost*" OR "sustainab*" OR "environment*") AND ("challenge*" OR "threat*" OR "problem*")) \\ \hline 
+		\includegraphics[width=0.3\textwidth]{Pictures/slr.png}
+	\caption{Search compression process}
+	\label{fig:slr}
+\end{figure}
 
-            Electronic Healthcare & \citet{LuongPark, ZHENG, WangEtAl, Huangetal} \\  \hline 
-            Cloud Security & \citet{LiuWangPengXing, Major, Munivel, Kanagamani} \\  \hline 
-            Scaling &  \\  \hline 
-	\end{tabular}
-\label{tab:domains}
-\end{table}
-\section{Design}
-\section{Implementation}
+Results of the survey can be summarized into the following topics. 
+\begin{itemize}
+    \item Algorithm design topics: Zero-knowledge proofs are designed by combining proof systems and cryptographic tools to achieve specific characteristics. Proof systems are examined and defined, linking and presenting cryptographic tools within the scope of building zero-knowledge argument systems in the area of applicable blockchain-based solutions.
+    \item Subsequent to the previous item, most widely used and performative zero-knowledge proofs are described in more detail, i.e., algorithms of specific zk-SNARKs, zk-STARKS, and Bulletproofs.
+    \item Selective literature is summarized according to the following problem domains identified: Electronic Voting and Government, Electronic Auctions, Data Queries and Traceability, Electronic Healthcare, Cloud Security, and Scaling.
+    \item Opportunities and challenges are summarized and aligned by evaluating and comparing the different algorithms qualitatively through literature review and quantitatively through complexity analysis.
+\end{itemize}
+
+\section{Design And Implementation}
+-review of project requirements-->ableiten von design requirements
+- with focus at technical functionalities, two use cases were picked out and developed in an agile manner, presenting very first prototypes for open discussion further in the project, main goal of knowledge accumulation is satisfied in chapter 5, designed and implemented artifacts satisfy two other main project requirements
 \section{Evaluation}
+- evaluation according to complexity analysis, fit to the project needs, limitations and future outlook
 \begin{comment}
 SLR
 Analysis of other resources
