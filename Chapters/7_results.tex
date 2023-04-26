@@ -532,7 +532,7 @@ In the zk-DApp, there are three roles: verifier, submitter, and attester. In thi
 \end{figure}
 \begin{enumerate}
 \item \textit{Fill Form}:
-The submitter connects their wallet and can see an input mask for MRO data entries. In this first prototype, the submitter can enter the part identifier, flight hours, time since last service, and MRO cycles. Once the values are added, the submitter decides which authority needs to attest to the values, e.g., FAA/Unites States, EASA. If the constraints are met, the submitter generates the proof, which results in the following: first, the proof is generated and displayed. Second, there are communication links generated, that can be parsed in another browser tab. These links are specific to the respective attesters, so the data assigned to them can be viewed. In practice, this has to be realized via separate communication channels to alert attesters, once a new set of MRO data inputs was performed. The submitter commits to these entries and the proof on-chain. Now, the values can be viewed by the respective attester and validated.
+The submitter connects their wallet and can see an input mask for MRO data entries (Figure \ref{fig:form}. In this first prototype, the submitter can enter the part identifier, flight hours, time since last service, and MRO cycles. Once the values are added, the submitter decides which authority needs to attest to the values, e.g., FAA/Unites States, EASA. If the constraints are met, the submitter generates the proof, which results in the following: first, the proof is generated and displayed. Second, there are communication links generated, that can be parsed in another browser tab. These links are specific to the respective attesters, so the data assigned to them can be viewed. In practice, this has to be realized via separate communication channels to alert attesters, once a new set of MRO data inputs was performed. The submitter commits to these entries and the proof on-chain. Now, the values can be viewed by the respective attester and validated.
 
 \item \textit{Attest to MRO data}: The respective attester follows the attestation link, connects their wallet, and only sees the decrypted values of the data assigned to them for validation. The attester marks the data as true and commits the result. Once all attesters have successfully attested to the data, the verification can be initiated.
 
@@ -540,6 +540,14 @@ The submitter connects their wallet and can see an input mask for MRO data entri
 
 \item \textit{View Verified}: Any participant can view the latest verified information. However, only the green mark is shown of whether the data is correct, the field names, and which trusted authority performed the attestation. The verifier and other participants do not learn anything besides that the information provided is correct and has been truthfully attested by a specific trusted institution.
 \end{enumerate}
+
+\begin{figure}[hbt]
+	\centering
+		\includegraphics[width=1.0\textwidth]{Pictures/form.png}
+	\caption{zk-DApp Fill Form}
+	\label{fig:form}
+\end{figure}
+
 \subsubsection{Highlighted features}
 The following features are described in more detail to illustrate the underlying functionality applied in the zk-DApp.
 
@@ -573,8 +581,19 @@ The following features are described in more detail to illustrate the underlying
 - maybe use snarkjs Groth16 first and then PLONK as future outlook, when TurboPLONK support will come in snarkjs
 
 \section{Evaluation}
+
+\subsubsection{zk-DApp MRO Attestations}
+On the developer's machine with 2,2 GHz 6-Core Intel Core i7 processor and macOS 13.2.1 (22D68) operating system, the circom build, snarkjs plonk setup, as well as contracts deployment is executed in 6.90 seconds. 
 \begin{comment}
-- how fast is the zk-DApp with plonk on my PC?
+-do one evaluation cycle: which design requirements are met?
+
+feedback from Opremic: 
+- MRO data tracked per part Id
+- add time since last service as entry, remove form id
+- add third constraint
+- constraints are stand-alone, no equations yet identified
+- more systematic user interviews needed for this use case, but technical functionality is easily displayed via this use case
+
 - why is the architecture good -->because it tackles the assumptions that are made for the zk-DApp and focuses on another big requirement in the project: the data digitization approach
 - comparison of groth16 and plonk performance
 - limitations of the implementation
