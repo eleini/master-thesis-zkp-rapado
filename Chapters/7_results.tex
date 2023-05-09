@@ -544,7 +544,7 @@ The submitter connects their wallet and can see an input mask for MRO data entri
 \begin{figure}[hbt]
 	\centering
 		\includegraphics[width=1.0\textwidth]{Pictures/form.png}
-	\caption{zk-DApp Fill Form}
+	\caption{zk-DApp Fill Form (first implementation)}
 	\label{fig:form}
 \end{figure}
 
@@ -572,6 +572,9 @@ The following features are described in more detail to illustrate the underlying
 \end{comment}
 
 \section{Zero-Knowledge Data Structure}
+- USE CASE: check the authenticity of MRO spare part documentation-->currently hard to achieve due to paper based documentation
+- big need to prove authenticity, e.g., through checking if mechanic and date stempel match with a part if and certificate id
+- big need to strive towards a decentralized temper-proof data structure
 -create a architecture for verification mechanisms in Rapado, based on Sedlmeier, Völter, Strüker (2021):
 -->proof membership in a merkle tree? data structure of parts, certificates
 
@@ -584,6 +587,17 @@ The following features are described in more detail to illustrate the underlying
 
 \subsubsection{zk-DApp MRO Attestations}
 On the developer's machine with 2,2 GHz 6-Core Intel Core i7 processor and macOS 13.2.1 (22D68) operating system, the circom build, snarkjs plonk setup, as well as contracts deployment is executed in 6.90 seconds. 
+\begin{comment}
+    - how is plonk better than the rest, how is plonk weaker than the rest in general?
+\end{comment}
+The result of the evaluation cycle is described as follows, taking feedback from the recent project workshop into consideration: The implementation of the software artifact zk-DApp represents a seized opportunity to meet the second project requirement of constructing a trade-off between privacy, confidentiality and transparency. This requirement is successfully met, due to the nature of zero-knowledge proofs realizing transparency and confidentiality in a trustless environment of MRO spare parts validation. On the one hand, the use case of MRO KPI validation needs to be revisited and could be replaced to meet more urgent project targets, e.g., other MRO data to be validated. The data captured in the prototype is captured per part identifier only, i.e., the form identifier is obsolete. The time since the last service on the part was performed is relevant as well, and should be added as a third constraint as well (Figure \ref{fig:form}). The data points are to be perceived as stand-alone, i.e., validation calculation checks yet have to be investigated. This also true for any threshold values. Except for the data points itself, further content analysis and feedback in the MRO industry is to be performed in future research to further match the use case in this prototype. One the other hand, the demonstration of the technical functionality is successfull, and the existing DApp for MRO certificate validation and the MRO Smart Hub (in development through Opremic GmbH) can be extended with the zero-knowledge proof functionality of this software artifact. The current code shared with the thesis shows the implementation of most recent feedback of the evaluation cycle. A screenshot of the input screen (in analogy to Figure \ref{fig:form}) is shown below (Figure \ref{fig:form1}).
+\begin{figure}[hbt]
+	\centering
+		\includegraphics[width=1.0\textwidth]{Pictures/bsp2.png}
+	\caption{zk-DApp Fill Form}
+	\label{fig:form1}
+\end{figure}
+
 \begin{comment}
 -do one evaluation cycle: which design requirements are met?
 
@@ -606,6 +620,21 @@ content:
 - data structure will dictate industry effectiveness of zero-knowledge proof implementations in the project as well as adoption
 - zk-DApp flexible and easy to adapt to further business cases
 - the data structure verification with zero-knowledge proposes another way of making use of ZKP for the requirement to create a industry standard for MRO data digitization and verification
+
+
+---------------RAPADO Workshop May 8
+- certificates must be checked for authenticity first
+- then data structure is needed to store part id+serial number+ form number and name of mechanic
+- Daten des Mechanikers liegen aber in seiner Organisation, das ist Hauptproblem
+- Datenschutz
+-current: Stammdatensatz, aus dem statistische evaluierung erfolgen soll
+- diese datenstruktu könnte als support system dienen für die validierer, validierung kann bis zu 3 wochen dauern
+
+
+
+
+-am ende unbedingt auf manuellen aufwand eingehen+shortage of validation staff, und die verschwendung weil zweitmarkt fehlt 
+- kosten sind am höchsten bei der überfühurng in blockchain-->zkps weg zur kostensenkung
 \end{comment}
 
 
