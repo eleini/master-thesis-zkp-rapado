@@ -288,14 +288,10 @@ Zero-knowledge proofs find broader implementation due to increasing interest in 
             3 & Data Queries and \newline Traceability & \citet{Godden, XueWang}  \\  \hline
             4 & Electronic Healthcare & \citet{LuongPark, ZHENG, WangEtAl, Huangetal} \\  \hline 
             5 & Cloud Security & \citet{LiuWangPengXing, Major, Munivel, Kanagamani} \\  \hline 
-            6 & Scaling &  \\  \hline 
+            6 & Rollups & \citet{chen2022review, scalingintro, zksyncintro, buterinrollups} \\  \hline 
 	\end{tabular}
 \label{tab:domains}
 \end{table}
-
-\begin{comment}
-- Maller et al 2019 Sonic: verifiable outsourcing computation example paper
-\end{comment}
 
 \subsection{Electronic Voting and Government}
 Motivated by recent developments in personal data protection laws, \citet{Bansod} present a governmental architecture based on self sovereign identity to cope with the increasing demand to protect online transactions of personal information. In this generalized scenario, users request a decentralized identifier from their digital, governmental issuer, which is going to ask for a piece of personally identifiable information that is needed for administrative services, e.g., birth date, address, tax identifier etc. The user only provides a zero-knowledge proof enabled identity, e.g., the proof of being the person the user claims to be, and receives identity certificates from the e-government issuer. These certificates are encrypted and stored in a database and on-chain. The user, when in need of a service, e.g., renew a driver's license, can request from service providers and provide the certificates that are required. The service provider can verify the hash values and digital signatures on the certifications and provide the service once it holds true.
@@ -337,7 +333,11 @@ Password attacks have increased, especially observing the rising usage of cloud 
 
 Apart from research work focusing on cloud authentication, there are implementation efforts to make use of zero-knowledge proofs for storing only one single copy of the same data on cloud servers, i.e., data deduplication efforts. Motivated by mass data storage outsourcing to third party cloud computing providers, data deduplication and dynamic ownership are promising areas of development. On the assumption that the cloud server is honest, but curious, \citet{Kanagamani} propose a data deduplication scheme using in-line block matching and interactive zero-knowledge proofs. The cloud server performs the deduplication check by verifying the proof of ownership of the file and checking whether a copy of the file is already stored, while learning no further information about the ownership and the file. Before the initial upload, the file should been hashed already. The server registers users and provides them with a public key and secret key. By applying another hashing algorithm on the file hash, the encryption key is obtained. Further, this key is hashed once more to obtain the tag. The tag is referred to by the cloud server to check whether a subsequently uploaded file already exists. The user chooses a random encryption key, which is different and encrypts the encryption key to obtain a ciphertext. The tag, ciphertext, user identifier and the proof is stored in the cloud server. The proof is obtained by combining in-line block matching with zero knowledge proof generation. The file is divided into blocks and each block is used to perform a exponential equation with some primes \(a\) and calculated in modular arithmetic with another prime \(mod \ b\). All computations are performed using a multiplicative cyclic group \begin{math} \mathbb{G} \end{math} with prime order \(t\). The result of each calculation forms a sequence of individual block proofs, which are the file proof. The server receives the proof, together with the data described above, and checks if the tag matches any other tag of a file stored previously. For verification, group keys are generated, which are used to perform bilinear pairing checks, i.e., similar to zk-SNARKS, e.g., Groth16. The public key of the file is taken, alongside random prime numbers to obtain the group key.The ciphertext is encrypted with the group key by the server and stored together with the ownership information. Each time the ownership changes, the server uses the existing proofs to send challenges to the allegedly new owner. The new owner responds by creating secret values from the challenge received. Once the server can verify the proof, secret and response, another group key is generated and used to encrypt the ciphertext of the file. The ownership information can be changed. The server did not learn anything more than there has been a change in ownership and that the file only exists once. 
 
-\subsection{Scaling}
+\subsection{Rollups}
+The implementation of zero-knowledge rollups enhances the throughput of blockchain transactions through outsourcing computation off-chain and only perform the validation part on-chain. Often referred to validity rollups, do not show the property of perfect zero-knowledge. In this reflection, only application-specific rollups are discussed. General rollups, e.g., Zcash and Tornado Cash, are not in scope (see chapter 4 on exclusion criteria). In application-specific rollups, the most expensive part of the blockchain application is deployed via rollups. All rollups in practice can be categorized into validity-style rollups and validium-style rollups \citep{chen2022review}.
+
+Continuing with the scope of application-specific implementations, Ethereum is the most widely used Turing-complete blockchain to build apps on. However, the block validation time of 15 seconds per block results in significantly high gas cost, and with increasing volume, Ethereum can barely serve the amount of users \citep{scalingintro}. The general idea of rollups is to solve this via off-chain computation of transaction states \citep{chen2022review}. In order to realize it, another blockchain layer (L2) is utilized. The main layer (L1) deploys a smart contract, which interchanges tokens with L2 and verifies that computations and transactions on L2 are performed correctly. In an Optimistic Rollup, the L2 scaling is approached with the assumption that every transaction is valid until proven invalid. It is dependent on users to submit proofs to claim that some transaction was forged in order to ensure transaction security \citep{zksyncintro}. In analogy to this scenario, validity-style rollups follow the following architecture \citep{buterinrollups}: validators on the mainnet bridge between L1 and L2, receiving submitted transactions by users who signed their transaction activities on L2. These validators perform the following scaling procedure: all of the submitted transactions are scaled, i.e., aggregated, into a single batch and submitted to the L1 smart contract for further processing. In essence, the L2 state root, a zk-SNARK to prove L2 state root correctness, every transaction header, and the merkle root of the transaction batch is submitted to the smart contract. In L1, the validation of the entire batch, as well as the suggested update of the merkle state root, can be performed. First, batch verification is more inexpensive. Second, the off-chain storage of the state root increases the performance on the mainnet, boosts the its capacity, and decreases transaction fees \citep{chen2022review}. In validium-style rollups, the transaction header is not stored and provided, but instead the SNARK proves the validity of the state transition. Because of this, validium-style rollups are additionally perceived as proof of knowledge whereas validity-style rollups only serve as proof of computation \citep{validiumintro}. 
+
 \begin{comment}
 -start with zk Roll ups, sources: Chen et al (2022): very good overview on rollups, validium, zkEVM with TinyRAM, recursive SNARK by MatterLabs
 
@@ -349,6 +349,18 @@ good implementation papers:
 \end{comment}
 
 \section{Challenges}
+
+\begin{comment}
+part1:
+    - zk snarks weaknesses-->future of snarks in chapter 6 of chen et al
+    - quick excurse to starks and recursive snarks being the future
+    - damit hätte ich dann trust assumption abgedeckt!
+    - tiny bit overview on why snarks are not quatum secure and what is quantum secure
+part2:
+    - evaluation via: 1) performance analysis 2) communication analysis--->paper aus der slr miteinbeziehen
+    - zu 1): alle aufgeführten protokolle hinsichtlich ihrer performance gegenü stellen
+    - in die performance tabelle kommen: tbd
+\end{comment}
 - challenges can go into evaluation/comparisons of the 4 zkps
 \subsection{Cost}
 -Zhang et al 2021 PipeZK time and cost challenges of zKSNARK

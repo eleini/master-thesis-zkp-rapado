@@ -7,7 +7,7 @@ The requirements positioned in previous chapters (4 and 5) can be summarized as 
 \begin{enumerate}
     \item Zero-knowledge proof systems are identified to be a disruptive technology in the domain of blockchain-based research and development. One project requirement is to \textbf{accumulate knowledge and current research outcomes} in this field to extend expertise within RAPADO \citep{ZedelJ}. As an outcome to the extensive literature review, the Groth16 algorithm is introduced in detail by using an example calculation problem (6.2). In the step-wise computation, the problem is split and transformed to an arithmetic circuit, arriving at a R1CS. From this, the QAP is calculated. Additionally, tools, e.g, homomorphic hiding and elliptic curve pairing are introduced. Ultimately, following the Groth16 protocol, the key and proof generation, as well as verification mechanisms are illustrated.
     \item The requirement of \textbf{constructing a trade-off between privacy, confidentiality and transparency} arises from preliminary work in the project and at the department of information systems \citep{FornaconFrank, ZedelJ, semesterproject}. The use of blockchain-based solutions enables great transparency at the cost of confidentiality. With the constantly increasing awareness for data privacy, combined with trust issues and regulatory data confidentiality requirements in the industry, zero-knowledge proof systems have to be explored and utilized to secure adoption of project results and products in the future. The first minimal viable product (MVP) of the zk-DApp for MRO data attestations contributes to this goal and satisfies this requirement. The zk-DApp is organized as follows: the backend directory stores the json input schema, the solidity smart contracts, the circom circuit and corresponding generated files (6.2). The lib directory stores shared files between backend and frontend, as well as hashing functions used, e.g, in the circuit code. The UI directory finds the correct schema to be used and also stores a copy of the final protocol transcript key and the witness generating file. It also stores the frontend code for the landing page and all corresponding pages to submit, attest to, and verify MRO data.
-    \item Current paper-based MRO documentation of aviation spare parts largely sets the requirement for \textbf{fraud-preventive verification mechanisms, enabled though effective data formats and digitization of spare part documents}. Fraud-preventive verification is covered via the zk-DApp. However, current data digitization efforts for spare part documentation need to be further addressed: the zero-knowledge data structure architecture enables consistent and temper-proof data storage via merkle trees, and proofs specific memberships, e.g., mechanics who worked at a specific part at a given time, in zero-knowledge.
+    \item Current paper-based MRO documentation of aviation spare parts largely sets the requirement for \textbf{fraud-preventive document authenticity checks, enabled through effective data formats and digitization of spare part documentation}. Fraud-preventive verification is covered via the zk-DApp. However, current data digitization efforts for spare part documentation need to be further addressed: the zero-knowledge data structure architecture enables consistent and temper-proof data storage via merkle trees, and proofs specific memberships, e.g., mechanics who worked at a specific part at a given time, in zero-knowledge.
 \end{enumerate}
 
 \begin{comment}
@@ -499,7 +499,8 @@ Now, we can replace A and B. We also see that the middle of the equation is \(L_
 Eventually, we get the equality check we wanted to achieve (6.15). The use of the secret encoded values \(\alpha, \beta\) of the toxic waste (6.22) force the prover algorithm to use the same coefficients of the solution vector (witness) to compute \(A(X), B(X), C(X)\). \(\gamma, \delta\) ensure that the public inputs of order \(l\) are independent from the solution vector (witness). In order to achieve the zero-knowledge aspect, \(r, s\) are used to randomly shift the proof.
 
 \section{Plonk-based zk-DApp}
-The decentralized application for zero-knowledge MRO data attestation (zk-DApp) facilitates data entries and data sharing between MRO data owners (submitters) and aviation authorities (attesters) in zero-knowledge. This software artifact attempts to ensure compatibility between the lack of trust among industry participants and the need for data verification and transparency (trade-off between requirements within the project).
+The decentralized application for zero-knowledge MRO data attestation (zk-DApp) facilitates data entries and data sharing between MRO data owners (submitters) and aviation authorities (attesters) in zero-knowledge. This software artifact attempts to ensure compatibility between the lack of trust among industry participants and the need for data verification and transparency (trade-off between requirements within the project). MRO key data need to be made transparent for potential secondary market trading of aviation spare parts in the future, without giving full access to the documentation, e.g., to the entire shop report.
+
 \subsubsection{Circom, snarkjs}
 The zero-knowledge part of the zk-DApp is implemented via circom and snarkjs, which are developed by iden3. iden3 is an open-source project focused on scalable and distributed identity systems on zero-knowledge proofs, i.e., providing protocols, data structures, and modules. The current objectives include achieving self-sovereign identities free of charge, minimizing on-chain transactions, re-designing privacy with non-reusable proofs, creating complete products, e.g., user wallets, and focusing on community standardization \citep{iden3aboutus}. Circom is Rust-based and allows to write and compile arithmetic circuits. In circom, there is a data type called field elements, which are values modulo a large prime number and based on the BN128 elliptic curve by default \citep{circom} By compiling the circuit, R1CS files are generated: the constraint system in binary format, a symbols file for debugging, and files that are necessary to generate the witness. In order to compute the witness, an input file in json format needs to be specified, that contains the witness information. In the zk-DApp, the submitter enters the information to be verified, which is processed according to an input schema. The witness is computed and saved in a file format accepted by snarkjs. Snarkjs is a JavaScript library that continues with the outputs from circom and executes a specified zero-knowledge proof protocol, e.g., currently, Groth16, Plonk, and Fflonk are supported \citep{snarkjsdoc}. For this use case, snarkjs' plonk implementation is utilized. For the verification, as well as intermediate result hashes, a powers of tau file is utilized, so that the multi-party computation can be performed. In Groth16, it is utilized during the trusted setup (5.2.1). In plonk, this is the source of public randomness (5.2.2). Figure \ref{fig:zk-DAppgeneral} shows the main steps performed for a plonk-based zk-DApp. Plonk does not require a trusted ceremony for each circuit, i.e., the powers of tau ceremony is universal. After compiling the circuit and calculating the witness, the snarkjs plonk can be setup. A final protocol transcript key (zkey) is generated and verified. It is the zero-knowledge key that includes proving and verification key \citep{snarkjsdoc}. From the zkey, the verification key is exported in json format. With this verification key file, the final zkey file and the witness file, the proof file, and the file with the public inputs and outputs are generated. These two files and the verification key are used to verify the proof. The verifier is transformed into a smart contract (PlonkVerifier.sol), that is performing the verification. In order to utilize the PlonkVerifier smart contract that is exported in the previous step, an interface needs to be created (IPlonkVerifier.sol), which initiates verifyProof and outputs a true or false. The ZkDocument.sol smart contract, which stores user inputs, e.g., the commitments and trusted attesters, uses this interface to verify the proof and update the states of the smark contracts. With every user input, a witness and proof are calculated. The commitment is posted and the smart contracts updated. Once verified, the user interface (UI) shows an update, e.g., a green highlighting. 
 \begin{figure}[hbt]
@@ -571,7 +572,39 @@ The following features are described in more detail to illustrate the underlying
 - überleitung zur daten architektur: automatic verification of part id and its true existence through merkle tree zk verification
 \end{comment}
 
-\section{Zero-Knowledge Data Structure}
+
+
+\section{Evaluation}
+
+\subsubsection{zk-DApp MRO Attestations}
+On the developer's machine with 2,2 GHz 6-Core Intel Core i7 processor and macOS 13.2.1 (22D68) operating system, the circom build, snarkjs plonk setup, as well as contracts deployment is executed in 6.90 seconds. 
+\begin{comment}
+    - how is plonk better than the rest, how is plonk weaker than the rest in general?
+    - why has plonk be used? because TURBOplonk will come also
+\end{comment}
+The result of the evaluation cycle is described as follows, taking feedback from the recent project workshop into consideration: The implementation of the software artifact zk-DApp represents a seized opportunity to meet the second project requirement of constructing a trade-off between privacy, confidentiality and transparency. This requirement is successfully met, due to the nature of zero-knowledge proofs realizing transparency and confidentiality in a trustless environment of MRO spare parts validation. On the one hand, the use case of MRO key performance indicator (KPI) validation needs to be revisited and could be replaced to meet more urgent project targets, e.g., validation of non-KPI MRO data. The data captured in the prototype is captured per part identifier only, i.e., the form identifier is obsolete. The time since the last service on the part was performed is relevant as well, and should be added as a third constraint as well (Figure \ref{fig:form}). The data points are to be perceived as stand-alone, i.e., validation calculation checks yet have to be investigated. This is also true for any threshold values. Except for the data points itself, further content analysis and feedback in the MRO industry is to be performed in future research to further match the use case in this prototype. On the other hand, the demonstration of the technical functionality is successfull, and the existing DApp for MRO certificate validation and the MRO Smart Hub (in development through Opremic GmbH) can be extended with the zero-knowledge proof functionality of this software artifact. The current code shared with the thesis shows the implementation of most recent feedback of the evaluation cycle. A screenshot of the input screen (in analogy to Figure \ref{fig:form}) is shown below (Figure \ref{fig:form1}).
+\begin{figure}[hbt]
+	\centering
+		\includegraphics[width=1.0\textwidth]{Pictures/bsp2.png}
+	\caption{zk-DApp Fill Form}
+	\label{fig:form1}
+\end{figure}
+
+Assumptions about the data structure led to the development of the first zk-DApp prototype, and are revisited during the evaluation cycle to review the data layer of the application in more detail. Current paper-based documentation must be replaced by automatic digitization of spare part certificates and brought into an effective storage structure with part identifiers and corresponding certificate identifiers. While the automatic digitization of spare part documents is currently being realized in the project via optical character recognition (OCR), the authenticity validation check of these data in a trustless environment is still to be approached. As an evaluation aspect for further research implementation, an architectural  zero-knowledge data structure is outlined as opportunity to meet the third project requirement in the following segment. In parallel, this architecture is perceived to be the basis to increasingly capture MRO KPI data through combination with the zk-DApp in further research. 
+
+
+\begin{comment}
+data structure muss in den evaluierungsteil
+part id ist der link
+part id in der dapp und part id des merkle trees der datenstruktur ist der link
+data structure ist eine art ausblick, aber erfüllt auch ein requirement im project (no. 3)
+-organisation: mechaniker, datum
+- MRO KPI data
+\end{comment}
+
+\subsubsection{Zero-Knowledge Data Structure}
+The lack of structured data base for proofing the authenticity of aviation spare part documentation presents a barrier to lay the basis for industry-wide adoption of a blockchain-based industry standard for document verification approaches. There is a need to proof the authenticity of documents, e.g., via transparent availability of the signing mechanics, and the document date stamp, in combination with the document issuing organization. However, this need for transparency is in conflict with data privacy and the large amount of paper-based data capture in the past, that cannot be traced back effectively in time. The exploration of a merkle tree based, zero-knowledge proof data structure can help solve this problem.
+\begin{comment}
 - USE CASE: check the authenticity of MRO spare part documentation-->currently hard to achieve due to paper based documentation
 - big need to prove authenticity, e.g., through checking if mechanic and date stempel match with a part if and certificate id
 - big need to strive towards a decentralized temper-proof data structure
@@ -583,22 +616,6 @@ The following features are described in more detail to illustrate the underlying
 - build zk DAPP for document verification with circom snarkjs on hardhat test network
 - maybe use snarkjs Groth16 first and then PLONK as future outlook, when TurboPLONK support will come in snarkjs
 
-\section{Evaluation}
-
-\subsubsection{zk-DApp MRO Attestations}
-On the developer's machine with 2,2 GHz 6-Core Intel Core i7 processor and macOS 13.2.1 (22D68) operating system, the circom build, snarkjs plonk setup, as well as contracts deployment is executed in 6.90 seconds. 
-\begin{comment}
-    - how is plonk better than the rest, how is plonk weaker than the rest in general?
-\end{comment}
-The result of the evaluation cycle is described as follows, taking feedback from the recent project workshop into consideration: The implementation of the software artifact zk-DApp represents a seized opportunity to meet the second project requirement of constructing a trade-off between privacy, confidentiality and transparency. This requirement is successfully met, due to the nature of zero-knowledge proofs realizing transparency and confidentiality in a trustless environment of MRO spare parts validation. On the one hand, the use case of MRO KPI validation needs to be revisited and could be replaced to meet more urgent project targets, e.g., other MRO data to be validated. The data captured in the prototype is captured per part identifier only, i.e., the form identifier is obsolete. The time since the last service on the part was performed is relevant as well, and should be added as a third constraint as well (Figure \ref{fig:form}). The data points are to be perceived as stand-alone, i.e., validation calculation checks yet have to be investigated. This also true for any threshold values. Except for the data points itself, further content analysis and feedback in the MRO industry is to be performed in future research to further match the use case in this prototype. One the other hand, the demonstration of the technical functionality is successfull, and the existing DApp for MRO certificate validation and the MRO Smart Hub (in development through Opremic GmbH) can be extended with the zero-knowledge proof functionality of this software artifact. The current code shared with the thesis shows the implementation of most recent feedback of the evaluation cycle. A screenshot of the input screen (in analogy to Figure \ref{fig:form}) is shown below (Figure \ref{fig:form1}).
-\begin{figure}[hbt]
-	\centering
-		\includegraphics[width=1.0\textwidth]{Pictures/bsp2.png}
-	\caption{zk-DApp Fill Form}
-	\label{fig:form1}
-\end{figure}
-
-\begin{comment}
 -do one evaluation cycle: which design requirements are met?
 
 feedback from Opremic: 
@@ -635,6 +652,9 @@ content:
 
 -am ende unbedingt auf manuellen aufwand eingehen+shortage of validation staff, und die verschwendung weil zweitmarkt fehlt 
 - kosten sind am höchsten bei der überfühurng in blockchain-->zkps weg zur kostensenkung
+
+
+
 \end{comment}
 
 
