@@ -273,7 +273,7 @@ Deng et al 2022: history of range proofs, cuproof as example
 \end{comment}
 
 \section{Application Domains and Use Cases}
-Zero-knowledge proofs find broader implementation due to increasing interest in decentralized applications in recent years. However, despite successful research efforts in distributed ledger technology, there is only limited adoption of blockchain-based solutions outside the financial sector. One of the main challenges, pointed out by \citet{SedlmeirTransparencyChallenge}, is the need to make sensitive data visible. The high transparency blockchain offers collides with the need to preserve privacy and allow for restricted visibility. \citet{Godden} describe it as increasing consciousness to preserve data confidentiality and ownership, which leads to the development of privacy enhancing technologies. The literature review (SLR approach is described in chapter 4) shows that general purpose zero-knowledge proofs find implementation as essential elements in domains with enhanced privacy preserving efforts. ZKP implementations can be categorized into the following application domains: \textit{Identity Management}, \textit{Data Sharing and Traceability}, and, \textit{System Scaling} \citep{PipeZK, chen2022review, morais2019survey}. Use cases from these application domains are clustered according to the problem domain they are attempting to solve (Table \ref{tab:domains}): (1) \textit{Electronic Voting and Government}, (2) \textit{Electronic Auctions}, (3) \textit{Data Queries and Traceability}, (4) \textit{Electronic Healthcare}, (5) \textit{Cloud Security}, and (6) \textit{Scaling and Performance}.
+Zero-knowledge proofs find broader implementation due to increasing interest in decentralized applications in recent years. However, despite successful research efforts in distributed ledger technology, there is only limited adoption of blockchain-based solutions outside the financial sector. One of the main challenges, pointed out by \citet{SedlmeirTransparencyChallenge}, is the need to make sensitive data visible. The high transparency blockchain offers collides with the need to preserve privacy and allow for restricted visibility. \citet{Godden} describe it as increasing consciousness to preserve data confidentiality and ownership, which leads to the development of privacy enhancing technologies. The literature review (SLR approach is described in chapter 4) shows that general purpose zero-knowledge proofs find implementation as essential elements in domains with enhanced privacy preserving efforts. ZKP implementations can be categorized into the following application domains: \textit{Identity Management}, \textit{Data Sharing and Traceability}, and, \textit{System Scaling} \citep{PipeZK, chen2022review, morais2019survey}. Use cases from these application domains are clustered according to the problem domain they are attempting to solve (Table \ref{tab:domains}): (1) \textit{Electronic Voting and Government}, (2) \textit{Electronic Auctions}, (3) \textit{Data Queries and Traceability}, (4) \textit{Electronic Healthcare}, (5) \textit{Cloud Security}, and (6) \textit{Rollups}.
 
 \setlength{\tabcolsep}{2ex}
 \renewcommand{\arraystretch}{1.5}%
@@ -336,7 +336,9 @@ Apart from research work focusing on cloud authentication, there are implementat
 \subsection{Rollups}
 The implementation of zero-knowledge rollups enhances the throughput of blockchain transactions through outsourcing computation off-chain and only perform the validation part on-chain. Often referred to validity rollups, do not show the property of perfect zero-knowledge. In this reflection, only application-specific rollups are discussed. General rollups, e.g., Zcash and Tornado Cash, are not in scope (see chapter 4 on exclusion criteria). In application-specific rollups, the most expensive part of the blockchain application is deployed via rollups. All rollups in practice can be categorized into validity-style rollups and validium-style rollups \citep{chen2022review}.
 
-Continuing with the scope of application-specific implementations, Ethereum is the most widely used Turing-complete blockchain to build apps on. However, the block validation time of 15 seconds per block results in significantly high gas cost, and with increasing volume, Ethereum can barely serve the amount of users \citep{scalingintro}. The general idea of rollups is to solve this via off-chain computation of transaction states \citep{chen2022review}. In order to realize it, another blockchain layer (L2) is utilized. The main layer (L1) deploys a smart contract, which interchanges tokens with L2 and verifies that computations and transactions on L2 are performed correctly. In an Optimistic Rollup, the L2 scaling is approached with the assumption that every transaction is valid until proven invalid. It is dependent on users to submit proofs to claim that some transaction was forged in order to ensure transaction security \citep{zksyncintro}. In analogy to this scenario, validity-style rollups follow the following architecture \citep{buterinrollups}: validators on the mainnet bridge between L1 and L2, receiving submitted transactions by users who signed their transaction activities on L2. These validators perform the following scaling procedure: all of the submitted transactions are scaled, i.e., aggregated, into a single batch and submitted to the L1 smart contract for further processing. In essence, the L2 state root, a zk-SNARK to prove L2 state root correctness, every transaction header, and the merkle root of the transaction batch is submitted to the smart contract. In L1, the validation of the entire batch, as well as the suggested update of the merkle state root, can be performed. First, batch verification is more inexpensive. Second, the off-chain storage of the state root increases the performance on the mainnet, boosts the its capacity, and decreases transaction fees \citep{chen2022review}. In validium-style rollups, the transaction header is not stored and provided, but instead the SNARK proves the validity of the state transition. Because of this, validium-style rollups are additionally perceived as proof of knowledge whereas validity-style rollups only serve as proof of computation \citep{validiumintro}. 
+Continuing with the scope of application-specific implementations, Ethereum is the most widely used Turing-complete blockchain to build apps on. However, the block validation time of 15 seconds per block results in significantly high gas cost, and with increasing volume, Ethereum can barely serve the amount of users \citep{scalingintro}. The general idea of rollups is to solve this via off-chain computation of transaction states \citep{chen2022review}. In order to realize it, another blockchain layer (L2) is utilized. The main layer (L1) deploys a smart contract, which interchanges tokens with L2 and verifies that computations and transactions on L2 are performed correctly. In an Optimistic Rollup, the L2 scaling is approached with the assumption that every transaction is valid until proven invalid. It is dependent on users to submit proofs to claim that some transaction was forged in order to ensure transaction security \citep{zksyncintro}. Zero-knowledge Rollups are different, because each transaction state transition is verified by the rollup smart contract before it becomes effective. 
+
+Validity-style rollups follow the following architecture \citep{buterinrollups}: validators on the mainnet bridge between L1 and L2, receiving submitted transactions by users who signed their transaction activities on L2. These validators perform the following scaling procedure: all of the submitted transactions are scaled, i.e., aggregated, into a single batch and submitted to the L1 smart contract for further processing. In essence, the L2 state root, a zk-SNARK to prove L2 state root correctness, every transaction header, and the merkle root of the transaction batch is submitted to the smart contract. In L1, the validation of the entire batch, as well as the suggested update of the merkle state root, can be performed. First, batch verification is more inexpensive. Second, the off-chain storage of the state root increases the performance on the mainnet, boosts the its capacity, and decreases transaction fees \citep{chen2022review}. In validium-style rollups, the transaction header is not stored and provided, but instead the SNARK proves the validity of the state transition. Because of this, validium-style rollups are additionally perceived as proof of knowledge whereas validity-style rollups only serve as proof of computation \citep{validiumintro}. 
 
 \begin{comment}
 -start with zk Roll ups, sources: Chen et al (2022): very good overview on rollups, validium, zkEVM with TinyRAM, recursive SNARK by MatterLabs
@@ -348,19 +350,64 @@ good implementation papers:
 
 \end{comment}
 
-\section{Challenges}
+\section{Evaluation and Challenges}
+As presented above, zk-SNARKs are successfully implemented in various application scenarios, there are still weaknesses to be discussed. The zero-knowledge proofs presented earlier are contrasted to condense differences and similarities. Ultimately, the main challenges of trust assumption, cost, and quantum computing are summarized in this chapter, providing an outlook on future solution approaches currently discussed in research.
+
+\subsection{Assessment Approaches}
+Zero-knowledge proof evaluation approaches (SOURCE GONG et al) can be grouped into computational complexity analysis \citep{LiuWangPengXing, SONIC10.1145/3319535.3339817, PipeZK}, security analysis \citep{Huangetal}, and communication cost \citep{ZHENG, liuetal}. This sub chapter is comparing specific aspects out of these categorizations. First, highlighted characteristics of zk-SNARKs, zk-STARKS, and Bulletproofs are revisited. Second, the analysis aspects of trusted setup, communication complexity, and quantum threat are emphasized. 
+
+zk snarks:
+- cryptographic assumption is secure bilinear pairings
+-shorter proof length, smaller memory on-chain consumption, but trusted set up and crs
+-trusted thrid party is to generate proving and verification key
+
+zk-starks: 
+-faster verification and proof speed, although large number of circuits, no need for trusted setup and crs because of hash collision based symmetric encryption, free from arguments, which are vulnerable by future quantum computers
+
+
+bulletproofs: 
+-no trusted setup, logarithmically increasing proof size, good applicability with range proofs, they can save internal storage, well suitable for short proof sizes for general arithmetic circuits
+- bulletproofs enable storing proofs on-chain easily, which is different to all other ZKPs
+
+trusted setup:
+- CRS is relied on in zksnarks and third party needed
+- no crs required in zkstarks because verifiable randomness is utilized 
+-bulletproofs avoid trusted setup because of discrete logarithm assumption and completed 128-bit security in untrusted environment 
+
+complexity analysis: algorithmic complexity of communication (proof size), prover and verifier:
+algorithmic complexity: 
+communication complexity: 
+- zksnarks almost in linear o(1), because prover hands proof over to verifier, while computational workload increases significantly
+prover complexity:
+-snark: O(NlogN) with N input size of the circuit
+%-->groth16 paper:m + 3n −l*E with circuit of m wires, n multiplication gates, l elements in the statements and E exponentiations (Gro16 paper source)
+
+verifier complexity:
+-zk-snarks: O(1), one verification step, in Groth 16 consisting of 3 pairing checks
+
+quantum threat:
+
+\subsection{Future of Zero-Knowledge Proofs}
 
 \begin{comment}
-part1:
-    - zk snarks weaknesses-->future of snarks in chapter 6 of chen et al
+
+    -->future of snarks in chapter 6 of chen et al
     - quick excurse to starks and recursive snarks being the future
     - damit hätte ich dann trust assumption abgedeckt!
     - tiny bit overview on why snarks are not quatum secure and what is quantum secure
-part2:
-    - evaluation via: 1) performance analysis 2) communication analysis--->paper aus der slr miteinbeziehen
-    - zu 1): alle aufgeführten protokolle hinsichtlich ihrer performance gegenü stellen
-    - in die performance tabelle kommen: tbd
-\end{comment}
+
+
+\section{Evaluation Methods}
+-Huang et al 2020: 1)privacy preserving and security: confidentiality, availability, integrity, privacy-preserving, traceability, single point of failure 2) performance evaluation: computing cost, number of startup nodes, privacy protection, time to generate NIZK keypair, NIZK proof, verify NIZK proof
+-Zhang et al 2021 PipeZK proof generation enhancement
+- Maller et al 2019 Sonic: better structured SRS in linear size to speed up proof verification
+- Chen et al (2022): future of ZK are zk-STARKS
+\subsection{Performance Analysis}
+-Liu et al, Zheng at al: semihonest model evaluation topics-> computational complexity, communication complexity, experimental evaluation
+- Liu Wang Peng Xing 2019: remote authentication for mobile cloud computing, Real-Or-Random model and BAN logic for security evaluation REGARDING different attacks
+- Zhang et al 2021 PikeZK: new hardware accelerator to boost comp time for proof generation
+
+
 - challenges can go into evaluation/comparisons of the 4 zkps
 \subsection{Cost}
 -Zhang et al 2021 PipeZK time and cost challenges of zKSNARK
@@ -380,22 +427,14 @@ part2:
 - also include Watrous(2009)-->coming from Vidick Zhang 2020
 -Lyubashevsky et al (2020): new lattice based ZKP algorithm which is the fastest and smallest proof size for small int addition and multiplication 
 
-\section{Evaluation Methods}
--Huang et al 2020: 1)privacy preserving and security: confidentiality, availability, integrity, privacy-preserving, traceability, single point of failure 2) performance evaluation: computing cost, number of startup nodes, privacy protection, time to generate NIZK keypair, NIZK proof, verify NIZK proof
--Zhang et al 2021 PipeZK proof generation enhancement
-- Maller et al 2019 Sonic: better structured SRS in linear size to speed up proof verification
-- Chen et al (2022): future of ZK are zk-STARKS
-\subsection{Performance Analysis}
--Liu et al, Zheng at al: semihonest model evaluation topics-> computational complexity, communication complexity, experimental evaluation
-- Liu Wang Peng Xing 2019: remote authentication for mobile cloud computing, Real-Or-Random model and BAN logic for security evaluation REGARDING different attacks
-- Zhang et al 2021 PikeZK: new hardware accelerator to boost comp time for proof generation
+
 
 \subsection{Sustainability}
 -maybe too little literature for an own sub chapter
 -Simunic et al mention need for more sustainable solutions in blockchain privacy preserving through ZKPs
 -elements from Sedlmeier Völter Strüker (2021): ZKPs are more sustainable 
 
-\begin{comment}
+
     end this chapter with (maybe):
     - ZKPs still need more practical implementations and adoption in real life use cases
     - main problem is black box appearance of ZKPs and lack of awareness on how they can be leveraged and when does what work in specific scenarios and on what conditions
