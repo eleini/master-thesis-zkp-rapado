@@ -251,6 +251,7 @@ The only program specific polynomials that need to be computed upfront by prover
 
 \subsection{FRI-STARK}
 \begin{comment}
+https://limechain.tech/blog/zero-knowledge-proofs-explained/
 with FRI-based polynomial commitment
 -does not use R1CS
 -fri starks
@@ -359,11 +360,12 @@ Zero-knowledge proof evaluation approaches (SOURCE GONG et al) can be grouped in
 zk snarks:
 - cryptographic assumption is secure bilinear pairings
 -shorter proof length, smaller memory on-chain consumption, but trusted set up and crs
--trusted thrid party is to generate proving and verification key
+-trusted thrid party is to generate proving and verification key, how ever MPC can diffuse centralization of trust by letting hundreds of particpants generate the CRS
 
 zk-starks: 
 -faster verification and proof speed, although large number of circuits, no need for trusted setup and crs because of hash collision based symmetric encryption, free from arguments, which are vulnerable by future quantum computers
-
+- more complex that snarks because of larger proof size (snarks is bytes, stark hundreds of KB)
+%polylog : https://crypto.stackexchange.com/questions/48638/whats-the-difference-between-polylogarithmic-and-logarithmic
 
 bulletproofs: 
 -no trusted setup, logarithmically increasing proof size, good applicability with range proofs, they can save internal storage, well suitable for short proof sizes for general arithmetic circuits
@@ -379,13 +381,18 @@ algorithmic complexity:
 communication complexity: 
 - zksnarks almost in linear o(1), because prover hands proof over to verifier, while computational workload increases significantly
 prover complexity:
+-starks the fastest with polylog, however they have largest proof size (polylog n)
 -snark: O(NlogN) with N input size of the circuit
 %-->groth16 paper:m + 3n −l*E with circuit of m wires, n multiplication gates, l elements in the statements and E exponentiations (Gro16 paper source)
-
+%https://hackernoon.com/trade-it-like-it-is-hot-a-review-of-popular-zk-projects-and-the-zero-knowledge-proof-technology
+%https://www.alchemy.com/overviews/snarks-vs-starks
+%https://consensys.net/blog/blockchain-explained/zero-knowledge-proofs-starks-vs-snarks/
 verifier complexity:
 -zk-snarks: O(1), one verification step, in Groth 16 consisting of 3 pairing checks
-
+-zk-snarks faster verifier than zk starks
+- polylog faster than log base 2
 quantum threat:
+- only starks are quantum secure
 
 \subsection{Future of Zero-Knowledge Proofs}
 

@@ -582,6 +582,22 @@ On the developer's machine with 2,2 GHz 6-Core Intel Core i7 processor and macOS
     - how is plonk better than the rest, how is plonk weaker than the rest in general? comparison for groth
     - why has plonk be used? because TURBOplonk will come also
     SOURCE: https://medium.com/aztec-protocol/plonk-benchmarks-2-5x-faster-than-groth16-on-mimc-9e1009f96dfe
+
+plonk:
+- plonk can be built on top of any polynomial commitment scheme which makes it applicable to use for zk Rollups, e.g. zkEVM, zk Rollup compatible with EVM and responsible for massive scaling of the ethereum blockchain 
+- used because faster, mit aussicht auf turboplonk: snarkjs circom implementation coming soon, introducing cutom gates appearing multiple times within a circuit, reducing number of gates but maintaining efficiency 8SOURCE turboplonk)
+- with MiMC hash implementation comparison, plonk outperforms groth16--> 2.5x faster prover time
+- while performance depends on the underlying curves and their field sizes which result in different pairing friendliness, recent comparisons with the usage of the Poseidon-128 hash shows less prover time for one hash in plonk 
+- with a uiversal setup and 1M gates implementation, plonk only costs 10% more in gas than 
+
+groth16
+- larger proof size 9 in G1 and additionally 7 field elements in F 
+groth16:
+-with any smart contract modification i.e. circuit change, new trusted setup is needed -->not universal
+- all snarks need trusted setup, MPC help mitigate the risk of cental third party, but e.g. running the MPC ceremony 
+in AZTEC protocol took more than 6 weeks (SOURCE?) AZTEC is private transaction protocol for ethereum mainnet
+-with SHA-256, groth outperforms plonk
+- smaller proof size than plonk 2 in G1 and 1 in G2
 \end{comment}
 The result of the evaluation cycle is described as follows, taking feedback from the recent project workshop into consideration: The implementation of the software artifact zk-DApp represents a seized opportunity to meet the second project requirement of constructing a trade-off between privacy, confidentiality and transparency. This requirement is successfully met, due to the nature of zero-knowledge proofs realizing transparency and confidentiality in a trustless environment of MRO spare parts validation. On the one hand, the use case of MRO key performance indicator (KPI) validation needs to be revisited and could be replaced to meet more urgent project targets, e.g., validation of non-KPI MRO data. The data captured in the prototype is captured per part identifier only, i.e., the form identifier is obsolete. The time since the last service on the part was performed is relevant as well, and should be added as a third constraint as well (Figure \ref{fig:form}). The data points are to be perceived as stand-alone, i.e., validation calculation checks yet have to be investigated. This is also true for any threshold values. Except for the data points itself, further content analysis and feedback in the MRO industry is to be performed in future research to further match the use case in this prototype. On the other hand, the demonstration of the technical functionality is successfull, and the existing DApp for MRO certificate validation and the MRO Smart Hub (in development through Opremic GmbH) can be extended with the zero-knowledge proof functionality of this software artifact. The current code shared with the thesis shows the implementation of most recent feedback of the evaluation cycle. A screenshot of the input screen (in analogy to Figure \ref{fig:form}) is shown below (Figure \ref{fig:form1}).
 \begin{figure}[hbt]
@@ -590,7 +606,6 @@ The result of the evaluation cycle is described as follows, taking feedback from
 	\caption{zk-DApp Fill Form}
 	\label{fig:form1}
 \end{figure}
-
 Assumptions about the data structure led to the development of the first zk-DApp prototype, and are revisited during the evaluation cycle to review the data layer of the application in more detail. Current paper-based documentation must be replaced by automatic digitization of spare part certificates and brought into an effective storage structure with part identifiers and corresponding certificate identifiers. While the automatic digitization of spare part documents is currently being realized in the project via optical character recognition (OCR), the authenticity validation check of these data in a trustless environment is still to be approached. As an evaluation aspect for further research implementation, an architectural  zero-knowledge data structure is outlined as opportunity to meet the third project requirement in the following segment. In parallel, this architecture is perceived to be the basis to increasingly capture MRO KPI data through combination with the zk-DApp in further research. 
 
 
