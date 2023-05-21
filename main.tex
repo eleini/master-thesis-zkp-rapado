@@ -1,6 +1,6 @@
 \documentclass[12pt,
-bibtotoc,liststotoc,appendixprefix
-twoside,paper=a4,headings=small]{scrbook}
+bibtotoc,liststotoc,appendixprefix,
+twoside=off,paper=a4,headings=small]{scrbook}
 %
 % Packages
 % -----------------------------------
@@ -89,8 +89,11 @@ twoside,paper=a4,headings=small]{scrbook}
     \input{./Chapters/2_introduction}
     \clearpage{\pagestyle{empty}\cleardoublepage}		% löscht Kopfzeilen und Seitennummerierung von der letzten Seite eines Chapters, sofern dort kein Text mehr steht
     \input{./Chapters/3_related_work}
+    \clearpage{\pagestyle{empty}\cleardoublepage}
     \input{./Chapters/4_methodology}
+    \clearpage{\pagestyle{empty}\cleardoublepage}
     \input{./Chapters/5_the_rapado_project}
+    \clearpage{\pagestyle{empty}\cleardoublepage}
     \input{./Chapters/6_zero_knowledge_proofs}
     \clearpage{\pagestyle{empty}\cleardoublepage}
     \input{./Chapters/7_results}
@@ -101,7 +104,8 @@ twoside,paper=a4,headings=small]{scrbook}
 % -----------------------------------
 \backmatter 
 \bibliographystyle{apacite}				% bei natbib in deutsch
-\bibliography{./Literature/sources}		% Literaturquellen einbinden 
+\bibliography{./Literature/sources}	% Literaturquellen einbinden 
+\input{Chapters/appendix}           % Appendix
 \input{./Chapters/statutory_declaration} % Eidesstattliche Erklärung (nicht bei Seminararb.)
 
 \end{document}

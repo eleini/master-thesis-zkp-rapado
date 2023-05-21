@@ -354,7 +354,6 @@ good implementation papers:
 \section{Evaluation and Challenges}
 As presented above, zk-SNARKs are successfully implemented in various application scenarios, but weaknesses remain to be discussed. The zero-knowledge proofs presented earlier are contrasted to condense differences and similarities. Ultimately, the main challenges of trust assumption, cost, and quantum computing are summarized in this chapter, providing an outlook on future solution approaches currently discussed in the research.
 
-\subsection{Assessment Approaches}
 Zero-knowledge proof evaluation approaches can be grouped into computational complexity analysis \citep{LiuWangPengXing, SONIC10.1145/3319535.3339817, PipeZK}, security analysis \citep{Huangetal}, and communication cost \citep{ZHENG, liuetal, gongetal}. This subchapter compares specific aspects of these categorizations. First, highlighted characteristics of zk-SNARKs, zk-STARKS, and Bulletproofs are revisited. Second, the analysis aspects of trusted setup, communication complexity, and quantum threat are emphasized. 
 
 The cryptographic assumption of zk-SNARKs is secure bilinear pairings with a short proof length and smaller memory consumption on-chain. However, a trusted setup with a CRS is needed. A third party generates the proving and verifying key. A multi-party ceremony (MPC) can diffuse the centralization of trust by letting hundreds of participants generate the CRS \citep{liuetal}. Zk-STARKS have a faster verification and proof speed. The larger proof and circuit size (bytes versus several hundred kilobytes) make zk-STARKs more complex than zk-SNARKS. There is no necessity for a trusted setup and CRS because of the hash collision-based symmetric encryption, which is free from arguments of knowledge; thus, zk-STARKS are not vulnerable to quantum computers. Bulletproofs do not need a trusted setup and possess a logarithmically increasing proof size. There is good applicability with range proofs and short proof sizes for general arithmetic circuits, although bulletproofs are faster to be verified than range proofs \citep{gongetal}. Unlike all other ZKPs discussed in this chapter, bulletproofs enable efficient on-chain proof storage. 
@@ -381,6 +380,7 @@ Zk-SNARKs are easy to be broken by quantum computers due to the ability of quant
 
 Recalling from the definition of quantum zero-knowledge (QZK) introduced by \citet{watrousqzk}, various approaches enhance classic zero-knowledge proofs to become quantum secure. In QZK, the verifier \(V\) could be quantum, i.e., for any polynomial-time quantum verifier, there exists a quantum simulator \(S\), such that any mappings induced between them are quantum computationally indistinguishable. Even though there could be a quantum verifier, it should not obtain knowledge. All approaches to obtain quantum resistance focus on specific classic properties of zero-knowledge proofs and transform them to be suitable against quantum adversaries. For example, security notions of witness indistinguishability (WI) and witness hiding (WH) are studied to construct the quantum variants of those, and ultimately, propose a quantum secure signature scheme to construct the CRS \citep{xieyang2019, katzetal}. WI refers to a proof system in which the verifier cannot know which witness was used by the prover. WH describes the verifier's inability to compute the unknown witness through interaction with the prover. \citet{Vidick2020classicalzero} construct a zero-knowledge protocol sound against polynomial-time quantum provers and both classic and quantum polynomial-time verifiers. It uses a perfect binding, quantum computationally concealing commitment protocol with extended trapdoor functionalities. Another approach to construct QZK focuses on the MPC, providing quantum secure digital signature algorithms based on asymmetric key primitives, e.g., ZKBoo and ZKB++ \citep{gongetal}.
 
+Recursive STARKs is a promising research field when discussing the future of ZK. With zk-SNARKs, proving the correct execution of a specific multi-step function at a given step requires the computation of each step, which can be improved. For example, not all function steps are known, computing all these steps is computationally too expensive for the use case, or it is not efficiently feasible to process all proofs if the amount of participating provers is high. Recursive SNARKs act as aggregators so that SNARKs can be applied for each iteration to prove the correctness of a previous proof \citep{chen2022review}.
 
 \begin{comment}
 %polylog : https://crypto.stackexchange.com/questions/48638/whats-the-difference-between-polylogarithmic-and-logarithmic
@@ -431,7 +431,6 @@ quantum threat:
 -Huang et al 2020 semi trusted proxy server, their assumptions
 -trusted set up for zk Snarks
 
-
 \subsection{Quantum Computing Threats}
 1. Why are quantum verifiers a threat? (maybe Katz et al 2018)
 2. different aspects of solution examples
@@ -443,15 +442,13 @@ quantum threat:
 
 \subsection{Sustainability}
 -maybe too little literature for an own sub chapter
--Simunic et al mention need for more sustainable solutions in blockchain privacy preserving through ZKPs
+-Simunic et al mention need for more sustainable solutions in blockchain privacy preserving through ZKPs32
 -elements from Sedlmeier Völter Strüker (2021): ZKPs are more sustainable 
-
 
     end this chapter with (maybe):
     - ZKPs still need more practical implementations and adoption in real life use cases
     - main problem is black box appearance of ZKPs and lack of awareness on how they can be leveraged and when does what work in specific scenarios and on what conditions
 \end{comment}
-\subsection{Future of Zero-Knowledge Proofs}
 
 \begin{comment}
      -->future of snarks in chapter 6 of chen et al
