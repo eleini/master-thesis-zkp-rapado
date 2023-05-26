@@ -1,12 +1,12 @@
 \chapter{Implementation and Results}
-The following sub-chapters present the results of this master thesis. First, the requirements are summarized. Subsequently, the example computation of a Groth16 proof and verification is described in detail. The first artifact, the zero-knowledge decentralized application (zk-DApp), is demonstrated. The second artifact, an architecture proposal for the zero-knowledge data structure of spare part certification and metadata information, is introduced as an outcome of the zk-DApp evaluation. Ultimately, artifacts are evaluated, and a future outlook is provided.
+The following sub-chapters present the results of this master thesis. First, the requirements are summarized. Subsequently, the example computation of a Groth16 proof and verification is described in detail. The first artifact, the zero-knowledge decentralized application (zk-DApp), is demonstrated. The second artifact, an architecture proposal for the zero-knowledge data structure of spare part certification and metadata information, is introduced as an outcome of the zk-DApp evaluation.
 
 \section{Summary of Requirements}
-The requirements positioned in previous chapters (4 and 5) can be summarized as follows: 
+The requirements introduced in Chapter 2 and 3 are summarized as follows.
 
 \begin{enumerate}
-    \item Zero-knowledge proof systems are identified to be disruptive technology in the domain of blockchain-based research and development. One project requirement is to \textbf{accumulate knowledge and current research outcomes} in this field to extend expertise within RAPADO \citep{ZedelJ}. As an outcome of the extensive literature review, the Groth16 algorithm is introduced in detail using an example calculation problem (Chapter 5.2). The problem is split and transformed into an arithmetic circuit in the step-wise computation, arriving at an R1CS. From this, the QAP is calculated. Tools, e.g, homomorphic hiding and elliptic curve pairing, are also introduced. Ultimately, following the Groth16 protocol, the key and proof generation and verification mechanisms are illustrated.
-    \item The requirement of \textbf{constructing a trade-off between privacy, confidentiality, and transparency} arises from preliminary work in the project and at the department of information systems \citep{FornaconFrank, ZedelJ}. The use of blockchain-based solutions enables transparency at the cost of confidentiality. With the constantly increasing awareness for data privacy, combined with trust issues and regulatory data confidentiality requirements in the industry, zero-knowledge proof systems have to be explored and utilized to secure the adoption of project results and products in the future. The first minimal viable product (MVP) of the zk-DApp for MRO data attestations contributes to this goal and satisfies this requirement. The zk-DApp is organized as follows: the backend directory stores the JSON input schema, the solidity smart contracts, the circom circuit, and corresponding generated files (Chapter 5.2). The lib directory stores shared files between the backend and frontend and hashing functions used, e.g., in the circuit code. The UI directory finds the correct schema and stores a copy of the final protocol transcript key and the witness-generating file. It also stores the frontend code for the landing page and all corresponding pages to submit, attest to and verify MRO data.
+    \item Zero-knowledge proof systems are a disruptive technology in the domain of blockchain-based research and development. One project requirement is to \textbf{accumulate knowledge and current research outcomes} in this field to extend expertise within RAPADO \citep{ZedelJ}. The Groth16 algorithm is introduced in detail using an example calculation problem (Chapter 5.2). The problem is split and transformed into an arithmetic circuit in the step-wise computation, arriving at an R1CS. From this, the QAP is calculated. Tools, e.g, homomorphic hiding and elliptic curve pairing, are also introduced. Ultimately, following the Groth16 protocol, the key and proof generation and verification mechanisms are illustrated.
+    \item The requirement of \textbf{constructing a trade-off between privacy, confidentiality, and transparency} arises from preliminary work in the project and at the Department of Information Systems \citep{ZedelJ}. The use of blockchain-based solutions enables transparency at the cost of confidentiality. With the constantly increasing awareness for data privacy, combined with trust issues and regulatory data confidentiality requirements in the industry, zero-knowledge proof systems have to be explored and utilized to secure the adoption of project results and products in the future. The first minimal viable product (MVP) of the zk-DApp for MRO data attestations contributes to this goal and satisfies this requirement. The zk-DApp is organized as follows: the backend directory stores the JSON input schema, the solidity smart contracts, the circom circuit, and corresponding generated files. The lib directory stores shared files between the backend and frontend and hashing functions used, e.g., in the circuit code. The UI directory finds the correct schema and stores a copy of the final protocol transcript key and the witness-generating file. It also stores the frontend code for the landing page and all corresponding pages to submit, attest to and verify MRO data.
     \item Current paper-based MRO documentation of aviation spare parts primarily sets the requirement for \textbf{fraud-preventive document authenticity checks, enabled through practical data formats and digitization of spare part documentation}. Fraud-preventive verification is covered via the zk-DApp. However, current data digitization efforts for spare part documentation need to be further addressed: the zero-knowledge data structure architecture enables consistent and temper-proof data storage via Merkle trees, and proofs specific memberships, e.g., mechanics who worked at a specific part at a given time, in zero-knowledge.
 \end{enumerate}
 
@@ -32,7 +32,7 @@ In den Ausblick der zk-dapp
 \end{comment}
 
 \section{Groth16 Proof and Verification}
-Let us use an example to illustrate the underlying mathematical methods applied in zk-SNARK. The example calculation will use the knowledge of the coefficient assumption for simplification. In practice, the FFT is applied. First, the arithmetic circuit is transformed into an R1CS. The R1CS is used to obtain the QAP. Homomorphic hiding, elliptic curves, and pairing-based cryptography are introduced in more detail and put in context for the next steps of the calculation. Finally, the Groth16 protocol is introduced: First, the key generation steps are explained. Second, the proof is generated. Lastly, the verification steps are illustrated. Formal definitions are found in 5.2.
+Let us use an example to illustrate the underlying mathematical methods applied in zk-SNARK. The example calculation will use the knowledge of the coefficient assumption for simplification. In practice, the FFT is applied. First, the arithmetic circuit is transformed into an R1CS. The R1CS is used to obtain the QAP. Homomorphic hiding, elliptic curves, and pairing-based cryptography are introduced in more detail and put in context for the next steps of the calculation. Finally, the Groth16 protocol is introduced: First, the key generation steps are explained. Second, the proof is generated. Lastly, the verification steps are illustrated. Formal definitions are found in Chapter 4.2.
 
 Say we want to prove we know a secret x so that
 
@@ -85,9 +85,9 @@ For the first gate \(sum1 = x*x\), the values of \(a, b,\) and \(c\) are assigne
     \end{bmatrix}
 \end{align*}
 
-The above is correct because the dot product of s and a, multiplied by the dot product of \(a\) and \(b\), subtracted by the dot product of \(s\) and \(c\), is 0 (Chapter 5.2).
+The above is correct because the dot product of s and a, multiplied by the dot product of \(a\) and \(b\), subtracted by the dot product of \(s\) and \(c\), is 0.
 
-This procedure is applied to every gate. Let us show more complex gates to underline the calculation. For example, the third gate and the fourth gate. The third gate \(sum2=y+x\) could be approached as the first gate by setting the variables in the equation to 1. However, this would not fulfill the equation shown in (6.2). Therefore, the correct values for \(a_3, b_3 \text{ and }c_3\) are
+This procedure is applied to every gate. Let us show more complex gates to underline the calculation. For example, the third gate and the fourth gate. The third gate \(sum2=y+x\) could be approached as the first gate by setting the variables in the equation to 1. However, this would not fulfill the equation shown in (5.2). Therefore, the correct values for \(a_3, b_3 \text{ and }c_3\) are
 \begin{align*}
     a_3 &=\begin{bmatrix}
         0 & 1 & 0 & 0 & 0 & 0
@@ -107,7 +107,7 @@ This procedure is applied to every gate. Let us show more complex gates to under
 Here, we make use of the dummy vector \textit{one} so that we can arrive at 
 \[30 * 1 - 30 = 0.\]
 
-The fourth gate \(out=sum2+5\) must also be approached by holding to the dot product equation in (Chapter 5.2). We have to make use of the dummy vector once again. Setting the values of \(one, sum2 \text{ and } out\)  to 1 will give us the following incorrect solution:
+The fourth gate \(out=sum2+5\) must also be approached by holding to the dot product equation in (5.2). We have to make use of the dummy vector once again. Setting the values of \(one, sum2 \text{ and } out\)  to 1 will give us the following incorrect solution:
 \begin{align*}
      \Vec{s}\cdot\Vec{a_4} * \Vec{s}\cdot\Vec{b_4} - \Vec{s}\cdot\Vec{c_4} \neq 0.
 \end{align*}
@@ -157,7 +157,7 @@ C&=\begin{pmatrix}
 
 \subsubsection{From R1CS to QAP}
 
-The R1CS shows three matrices \(A, B \text{ and }C\) representing the four gates of length six. It is transformed into a QAP by expressing polynomials as sums of Lagrange Interpolation (chapter 5.2.2). This results in three sets of polynomials \(A_i(X), B_i(X) \text{ and }C_i(X)\), each consisting of six polynomials of degree three. In the following, we will summarize the reason for setting up a QAP instead of continuing with the R1CS. Lagrange Interpolation allows us to develop polynomial coefficients representing each gate when evaluated at an \(X\) in the range of the number of constraints (gates). With \(X = 1\), the Lagrange Interpolation can be explained quite well because it means that we can add up the coefficients of the polynomials in \(A_i(X), B_i(X) \text{ and }C_i(X)\). Each set of polynomials is built so that evaluated at gate \(X\), whereby \(X\) has to be in the range of the number of gates (constraints), will deliver the specific value of \(X\) and 0 for the other values in that specific range.\newline
+The R1CS shows three matrices \(A, B \text{ and }C\) representing the four gates of length six. It is transformed into a QAP by expressing polynomials as sums of Lagrange Interpolation (Chapter 4.2.1). This results in three sets of polynomials \(A_i(X), B_i(X) \text{ and }C_i(X)\), each consisting of six polynomials of degree three. In the following, we will summarize the reason for setting up a QAP instead of continuing with the R1CS. Lagrange Interpolation allows us to develop polynomial coefficients representing each gate when evaluated at an \(X\) in the range of the number of constraints (gates). With \(X = 1\), the Lagrange Interpolation can be explained quite well because it means that we can add up the coefficients of the polynomials in \(A_i(X), B_i(X) \text{ and }C_i(X)\). Each set of polynomials is built so that evaluated at gate \(X\), whereby \(X\) has to be in the range of the number of gates (constraints), will deliver the specific value of \(X\) and 0 for the other values in that specific range.\newline
 The QAP for our example:
 \begin{align*}
     A_i(X) \\
@@ -204,11 +204,11 @@ However, it would be cumbersome to evaluate each constraint individually. This i
     A_i(X)\cdot \Vec{s} * B_i(X)\cdot \Vec{s} - C_i(X)\cdot \Vec{s} = H(X) * Z(X)
 \end{align}
 Interestingly, the left side of the equation is our target polynomial \(T(X)\), which we want to prove.
-Now, look at the equation's right side in (6.6). \(Z(X)\) is known if we know the number of constraints. In Groth16, it is made available in the trusted setup. In this case, we have four gates, so we arrive at
+Now, look at the equation's right side in (5.6). \(Z(X)\) is known if we know the number of constraints. In Groth16, it is made available in the trusted setup. In this case, we have four gates, so we arrive at
 \begin{align}
     Z(X) = (x-1)(x-2)(x-3)(x-4)
 \end{align}
-\(H(X)\) is the hiding of our initial minimal example, those inputs we do not want to share but prove we know the solution. What role hiding plays will be explained shortly. We want to finish looking at the equation in (6.6). In essence, we want to prove that we know a polynomial and its solution so that
+\(H(X)\) is the hiding of our initial minimal example, those inputs we do not want to share but prove we know the solution. What role hiding plays will be explained shortly. We want to finish looking at the equation in (5.6). In essence, we want to prove that we know a polynomial and its solution so that
 \begin{align}
     T(X) / Z(X) = H(X)
 \end{align}
@@ -232,9 +232,9 @@ With our previous knowledge, we know that the proof will consist of
     \frac{hh[A(P)] * hh[B(P)] - hh[C(P)])}{hh[Z(P)]} = hh[H(P)]
 \end{align}
 
-The hidings of our polynomials are numbers that currently can just be forged. The following will show how it can be proven that these numbers are hidings of the polynomials \(A(X)\), \(B(X)\) and \(C(X)\) in \(P\) which is not known to anybody. Furthermore, we need to prove that in order to arrive at \(A(X)\), \(B(X)\), and \(C(X)\), the same solution vector \(s\) was used (6.6). 
+The hidings of our polynomials are numbers that currently can just be forged. The following will show how it can be proven that these numbers are hidings of the polynomials \(A(X)\), \(B(X)\) and \(C(X)\) in \(P\) which is not known to anybody. Furthermore, we need to prove that in order to arrive at \(A(X)\), \(B(X)\), and \(C(X)\), the same solution vector \(s\) was used (5.6). 
 
-In order to approach the first problem, proving that the hidings of \(A(X)\),  \(B(X)\) and \(C(X)\) were calculated in \(P\), we need to "extend" \(P\) by the same number, namely \(u\). The CRS also consists of \(hh(u*P), hh(u*P^2), hh(u*P^3)\), i.e., it consists of two sets of hidings. We know that \(A(X)\) is a linear combination of the values of vector s inserted into the polynomials A1, A2, A3, etc. of A. B calculating \(hh[A(P)]\) and \(hh[A(u*P)]\) and looking if \(hh[A(P)] = u * hh[A(u*P]\) holds, shows that the hiding of \(A(X)\) calculated in \(P\) is indeed a result of the linear combination of A1, A2, A3, etc. and the values of the vector s (6.6). All we did was prove that the same sets of hidings of \(P\) were used to arrive at these numbers. The same is applied to the hidings of \(B(X)\), \(C(X)\) in P.
+In order to approach the first problem, proving that the hidings of \(A(X)\),  \(B(X)\) and \(C(X)\) were calculated in \(P\), we need to "extend" \(P\) by the same number, namely \(u\). The CRS also consists of \(hh(u*P), hh(u*P^2), hh(u*P^3)\), i.e., it consists of two sets of hidings. We know that \(A(X)\) is a linear combination of the values of vector s inserted into the polynomials A1, A2, A3, etc. of A. B calculating \(hh[A(P)]\) and \(hh[A(u*P)]\) and looking if \(hh[A(P)] = u * hh[A(u*P]\) holds, shows that the hiding of \(A(X)\) calculated in \(P\) is indeed a result of the linear combination of A1, A2, A3, etc. and the values of the vector s (5.6). All we did was prove that the same sets of hidings of \(P\) were used to arrive at these numbers. The same is applied to the hidings of \(B(X)\), \(C(X)\) in P.
 
 For the second problem, to prove the same values of vector s were used to arrive at the hidings of \(A(X)\), \(B(X)\) and C(X) in \(P\) a similar approach can be used. In our example, vector s has six solution variables. We use a new variable, K as
 \begin{align}
@@ -257,12 +257,12 @@ we can prove that the same coefficients of vector s were used. It is nearly impo
 
 \subsubsection{Homomorphic Hiding}
 
-\(y = hh(x)\) is a hashing function. It is collision-resistant, i.e., one cannot guess anything of \(x\) from \(y \). For zero-knowledge proofs, more than this property is required. The hashing function should also preserve algebraic structures so the checks in, e.g., (6.10), can be performed. Let us divide the term Homomorphic Hiding into two sections to explain in more detail.
+\(y = hh(x)\) is a hashing function. It is collision-resistant, i.e., one cannot guess anything of \(x\) from \(y \). For zero-knowledge proofs, more than this property is required. The hashing function should also preserve algebraic structures so the checks in, e.g., (5.10), can be performed. Let us divide the term Homomorphic Hiding into two sections to explain in more detail.
 A function \(y = hh(x) = e^x\) is homomorphic if
 \begin{align}
     hh(a*x1 + b*x2) = e^\textsuperscript{a*x1+b*x2} = e^\textsuperscript{a*x1} * e^\textsuperscript{b*x2} = hh(x1)^a * hh(x2)^b
 \end{align}
-As seen in (6.13), the basic exponential laws hold. However, this function is not hiding because one could calculate the logarithmic base \(e\) of \(x\) because of working with only real numbers \begin{math}\mathbb{R}  
+As seen in (5.13), the basic exponential laws hold. However, this function is not hiding because one could calculate the logarithmic base \(e\) of \(x\) because of working with only real numbers \begin{math}\mathbb{R}  
 \end{math} so far.
 
 We must express variables in a finite field as modulo \(p\), with \(p\) being a large prime. The finite field consists only of integer inputs in the range of 1 and some value \(p-2\). This way, expressing values in modular arithmetic, nobody can guess or calculate our base \(e\) anymore. Now,
@@ -271,7 +271,7 @@ We must express variables in a finite field as modulo \(p\), with \(p\) being a 
 \end{align}
 where \begin{math}\mathbb{G}\end{math} is a value in the finite field \begin{math}\mathbb{F}_p\end{math} and \(y\) will always be expressed as modulo \(p\).
 
-With homomorphic hiding being introduced, we know all the tools to prove that we can calculate the equation in (6.8) with the polynomials from the QAP and the same values of vector \(s\) without knowing any \(P\) and \(u * P\). We know how the proof is calculated without revealing our solution vector \(s\). The following deals with verifying that the above equations hold without revealing the solution vector \(s\).
+With homomorphic hiding being introduced, we know all the tools to prove that we can calculate the equation in (5.8) with the polynomials from the QAP and the same values of vector \(s\) without knowing any \(P\) and \(u * P\). We know how the proof is calculated without revealing our solution vector \(s\). The following deals with verifying that the above equations hold without revealing the solution vector \(s\).
 
 \subsubsection{Elliptic Curve Pairing}
 The goal of PCP and pairing-based zero-knowledge algorithms is to create a succinct proof that a defined computation with given inputs produces specifically known outputs without revealing any information about them and to show that the constraints of that computation hold. Eventually, we want to check if the following equality holds, i.e., that after transforming our problem into a polynomial structure, we know some polynomials so that
@@ -280,7 +280,7 @@ The goal of PCP and pairing-based zero-knowledge algorithms is to create a succi
     \frac{A(x) * B(x)}{Z(x)} = H(x) + C(x)
 \end{align}
 
-We have the polynomials \(A, B \text{ and }C\), not expressed in real numbers but mapped to a finite field with a large prime number. We can calculate \(H(X)\) as in (6.8). Now, we will use generators for each of our polynomials to produce points on an elliptic curve. This is necessary to use pairing, which allows us to check if equations, e.g., (6.13), hold without knowing the actual variable values in these equations. In the following, some preliminaries will be introduced to create a basis for the Groth16 CRS generation, proofing, and verification mechanism.
+We have the polynomials \(A, B \text{ and }C\), not expressed in real numbers but mapped to a finite field with a large prime number. We can calculate \(H(X)\) as in (5.8). Now, we will use generators for each of our polynomials to produce points on an elliptic curve. This is necessary to use pairing, which allows us to check if equations, e.g., (5.13), hold without knowing the actual variable values in these equations. In the following, some preliminaries will be introduced to create a basis for the Groth16 CRS generation, proofing, and verification mechanism.
 
 Elliptic curves define collision-resistant one-way functions, i.e., homomorphic hiding functions. An elliptic curve is a polynomial, e.g., the elliptic curve used in Bitcoin (Figure \ref{fig:test1}). 
 
@@ -289,13 +289,13 @@ Elliptic curves define collision-resistant one-way functions, i.e., homomorphic 
 \begin{minipage}{.5\textwidth}
   \centering
   \includegraphics[width=.4\linewidth]{Pictures/bitcoinec.png}
-  \caption{Figure 1:\ \(y^2 = x^3 +7\)}
+  \caption{\(y^2 = x^3 +7\)}
   \label{fig:test1}
 \end{minipage}%
 \begin{minipage}{.5\textwidth}
   \centering
-  \includegraphics[width=.4\linewidth]{Pictures/y2x3.png}
-  \caption{Figure 2:\ \(y^2 = x^3\)}
+  \includegraphics[width=.7\linewidth]{Pictures/y2x3.png}
+  \caption{\(y^2 = x^3\)}
   \label{fig:test2}
 \end{minipage}
 \end{figure}
@@ -326,7 +326,7 @@ Defining polynomial for field extension \begin{math}\mathbb{F}_p^k\end{math}:
     f(2) = 5 mod 3 = 2
 \end{align*}
 
-As shown in (6.18), none of the base field elements make f(x) evaluate to 0. In order to create the elements of the field extension \begin{math}\mathbb{F}_p^k\end{math}, we have to create all possible degree 2 polynomials out of the combinations of our base field \begin{math}\mathbb{F}_p\end{math}. For example, one possible polynomial with the coefficients from our base field is:
+As shown in (5.18), none of the base field elements make f(x) evaluate to 0. In order to create the elements of the field extension \begin{math}\mathbb{F}_p^k\end{math}, we have to create all possible degree 2 polynomials out of the combinations of our base field \begin{math}\mathbb{F}_p\end{math}. For example, one possible polynomial with the coefficients from our base field is:
 
 \begin{align}
     1*z^2+2*z+0 
@@ -334,13 +334,13 @@ As shown in (6.18), none of the base field elements make f(x) evaluate to 0. In 
 \begin{align*}
     (z^2+2*z)\mod (z^2+1) = 2*z-1\mod 3 = 2*z+2
 \end{align*}
-\(2*z+2\) is one element of the extension field \begin{math}\mathbb{F}_p^k\end{math}. In total, \begin{math}\mathbb{F}_p^k\end{math} has 9 elements, all calculated as in (6.18). In Summary, the elements of our extension field \begin{math}\mathbb{F}_p^k\end{math} are
+\(2*z+2\) is one element of the extension field \begin{math}\mathbb{F}_p^k\end{math}. In total, \begin{math}\mathbb{F}_p^k\end{math} has 9 elements, all calculated as in (5.18). In Summary, the elements of our extension field \begin{math}\mathbb{F}_p^k\end{math} are
 \begin{align}
 \{0, 1, 2, z, z+1, z+2, 2z, 2z+1, 2z+2\}
 \end{align}
 
-As shown in (6.20), the elements of the extension field are polynomials of degree up to \(k-1\). Addition and multiplication are defined in the way that coefficients are calculated \(\mod 3\) and polynomials \(\mod z^2+1\), the defining polynomial  
-\(f(x)\) from (6.18).
+As shown in (5.20), the elements of the extension field are polynomials of degree up to \(k-1\). Addition and multiplication are defined in the way that coefficients are calculated \(\mod 3\) and polynomials \(\mod z^2+1\), the defining polynomial  
+\(f(x)\) from (5.18).
 
 Now, having our extension field, we can use it to create \begin{math}\mathbb{G}_2\end{math}, a subgroup of points of the same elliptic curve used for \begin{math}\mathbb{G}_1\end{math}, but with elements of \begin{math}\mathbb{F}_p^k\end{math}, instead of base field \begin{math}\mathbb{F}_p\end{math}. For this, we have to define points, whereby x and y coordinates are polynomials from \begin{math}\mathbb{F}_p^k\end{math}. \begin{math}\mathbb{G}_2\end{math} will consist of combinations from \begin{math}\mathbb{F}_p^k\end{math} in the form of \((x,y)\), which satisfy the elliptic curve. 
 
@@ -361,7 +361,7 @@ Preliminaries to understand the Groth16 protocol have been covered. In the follo
 \begin{table}[hbt]
 	\centering
 	    \caption{Groth16 given parameters}
-		\begin{tabular}{| m{0.35\linewidth} | m{0.6\linewidth} |}
+		\begin{tabular}{| m{0.3\linewidth} | m{0.6\linewidth} |}
 		\hline
 		\textbf{Parameter} & \textbf{Definition}\\ \hline
             \(n,m\) & number of constraints, number of variables\\ \hline
@@ -401,21 +401,25 @@ The CRS consist of \begin{math} \sigma = ([\sigma_1]_1,[\sigma_2]_2)\end{math}, 
 \end{align*}
 
 \begin{itemize}
-    \item (6.23): elements of the toxic waste
-    \item (6.24): powers of \begin{math}\tau\end{math} of degree up to \(n-1\)
-    \item (6.25): The polynomial is chosen from the set of polynomials of \(A(X), B(X), C(X)\), which corresponds to the place of the public input of the solution vector. In our starting example, \(out = 35\) is the public input (since this is our only public input, \(l=1\)). The public input is in third place in s. Hence, \(A_3(X), B_3(X), C_3(X)\) are chosen, evaluated at \begin{math}\tau\end{math} and multiplied by \begin{math} \alpha, \beta\end{math} according to (24).
-    \item (6.26): Same as (6.25), but for the non-public inputs of s. All elements of \begin{math} [\sigma_1]_1 \end{math} are \begin{math}\mathbb{G}_1\end{math} elements, e.g., \begin{math}\alpha_1 = g_1 * \alpha\end{math}.
+    \item (5.23): elements of the toxic waste
+    \item (5.24): powers of \begin{math}\tau\end{math} of degree up to \(n-1\)
+    \item (5.25): The polynomial is chosen from the set of polynomials of \(A(X), B(X), C(X)\), which corresponds to the place of the public input of the solution vector. In our starting example, \(out = 35\) is the public input (since this is our only public input, \(l=1\)). The public input is in third place in s. Hence, \(A_3(X), B_3(X), C_3(X)\) are chosen, evaluated at \begin{math}\tau\end{math} and multiplied by \begin{math} \alpha, \beta\end{math}.
+    \item (5.26): Same as (5.25), but for the non-public inputs of \(s\). All elements of \begin{math} [\sigma_1]_1 \end{math} are \begin{math}\mathbb{G}_1\end{math} elements, e.g., \begin{math}\alpha_1 = g_1 * \alpha\end{math}.
 \end{itemize}
 
 The proving key consists of the following elements:
 \begin{itemize}
     \item \([(\alpha, \beta, 1, \tau, \tau^2, \tau^3, ..., \tau^{n-1}, \frac{L_{l+1}(\tau)}{\delta}, ..., \frac{L_m(\tau)}{\delta})]_1\)
     \item \([(1, \gamma, \delta)]_2\)
-    \item circuit information about the polynomials: \\
-    \(A_0(X), A_1(X), ..., A_m(X)\),\\
-    \(B_0(X), B_1(X), ..., B_m(X)\),\\
-    \(C_0(X), C_1(X), ..., C_m(X)\),\\
-    \(Z(x) = (x-1)(x-2)(x-3)...(x-(n-1))\)\\
+    \item circuit information about the polynomials:
+    
+    \(A_0(X), A_1(X), ..., A_m(X)\)
+    
+    \(B_0(X), B_1(X), ..., B_m(X)\)
+    
+    \(C_0(X), C_1(X), ..., C_m(X)\)
+    
+    \(Z(x) = (x-1)(x-2)(x-3)...(x-(n-1))\)
 \end{itemize}
 
 The verification key consists of the following elements:
@@ -447,7 +451,7 @@ In Groth16, three pairings are checked during verification. \begin{math}[\alpha 
     [A]_1 * [B]_2 = [\alpha]_1[\beta]_2 + \bigl[\frac{s_0L_0(\tau)}{\gamma}+ \frac{s_1L_1(\tau)}{\gamma} + ... + \frac{s_lL_l(\tau)}{\gamma}\bigr]_1 * [\gamma]_2 + [C]_1 * [\delta]_2
 \end{align}
 
-As shown in (6.27), the following three pairings are needed to be checked:
+As shown in (5.28), the following three pairings are needed to be checked:
 
 \begin{itemize}
     \item \(e([A]_1, [B]_2)\)
@@ -459,7 +463,7 @@ As shown in (6.27), the following three pairings are needed to be checked:
     \end{math}
 \end{itemize}
 
-Let us evaluate the verification equation in (6.27). The left-hand side evaluates as follows:
+Let us evaluate the verification equation in (5.28). The left-hand side evaluates as follows:
 
 \begin{equation*}
 \begin{split}
@@ -493,23 +497,25 @@ Now, we can replace A and B. We also see that the middle of the equation is \(L_
      \end{split}
  \end{equation*}
 
-Eventually, we got the equality check we wanted to achieve (6.15). The use of the secret encoded values \(\alpha, \beta\) of the toxic waste (6.22) forces the prover algorithm to use the same coefficients of the solution vector (witness) to compute \(A(X), B(X), C(X)\). \(\gamma, \delta\) ensure that the public inputs of order \(l\) are independent from the solution vector (witness). In order to achieve the zero-knowledge aspect, \(r, s\) are used to shift the proof randomly.
+Eventually, we got the equality check we wanted to achieve (5.15). The use of the secret encoded values \(\alpha, \beta\) of the toxic waste (5.22) forces the prover algorithm to use the same coefficients of the solution vector (witness) to compute \(A(X), B(X), C(X)\). \(\gamma, \delta\) ensure that the public inputs of order \(l\) are independent from the solution vector (witness). In order to achieve the zero-knowledge aspect, \(r, s\) are used to shift the proof randomly.
 
 \section{PLONK-based zk-DApp}
 The decentralized application for zero-knowledge MRO data attestation (zk-DApp) facilitates data entries and data sharing between MRO data owners (submitters) and aviation authorities (attesters) in zero-knowledge. This software artifact attempts to ensure compatibility between the lack of trust among industry participants and the need for data verification and transparency (a trade-off between requirements within the project). MRO data need to be transparent for potential secondary market trading of aviation spare parts without giving full access to the documentation, e.g., to the entire shop report.
 
 \subsection{Implementation}
-The zero-knowledge part of the zk-DApp is implemented via circom and snarkjs, developed by iden3. iden3 is an open-source project focused on scalable and distributed identity systems on zero-knowledge proofs, i.e., providing protocols, data structures, and modules. The current objectives include achieving self-sovereign identities free of charge, minimizing on-chain transactions, re-designing privacy with non-reusable proofs, creating complete products, e.g., user wallets, and focusing on community standardization \citep{iden3aboutus}. Circom is Rust-based and allows one to write and compile arithmetic circuits. In circom, there is a data type called field elements, which are values modulo a large prime number based on the BN128 elliptic curve by default \citep{circom}. R1CS files are generated by compiling the circuit: the constraint system in binary format, a symbols file for debugging, and files that are necessary to generate the witness. In order to compute the witness, an input file in JSON format needs to be specified that contains the witness information. In the zk-DApp, the submitter enters the information to be verified, which is processed according to an input schema. The witness is computed and saved in a file format accepted by snarkjs. Snarkjs is a JavaScript library that continues with the outputs from circom and executes a specified zero-knowledge proof protocol, e.g., currently, Groth16, PLONK, and Fflonk are supported \citep{snarkjsdoc}. For this use case, snarkjs' PLONK implementation is utilized. For the verification and intermediate result hashes, a powers of tau file is utilized to perform the multi-party computation. In Groth16, it is utilized during the trusted setup (5.2.1). In PLONK, this is the source of public randomness (5.2.2). Figure \ref{fig:zk-DAppgeneral} shows the main steps performed for a PLONK-based zk-DApp. PLONK does not require a trusted ceremony for each circuit, i.e., the powers of tau ceremony is universal. After compiling the circuit and calculating the witness, the snarkjs Plonk can be set up. A final protocol transcript key (zkey) is generated and verified. The zero-knowledge key includes proving and verification key \citep{snarkjsdoc}. From the zkey, the verification key is exported in JSON format. With this verification key file, the final zkey file and the witness file, the proof file, and the file with the public inputs and outputs are generated. These two files and the verification key are used to verify the proof. The verifier is transformed into a smart contract (PlonkVerifier.sol) that performs the verification. In order to utilize the PlonkVerifier smart contract exported in the previous step, an interface must be created (IPlonkVerifier.sol), which initiates verifyProof and outputs a true or false. The ZkDocument.sol smart contract, which stores user inputs, e.g., the commitments and trusted attesters, uses this interface to verify the proof and update the states of the smart contracts. With every user input, a witness and proof are calculated. The commitment is posted, and the smart contracts are updated. Once verified, the user interface (UI) shows an update, e.g., a green highlighting. 
+The zero-knowledge part of the zk-DApp is implemented via circom and snarkjs, developed by iden3. iden3 is an open-source project focused on scalable and distributed identity systems on zero-knowledge proofs, i.e., providing protocols, data structures, and modules. The current objectives include achieving self-sovereign identities free of charge, minimizing on-chain transactions, re-designing privacy with non-reusable proofs, creating complete products, e.g., user wallets, and focusing on community standardization \citep{iden3aboutus}. Circom is Rust-based and allows one to write and compile arithmetic circuits. In circom, there is a data type called field elements, which per default represents values modulo a large prime number based on the BN128 elliptic curve \citep{circom}. R1CS files are generated by compiling the circuit: the constraint system in binary format, a symbols file for debugging, and files that are necessary to generate the witness. In order to compute the witness, an input file in JSON format needs to be specified that contains the witness information. 
+
+In the zk-DApp, the submitter enters the information to be verified, which is processed according to an input schema. The witness is computed and saved in a file format accepted by snarkjs. Snarkjs is a JavaScript library that continues with the outputs from circom and executes a specified zero-knowledge proof protocol, e.g., currently, Groth16, PLONK, and Fflonk are supported \citep{snarkjsdoc}. For this use case, snarkjs' PLONK implementation is utilized. For the verification and intermediate result hashes, a powers of tau file is utilized to perform the multi-party computation. In Groth16, it is utilized during the trusted setup (5.2.1). In PLONK, this is the source of public randomness (5.2.2). Figure \ref{fig:zk-DAppgeneral} shows the main steps performed for a PLONK-based zk-DApp. PLONK does not require a trusted ceremony for each circuit, i.e., the powers of tau ceremony is universal. After compiling the circuit and calculating the witness, the snarkjs Plonk can be set up. A final protocol transcript key (zkey) is generated and verified. The zero-knowledge key includes proving and verification key \citep{snarkjsdoc}. From the zkey, the verification key is exported in JSON format. With this verification key file, the final zkey file and the witness file, the proof file, and the file with the public inputs and outputs are generated. These two files and the verification key are used to verify the proof. The verifier is transformed into a smart contract (PlonkVerifier.sol) that performs the verification. In order to utilize the PlonkVerifier smart contract exported in the previous step, an interface must be created (IPlonkVerifier.sol), which initiates verifyProof and outputs a true or false. The ZkDocument.sol smart contract, which stores user inputs, e.g., the commitments and trusted attesters, uses this interface to verify the proof and update the states of the smart contracts. With every user input, a witness and proof are calculated. The commitment is posted, and the smart contracts are updated. Once verified, the user interface (UI) shows an update, e.g., a green highlighting. 
 \begin{figure}[hbt]
 	\centering
 		\includegraphics[width=1.0\textwidth]{Pictures/circom snarkjs process flow.png}
-	\caption{PLONK-based zk-DApp high-level process flow}
+	\caption{PLONK-based zk-DApp high-level interaction process flow}
 	\label{fig:zk-DAppgeneral}
 \end{figure}
 For deployment, broadcasting, and development, hardhat testnet is used. Metamask is used as a crypto wallet browser plugin.
 
 \subsection{Artifact}
-In the following, the different roles and the steps to be performed in the zk-DApp are described:
+Different roles and the steps to be performed in the zk-DApp are described as follows.
 \begin{enumerate}
 \item The process flow and general functionalities are depicted.
 \item Essential implementation logic and features are highlighted with references to the implementation code.
@@ -561,7 +567,7 @@ The following features illustrate the underlying functionality applied in the zk
 
 \item The actual user input values are handled in the \textit{ZkDocument.sol} smart contract. It stores the selected attester addresses, the submitter's address, field commitments, and field indices to be attested. A nonce is generated for each field and value, and the commitment scheme is initiated. The commitment scheme for each field is hash(value, nonce). The hashing algorithm used in the circuit is POSEIDON. Due to its reduced prover and verifier complexity, POSEIDON is currently favored in research and developing zero-knowledge decentralized applications. Unlike other popular hashing functions, e.g., SHA-256, POSEIDON can operate on smaller circuits and is adapted to finite fields \citep{poseidon}. It can add and remove trusted attesters from the list via \textit{(addValidInstitution, addValidInstitutions, removeValidInstitution)}. It ensures that only the attester specified by the submitter via mask entry can attest to the fields and values committed. During this check, it is also secured that the attestation's field index matches the one specified during submission. Once the check is successful, the bit is flipped to confirm the correctness of the attestation. This procedure is simultaneously applied to all field attestations via \textit{attestMultiple}. The function \textit{postFields} posts the commitments and checks that 1) the commitment length matches the number of fields, 2) that the correct number of institutions to perform attestations are in the commitment, and 3) that the commitment is unique, and has not been posted previously. Through \textit{validateSubmitter}, the public signal array for PLONK verification is filled with the commitments. It checks that the specified institutions have attested to all fields. As described in the introduction of circom and snarkjs in 6.2, the verifier is transformed to a Solidity smart contract \textit{PlonkVerifier.sol}), containing the values and function logic needed for PLONK verification. \textit{ZkDocument.sol} uses the interface to \textit{PlonkVerifier.sol}, the \textit{IPlonkVerifier.sol} to initiate the function \textit{verifyProof}, which verifies the proof. By using the interface, it is made sure that a specific standardized function from the generated \textit{PlonkVerifier.sol} is used (\textit{verifyProof}). This way of implementation ensures that the state of \textit{PlonkVerifier.sol} undergoes an actual change. In order to prevent client-side attacks, the schema hash, using the Keccak-256 hashing algorithm (part of SHA-3 Solidity family), is stored in \textit{ZkDocument.sol} as well. 
 
-\item The UI finds the correct schema via the scheme hash stored, facilitated through \textit{SchemaUtils.ts}. It obtains the corresponding schema from the schema hash and can utilize the files generated through the PLONK procedure in circom and snarkjs (6.2).
+\item The UI finds the correct schema via the scheme hash stored, facilitated through \textit{SchemaUtils.ts}. It obtains the corresponding schema from the schema hash and can utilize the files generated through the PLONK procedure in circom and snarkjs.
 \end{itemize}
 \begin{comment}
 ÜBERLEITUNG: 
@@ -592,7 +598,7 @@ On the other hand, the demonstration of the technical functionality is successfu
 Assumptions about the data structure led to the development of the first zk-DApp prototype and are revisited during the evaluation cycle to review the application's data layer in more detail. Current paper-based documentation must be replaced by the automatic digitization of spare part certificates and brought into a practical storage structure with part identifiers and corresponding certificate identifiers. While the automatic digitization of spare part documents is being realized in the project via optical character recognition (OCR), the authenticity validation check of these data in a trustless environment is still to be approached. As an evaluation aspect for further research implementation, an architectural zero-knowledge data structure is outlined as an opportunity to meet the third project requirement. In parallel, this architecture is the basis to increasingly capture MRO KPI data through combination with the zk-DApp in further research. 
 
 \subsubsection{Zero-Knowledge Data Structure}
-The lack of a structured data foundation for proofing the authenticity of aviation spare part documentation is an obstacle to enabling an industry-wide adoption of a blockchain-based industry standard for document verification approaches. In combination with the document issuing organization, there is a need to prove the authenticity of documents, e.g., via a transparent availability of the mechanic's signature and the document date stamp. However, this need for transparency conflicts with data privacy and the large amount of paper-based data captured in the past, which cannot be traced back effectively. Exploring a Merkle tree-based, zero-knowledge proof data structure satisfies the third requirement to ensure document authenticity and data integrity. Further maturation of this architecture, especially the degree of integration with the zk-DApp prototype, must be addressed further.
+The lack of a structured data foundation for proofing the authenticity of aviation spare part documentation is an obstacle to enabling an industry-wide adoption of a blockchain-based industry standard for document verification approaches. In combination with the document issuing organization, there is a need to prove the authenticity of documents, e.g., via a transparent availability of the mechanic's signature and the document date stamp. However, this need for transparency conflicts with data privacy and the large amount of paper-based data captured in the past, which cannot be traced back effectively. Exploring a Merkle-tree-based, zero-knowledge proof data structure satisfies the third requirement to ensure document authenticity and data integrity. Further maturation of this architecture, especially the degree of integration with the zk-DApp prototype, must be addressed further.
 
 Incoming MRO data is structured via a Merkle tree, which is initialized by an aggregator role, the operator. The operator receives data sent by the client, e.g., a zk-DApp. The operator maintains the Merkle tree locally. Once MRO data is submitted, newly created leaves are added to the Merkle tree. The structure is organized as follows: spare parts and subordinated certificates have a unique identifier, e.g., a part identifier has many certificates, each with a unique part id and certificate id combination. Each certificate is issued by an organization that employs mechanics. Mechanics service spare parts, generate MRO data and sign the certificate. The leaves contain the mechanics signature, the MRO data, e.g., the same values collected via the zk-DApp prototype, and a time stamp—the Merkle root results from a specific state of the spare part documentation history. The Merkle tree represents the local running account for MRO data capturing and is entirely maintained off-chain. 
 
