@@ -19,8 +19,8 @@ The research question concerns topics of computer science, mathematics, and info
 
 \begin{figure}[hbt]
 	\centering
-		\includegraphics[width=0.99\textwidth]{Pictures/bsp2.png}
-	\caption{Concept Matrix}
+		\includegraphics[width=1.0\textwidth]{Pictures/concept_matrix_headers.png}
+	\caption{Concept Matrix - Outcome Summary of the Systematic Literature Review}
 	\label{fig:concept_matrix}
 \end{figure}
 
@@ -28,20 +28,17 @@ The results of the survey are categorized as follows.
 \begin{itemize}
     \item Algorithm design topics: Zero-knowledge proofs are designed by combining proof systems and cryptographic means to achieve specific characteristics. Proof systems are examined and defined, linking and presenting cryptographic tools within the scope of building zero-knowledge argument systems in the area of applicable blockchain-based solutions.
     \item Widely used and performative zero-knowledge proofs are described in more detail, i.e., algorithms of specific zk-SNARKs, zk-STARKS, and Bulletproofs.
-    \item Selective literature is reviewed according to the identified problem domains: Electronic Voting and Government, Electronic Auctions, Data Queries and Traceability, Electronic Healthcare, Cloud Security, and Scaling.
+    \item Selective literature is reviewed according to the identified problem domains: Electronic Voting and Government, Electronic Auctions, Data Queries and Traceability, Electronic Healthcare, Cloud Security, and Rollups.
     \item Opportunities and challenges are discussed and aligned by evaluating and comparing the different algorithms qualitatively through literature review and quantitatively through complexity analysis.
 \end{itemize}
 
 \section{Implementation and Evaluation}
 The results of this master thesis are three artifacts, each satisfying a requirement in project RAPADO. The requirements are derived from previous work at the Department of Information Systems at Freie Universit{\"a}t Berlin and workshops held within the project consortium. The development of artifacts is conducted agilely, focusing on the demonstration of the technical application of zero-knowledge proofs via prototyping \citep{mci/Wilde2007}. Table \ref{tab:summary_artifacts} summarizes the three artifacts and their implementation approach.
-
-The algorithms studied in Chapter 4 are evaluated according to their complexity. Artifact 1 represents a reference document to understand zk-SNARK functionalities. Artifact 2 is evaluated through the first feedback collection from the project partner. Enhancements are implemented and summarized in Chapter 5. Artifact 3 is evaluated by revisiting project and design requirements to reassess current and future project needs. 
-
 \setlength{\tabcolsep}{2ex}
 \renewcommand{\arraystretch}{1.5}%
 \begin{table}[htb]
 	\centering
-	    \caption{Summary of artifacts implementation approaches}
+	    \caption{Summary of Artifacts and Implementation Approaches}
 		\begin{tabular}{|m{0.001\linewidth} | m{0.11\linewidth} | m{0.35\linewidth} | m{0.35\linewidth} |}
 		\hline
 		\textbf{}& \textbf{Artifact} & \textbf{Short Description} & \textbf{Implementation} \\ \hline
@@ -51,6 +48,8 @@ The algorithms studied in Chapter 4 are evaluated according to their complexity.
 	\end{tabular}
 \label{tab:summary_artifacts}
 \end{table}
+
+The algorithms studied in Chapter 4 are evaluated according to their complexity. Artifact 1 represents a reference document to understand zk-SNARK functionalities. Artifact 2 is evaluated through the first feedback collection from the project partner. Enhancements are implemented and summarized in Chapter 5. Artifact 3 is evaluated by revisiting project and design requirements to reassess current and future project needs.
 \begin{comment}
 -review of project requirements-->ableiten von design requirements
 - with focus at technical functionalities, two use cases were picked out and developed in an agile manner, presenting very first prototypes for open discussion further in the project, main goal of knowledge accumulation is satisfied in chapter 5, designed and implemented artifacts satisfy two other main project requirements
