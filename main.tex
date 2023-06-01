@@ -54,6 +54,11 @@ twoside=off,paper=a4,headings=small]{scrbook}
 
 \usepackage{parskip}
 
+\usepackage[nopostdot,toc,acronym,nomain,nonumberlist]{glossaries}
+\makeglossaries
+\setacronymstyle{long-short}
+\loadglsentries[acronym]{./Chapters/0_acro_list}
+    
 \usepackage{calc}
 
 \usepackage{footnote}				% Fußnoten
@@ -85,6 +90,10 @@ twoside=off,paper=a4,headings=small]{scrbook}
     
     \listoftables						% Tabellenverzeichnis rein
     \clearpage{\pagestyle{empty}\cleardoublepage}
+
+    \printglossary[title={List of Abbreviations},type=acronym,style=long]
+    \clearpage{\pagestyle{empty}\cleardoublepage}
+
 % -----------------------------------
 \mainmatter 							% die einzelnen Chapters
     \input{./Chapters/2_introduction}
