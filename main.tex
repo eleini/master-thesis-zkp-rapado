@@ -29,8 +29,10 @@ twoside=off,paper=a4,headings=small]{scrbook}
 
 \usepackage{url}					% URL's formatieren (z.B. in Literatur) 
 \usepackage{setspace} 				% Zeileneinstellung
-\usepackage[colorlinks,linkcolor=black,citecolor=black,urlcolor=black]{hyperref} 				% für Hyperlinks in PDF-Dokumenten   
-  
+
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[colorlinks,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref} 				% für Hyperlinks in PDF-Dokumenten   
+
 \usepackage{tabularx} 				% bessere Gestaltung von Tabellen
 \usepackage{longtable} 		
 \usepackage{multicol}				
@@ -51,6 +53,8 @@ twoside=off,paper=a4,headings=small]{scrbook}
 \usepackage{lscape}					% zum Rotieren von Seiten
 
 \usepackage{amsmath,amssymb,amsfonts}				% zum Schreiben von mathematischen Formeln
+
+\usepackage{xcolor}
 
 \usepackage{parskip}
 
@@ -111,8 +115,13 @@ twoside=off,paper=a4,headings=small]{scrbook}
 
 % -----------------------------------
 \backmatter 
+\begingroup
+\raggedright
+\sloppy
+\interlinepenalty=1000
 \bibliographystyle{apacite}				% bei natbib in deutsch
-\bibliography{./Literature/sources}	% Literaturquellen einbinden 
+\bibliography{./Literature/sources}	    % Literaturquellen einbinden
+\endgroup
 \input{Chapters/appendix}           % Appendix
 \input{./Chapters/statutory_declaration} % Eidesstattliche Erklärung (nicht bei Seminararb.)
 
