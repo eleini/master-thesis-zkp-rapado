@@ -567,7 +567,7 @@ The actual user input values are handled in the \textit{ZkDocument.sol} smart co
 
 The function \textit{postFields} posts the commitments and checks that 1. the commitment length matches the number of fields, 2. the correct number of institutions to perform attestations are in the commitment, and 3. the commitment is unique, and has not been posted previously. Through \textit{validateSubmitter}, the public signal array for \acrshort{plonk} verification is filled with the commitments. It checks that the specified institutions have attested to all fields. As described in the introduction of circom and snarkjs in Chapter 6.2, the verifier is transformed to a Solidity smart contract \textit{PlonkVerifier.sol}), containing the values and function logic needed for \acrshort{plonk} verification. \textit{ZkDocument.sol} uses the interface to \textit{PlonkVerifier.sol}, the \textit{IPlonkVerifier.sol} to initiate the function \textit{verifyProof}, which verifies the proof. By using the interface, it is made sure that a specific standardized function from the generated \textit{PlonkVerifier.sol} is used (\textit{verifyProof}). This way of implementation ensures that the state of \textit{PlonkVerifier.sol} undergoes an actual change. In order to prevent client-side attacks, the schema hash, using the Keccak-256 hashing algorithm (part of SHA-3 Solidity family), is stored in \textit{ZkDocument.sol} as well. 
 
-The UI finds the correct schema via the scheme hash stored, facilitated through \textit{SchemaUtils.ts}. It obtains the corresponding schema from the schema hash and can utilize the files generated through the \acrshort{plonk} procedure in circom and snarkjs.
+The UI finds the correct schema via the scheme hash stored, facilitated through \textit{SchemaUtils.ts}. It obtains the corresponding schema from the schema hash and can utilize the files generated through the \acrshort{plonk} procedure in circom and snarkjs. Additional Figures are provided in Appendix \ref{Appendix B}.
 \begin{comment}
 ÜBERLEITUNG: 
 - use case support system for predictive maintenance
@@ -590,7 +590,7 @@ On the one hand, the use case of \acrshort{mro} key performance indicator (\acrs
 On the other hand, the demonstration of the technical functionality is successful, and the previously developed \acrshort{dapp} for \acrshort{mro} certificate validation and the \acrshort{mro} Smart Hub (in development through Opremic GmbH) can be extended with the zero-knowledge proof functionality of this software artifact. The current code shared with the thesis shows the implementation of the most recent feedback of the evaluation cycle. A screenshot of the input screen (in analogy to Figure \ref{fig:form}) is shown below (Figure \ref{fig:form1}).
 \begin{figure}[hbt]
 	\centering
-		\includegraphics[width=0.8\textwidth]{Pictures/bsp2.png}
+		\includegraphics[width=1.0\textwidth]{Pictures/form1.png}
 	\caption{\acrshort{zkdapp} Fill Form (Follow-Up after Evaluation)}
 	\label{fig:form1}
 \end{figure}

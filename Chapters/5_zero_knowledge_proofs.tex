@@ -53,7 +53,7 @@ The Fiat-Shamir transformation (\acrshort{fst}) \citep{ROMFiat1986HowTP} removes
 In summary, the prover only sends one message containing the transcript, i.e., the list of all messages sent by the prover and the query results of the random oracle. The input x has to be appended to the list every round. The verifier's coin tosses are no longer needed, and the verifier does not need to send messages to the prover (Figure \ref{fig:FST}).
 \begin{figure}[hbt]
 	\centering
-		\includegraphics[width=0.8\textwidth]{Pictures/FST.png}
+		\includegraphics[width=0.7\textwidth]{Pictures/FST.png}
 	\caption{Illustration of Generic Fiat Shamir Transformation (based on \citet{Thaler})}
 	\label{fig:FST}
 \end{figure}
@@ -221,7 +221,7 @@ The only program-specific polynomials that must be computed upfront are the \(Q\
 \begin{comment}
 https://limechain.tech/blog/zero-knowledge-proofs-explained/
 with FRI-based polynomial commitment
--does not use \acrshort{r1cs}
+-does not use r1cs
 -fri starks
 -Salleras et al 2021
 \end{comment}
@@ -336,7 +336,7 @@ The \acrshort{crs} generated in \acrshort{zksnark}s relies on a third party. Zk-
 	    \caption{Complexity Comparison of \acrshort{zksnark}s, \acrshort{zkstark}s, and Bulletproofs}
 		\begin{tabular}{| m{0.15\linewidth} | m{0.2\linewidth} |              m{0.2\linewidth}      | m{0.2\linewidth}|} \hline
 		\textbf{} & \textbf{\acrshort{zksnark}s} & \textbf{\acrshort{zkstark}s} &\textbf{Bulletproofs}       \\ \hline
-            Prover \newline complexity & \(O(N*log(N)\) & \(O(N*log(N)^k)\) & \(O(N*log(N)\) \\  \hline
+            Prover \newline complexity & \(O(N*log(N)\) & \(O(N*log(N)^k)\) & \(O(N*log(N))\) \\  \hline
             Verifier \newline complexity & \(O(1)\) & \(O(log(N)^k)\) & \(O(N)\) \\ \hline 
             Proof size & \(O(1)\) & \(O(log(N)^k)\) &  \(O(log(N))\)\\  \hline
             Post-quantum security &  not given & given & not given\\  \hline 

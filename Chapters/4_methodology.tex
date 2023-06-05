@@ -6,20 +6,20 @@ The initial and current status and results of project RAPADO are discussed. From
 
 Previous research at the Department of Information Systems concludes with conceptual solutions and a decentralized application for aviation industry  documentation, centering storage, and traceability \citep{ZedelJ}. As a result, use cases of uploading, storing, and trading aircraft spare parts certificates were given, and specific blockchain platform architectures were used. This research extends previous findings. However, it takes a new perspective by further investigating possible use cases for \acrshort{zkp} to automate verification processes, preserve data confidentiality, and suggest suitable data formats. The results are expected to represent the broader research project, i.e., beyond previously used software.
 
-The \acrshort{slr} focuses on zero-knowledge proofs with the scope of classification, opportunities, challenges, evaluation methods, and examples in practice. The design of zero-knowledge proofs needs to be examined from a theoretical perspective. Application domains and use cases applicable to the research project are at focus, which excludes topics of cryptocurrencies and embedded systems. This survey aims to provide an extensive overview of the design and implementation of zero-knowledge proofs and to bring out practical and critical implications. The final search string is derived from a concept map (Figure \ref{fig:concept_map}), and the selected literature is shown in a concept matrix, with headers displayed in Figure \ref{fig:concept_matrix} and the entire matrix in Appendix \ref{Appendix A}.
+The \acrshort{slr} focuses on zero-knowledge proofs with the scope of classification, opportunities, challenges, evaluation methods, and examples in practice. The design of zero-knowledge proofs needs to be examined from a theoretical perspective. Application domains and use cases applicable to the research project are at focus, which excludes topics of cryptocurrencies and embedded systems. This survey aims to provide an extensive overview of the design and implementation of zero-knowledge proofs and to bring out practical and critical implications. The final search string is derived from a concept map (Figure \ref{fig:con_map}), and the selected literature is shown in a concept matrix, with headers displayed in Figure \ref{fig:concept_matrix} and the entire matrix in Appendix \ref{Appendix A}.
 
 \begin{figure}[hbt]
 	\centering
-		\includegraphics[width=0.99\textwidth]{Pictures/concept map.png}
+	\includegraphics[width=0.99\textwidth]{Pictures/con_map.png}
 	\caption{Concept Map - Compression of main topics and relations as basis for final search string}
-	\label{fig:concept_map}
+	\label{fig:con_map}
 \end{figure}
 
 The research question concerns topics of computer science, mathematics, and information systems topics. For the search, the databases Web of Science (WoS), Association of Computing Machinery (ACM), zbMATH, arXiV, Association of Information Systems (AIS), and Institute of Electrical and Electronics Engineers (IEEE) were queried. Articles were searched in Title, Keywords, and Abstract, with date restrictions back to 2018 (WoS) and 2006 (ACM). The following search string was used: (("ZKP*" OR "Zero-Knowledge*" OR "zero*knowledge*algorithm*" OR "zero*knowledge*protocol*" OR "zero*knowledge*proof*" OR "zkS*" OR "zk*SNA*" OR "zk*STA*" OR "zk*STO" OR "bulletproof*") AND ("application*" OR "example*" OR "app*") AND ("carbon*footprint*" OR "*complexity*" OR "evaluation*" OR "cost*" OR "sustainab*" OR "environment*") AND ("challenge*" OR "threat*" OR "problem*"). After deduplication, the search resulted in 580 hits condensed according to the following approach. First, the result was filtered by English or German resources with more than or equal to five citations three times or higher past 180 days of usage (560 hits). The next exclusion criteria were applied in Title and Keywords (396 hits), Abstract (319 hits), and Full-text (80 hits), of which backward/forward search added another 20 hits. 
 
 \begin{figure}[hbt]
 	\centering
-		\includegraphics[width=1.0\textwidth]{Pictures/concept_matrix_headers.png}
+	\includegraphics[width=1.0\textwidth]{Pictures/concept_matrix_headers.png}
 	\caption{Concept Matrix - Outcome Summary of the Systematic Literature Review}
 	\label{fig:concept_matrix}
 \end{figure}
@@ -50,57 +50,3 @@ The results of this master thesis are three artifacts, each satisfying a require
 \end{table}
 
 The algorithms studied in Chapter 4 are evaluated according to their complexity. Artifact 1 represents a reference document to understand zk-SNARK functionalities. Artifact 2 is evaluated through the first feedback collection from the project partner. Enhancements are implemented and summarized in Chapter 5. Artifact 3 is evaluated by revisiting project and design requirements to reassess current and future project needs.
-\begin{comment}
--review of project requirements-->ableiten von design requirements
-- with focus at technical functionalities, two use cases were picked out and developed in an agile manner, presenting very first prototypes for open discussion further in the project, main goal of knowledge accumulation is satisfied in chapter 5, designed and implemented artifacts satisfy two other main project requirements
-- evaluation according to complexity analysis, fit to the project needs, limitations and future outlook
-\end{comment}
-
-
-
-
-\begin{comment}
-\acrshort{slr}
-Analysis of other resources
---> ends with requirements
-(how good/bad the solution is)
--quantitative and qualitative evaluation, e.g. Laufzeit und Interviews 
-- say what is not in scope
--DO NOT describe some agile method for the sake of having it! Just say it is a rather agile method etc.
-
-I. Systematic literature review according to vom Brocke, Cooper and Webster: 
-    1. Definition of Scope
-        - classification, examples, challenges and evaluation methods of zero knowledge proof protocols 
-        
-    2. Conceptualization
-        - work with concept map
-        - derive at a search string
-        
-    3. Literature Search and Selection
-        - look for review paper first to get good overview about the topic
-        a) exclude paper that are too old and have too few citations and/or low impact factor (e.g. 5.5 is high)
-        b) exclusion acc. to title and keywords
-        c) exclusion acc. to abstract & structure of paper & RQ
-        c) exclusion acc. to full text & availability of resource
-        
-    4. Synthesizing of Literature
-        - cluster definitions, examples, drawbacks and evaluation methods (first suggestion can be found in the preliminary agenda)
-        - write overview section about ZKP (Chapter 4)
-- - - - - - -
-How to know if a paper is useful for me?
-1.title 2.keywords 3.abstract 4.structure of the paper 5.examples/use cases 6.research question/formal problem definition
-- - - - - - -
-% DSR muss nicht sein, kann auch SCRUM oder {"a}hnliches
-II. Design Science Research
-- DSR method acc. to Peffers and Hevner
-
-\end{comment}
-\begin{comment}
-2) Ziel der Arbeit, scope of work
-- not scope to practically integrate any of the concepts into existing DApp or any other existing system
-- welche use cases gibt es f{"u}r ZKPs in RAPADO
-- wie k{"o}nnte man diese Umsetzen
-
-4) Ergebnisse skizzieren
-- implementation can be a proof of concept, software artifact depends highly on complexity of the use case
-\end{comment}
