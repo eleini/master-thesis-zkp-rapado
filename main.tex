@@ -74,7 +74,7 @@ twoside=off,paper=a4,headings=small]{scrbook}
 \hyphenation{voll-st\"andigen}		% Worttrennungen global definieren
 
 \setcounter{tocdepth}{1}			% Ebenen, die im Inhaltsverzeichnis angezeigt werden
-
+\usepackage{float}
 % Document
 % -----------------------------------
 \begin{document}
@@ -123,6 +123,7 @@ twoside=off,paper=a4,headings=small]{scrbook}
 \bibliography{./Literature/sources}	    % Literaturquellen einbinden
 \endgroup
 \input{Chapters/appendix}           % Appendix
+\clearpage{\pagestyle{empty}\cleardoublepage}
 \input{./Chapters/statutory_declaration} % Eidesstattliche Erklärung (nicht bei Seminararb.)
 
 \end{document}
